@@ -1,48 +1,12 @@
 (function () {
     "use strict";
 
-    var CLASSES = {
-        warrior: { card: "WarriorCard", scene: "WarriorScene", select: "WarriorSelect", name: "Warrior", base: "Mars", attribute: "STRENGTH", baseHero: "npc_dota_hero_mars", desc: "Frontline masters of steel and fury. Warriors hold the line, shield their allies and break enemy ranks in a single charge.", ascendencies: [
-            { key: "paladin", name: "Paladin", hero: "npc_dota_hero_omniknight", presentation: "Omniknight", desc: "A holy bulwark who mends wounds in the thick of battle and turns aside death itself." },
-            { key: "berserker", name: "Berserker", hero: "npc_dota_hero_skeleton_king", presentation: "Wraith King • Arcana desired", desc: "An unkillable warlord who feeds on blood and rises again with every fall." },
-            { key: "slayer", name: "Slayer", hero: "npc_dota_hero_spectre", presentation: "Spectre", desc: "A spectral huntress who isolates her prey and punishes any who stand alone." }
-        ]},
-        ranger: { card: "RangerCard", scene: "RangerScene", select: "RangerSelect", name: "Ranger", base: "Hoodwink", attribute: "AGILITY", baseHero: "npc_dota_hero_hoodwink", desc: "Swift skirmishers and deadly marksmen. Rangers control the battlefield from afar, striking where the enemy is weakest.", ascendencies: [
-            { key: "deadeye", name: "Deadeye", hero: "npc_dota_hero_windrunner", presentation: "Windranger", desc: "A precision archer who binds foes together and unleashes relentless volleys." },
-            { key: "witch_hunter", name: "Witch Hunter", hero: "npc_dota_hero_drow_ranger", presentation: "Drow Ranger • Arcana desired", desc: "A cold-eyed stalker whose frost-fletched arrows slow the arcane to a crawl." },
-            { key: "bone_fletcher", name: "Bone Fletcher", hero: "npc_dota_hero_clinkz", presentation: "Clinkz", desc: "A blazing skeletal archer whose strafe of arrows leaves only ashes." }
-        ]},
-        mage: { card: "MageCard", scene: "MageScene", select: "MageSelect", name: "Mage", base: "Invoker", attribute: "INTELLIGENCE", baseHero: "npc_dota_hero_invoker", desc: "Wielders of raw arcane force. Mages reshape the fight with fire, frost and storm before their foes can close the distance.", ascendencies: [
-            { key: "fire_mage", name: "Fire Mage", hero: "npc_dota_hero_lina", presentation: "Lina", desc: "A storm of living flame that consumes packs of enemies in a blink." },
-            { key: "frost_mage", name: "Frost Mage", hero: "npc_dota_hero_crystal_maiden", presentation: "Crystal Maiden", desc: "A winter weaver who freezes the battlefield solid and feeds allies power." },
-            { key: "lightning_mage", name: "Lightning Mage", hero: "npc_dota_hero_zuus", presentation: "Zeus", desc: "A thunder god's heir whose bolts arc from foe to foe without mercy." }
-        ]},
-        mercenary: { card: "MercenaryCard", scene: "MercenaryScene", select: "MercenarySelect", name: "Mercenary", base: "Anti-Mage", attribute: "AGILITY / STRENGTH", baseHero: "npc_dota_hero_antimage", desc: "Versatile fighters for hire. Mercenaries trade bladework, firepower and trickery — whatever the contract demands.", ascendencies: [
-            { key: "death_blade", name: "Death Blade", hero: "npc_dota_hero_legion_commander", presentation: "Legion Commander • Arcana desired", desc: "A duel-hungry commander who grows stronger with every clash she wins." },
-            { key: "trickster", name: "Trickster", hero: "npc_dota_hero_monkey_king", presentation: "Monkey King", desc: "A staff-wielding prankster who fights from the treetops and strikes wide." },
-            { key: "drunkard", name: "Drunkard", hero: "npc_dota_hero_brewmaster", presentation: "Brewmaster", desc: "A spinning brawler who fights three sheets to the wind — and splits into three when the cask empties." }
-        ]},
-        specialist: { card: "SpecialistCard", scene: "SpecialistScene", select: "SpecialistSelect", name: "Specialist", base: "Arc Warden", attribute: "UNIVERSAL", baseHero: "npc_dota_hero_arc_warden", desc: "Practitioners of rare and singular disciplines — shapers of beasts and riders of the spirit planes.", ascendencies: [
-            { key: "druid", name: "Druid", hero: "npc_dota_hero_lone_druid", presentation: "Lone Druid", desc: "A beast-bonded wanderer whose spirit companion rends enemies apart." },
-            { key: "spiritkin", name: "Spiritkin", hero: "npc_dota_hero_void_spirit", presentation: "Void Spirit", desc: "A rider of the spirit planes, bound to storm, ember and stone." },
-            { key: "summoner", name: "Summoner", hero: "npc_dota_hero_warlock", presentation: "Warlock", desc: "A chaos-touched conjurer whose golems and bindings crush all before them." }
-        ]},
-        gunner: { card: "GunnerCard", scene: "GunnerScene", select: "GunnerSelect", name: "Gunner", base: "Snapfire", attribute: "AGILITY / INTELLIGENCE", baseHero: "npc_dota_hero_snapfire", desc: "Ranged experts who trust in powder and precision — bullets, bombs and relentless barrages.", ascendencies: [
-            { key: "gunslinger", name: "Gunslinger", hero: "npc_dota_hero_muerta", presentation: "Muerta", desc: "A pistol-wielding duelist whose bullets tear through armor and soul alike." },
-            { key: "artillerist", name: "Artillerist", hero: "npc_dota_hero_gyrocopter", presentation: "Gyrocopter", desc: "An airborne gunner who blankets the field in rockets, flak and seeking missiles." },
-            { key: "sharpshooter", name: "Sharpshooter", hero: "npc_dota_hero_sniper", presentation: "Sniper", desc: "A patient marksman who ends fights from a mile away with one perfect shot." }
-        ]},
-        martial_artist: { card: "MartialArtistCard", scene: "MartialArtistScene", select: "MartialArtistSelect", name: "Martial Artist", base: "Juggernaut", attribute: "INTELLIGENCE / STRENGTH", baseHero: "npc_dota_hero_juggernaut", desc: "Disciplined artists of unarmed and weapon combat. Martial Artists turn motion itself into a lethal weapon.", ascendencies: [
-            { key: "striker", name: "Striker", hero: "npc_dota_hero_marci", presentation: "Marci", desc: "A loyal fist who vaults between allies and erupts in sudden fury." },
-            { key: "glavier", name: "Glavier", hero: "npc_dota_hero_void_spirit", presentation: "Void Spirit", desc: "An astral spearman whose remnant blades guard every angle." },
-            { key: "war_dancer", name: "War Dancer", hero: "npc_dota_hero_axe", presentation: "Axe • Arcana desired", desc: "A spinning executioner who dares enemies to strike, and pays them back in full." }
-        ]}
-    };
+    var CLASSES = LOA_CLASS_DEFINITIONS;
 
     var selectedClass = null;
     var selectedAscendency = null;
     var confirmed = false;
-    var classOrder = ["warrior", "ranger", "mage", "mercenary", "specialist", "gunner", "martial_artist"];
+    var classOrder = LOA_CLASS_ORDER.slice();
     var focusIndex = 0;
     var carouselPositions = (function () {
         var ringScales = [1, 0.8, 0.7, 0.6];
@@ -58,6 +22,54 @@
     })();
     var classPreviewRequest = 0;
     var ascendPreviewRequest = 0;
+
+    function AddPanel(type, parent, id, className, hitTest) {
+        var panel = $.CreatePanel(type, parent, id || "");
+        if (className) className.split(/\s+/).forEach(function (name) { panel.AddClass(name); });
+        if (hitTest === false) panel.hittest = false;
+        return panel;
+    }
+
+    function BuildClassCard(classKey) {
+        var definition = CLASSES[classKey];
+        var slot = AddPanel("Panel", $("#ClassCarouselTrack"), "Slot_" + classKey, "CarouselSlot", false);
+        var card = AddPanel("Panel", slot, "ClassCard_" + classKey, "CardShell BaseCard");
+        var art = AddPanel("Panel", card, "", "CardArt");
+        var scene = AddPanel("DOTAScenePanel", art, "ClassScene_" + classKey, "CardScene");
+        scene.allowrotation = true;
+        scene.rotationlimits = "-70 70";
+        AddPanel("Panel", art, "", "ArtVignette", false);
+        AddPanel("Panel", art, "", "ArtScrim", false);
+        AddPanel("Panel", card, "", "CardGlow", false);
+
+        var select = AddPanel("Button", card, "ClassSelect_" + classKey, "CardSelectArea");
+        select.hittestchildren = false;
+        var info = AddPanel("Panel", select, "", "CardInfo", false);
+        AddPanel("Panel", info, "", "InfoRule", false);
+        var emblem = AddPanel("Panel", info, "", "CardEmblem", false);
+        AddPanel("Panel", emblem, "", "CardEmblemCore", false);
+        var title = AddPanel("Label", info, "", "CardTitle", false);
+        title.text = definition.name.toUpperCase();
+        var type = AddPanel("Label", info, "", "CardType", false);
+        type.text = definition.attribute;
+        AddPanel("Panel", select, "", "ButtonRule", false);
+        var learnRow = AddPanel("Panel", select, "", "LearnMoreRow", false);
+        AddPanel("Panel", learnRow, "", "LearnMoreLine Left", false);
+        var learnLabel = AddPanel("Label", learnRow, "", "LearnMoreLabel", false);
+        learnLabel.text = "Learn More";
+        AddPanel("Panel", learnRow, "", "LearnMoreLine Right", false);
+
+        select.SetPanelEvent("onactivate", function () {
+            if (classOrder[focusIndex] === classKey) SelectClass(classKey);
+            else UpdateCarousel(classOrder.indexOf(classKey) - focusIndex);
+        });
+    }
+
+    function BuildClassCarousel() {
+        var track = $("#ClassCarouselTrack");
+        track.RemoveAndDeleteChildren();
+        classOrder.forEach(BuildClassCard);
+    }
 
     function OffsetFromFocus(index) {
         var count = classOrder.length;
@@ -78,7 +90,7 @@
             var slot = $("#Slot_" + key);
             var position = carouselPositions[Math.min(distance, carouselPositions.length - 1)];
             slot.style.transform = "translateX(" + (offset < 0 ? -position : position) + "px)";
-            var card = $("#" + CLASSES[key].card);
+            var card = $("#ClassCard_" + key);
             card.SetHasClass("Ring1", distance === 1);
             card.SetHasClass("Ring2", distance === 2);
             card.SetHasClass("Ring3", distance >= 3);
@@ -100,7 +112,7 @@
         $.Schedule(0.0, function () {
             if (request !== classPreviewRequest || $("#BaseStage").BHasClass("HiddenStage")) return;
             classOrder.forEach(function (key) {
-                var scene = $("#" + CLASSES[key].scene);
+                var scene = $("#ClassScene_" + key);
                 if (scene) scene.SetUnit(CLASSES[key].baseHero, "default", true);
             });
         });
@@ -222,20 +234,7 @@
     function OnPartyReady() { $.Msg("[LOA UI] Party ready; game start requested"); var root = $("#HeroSelectionRoot"), wrapper = root && root.GetParent(), context = $.GetContextPanel(); root.AddClass("PartyReady"); root.hittest = false; root.hittestchildren = false; if (wrapper) { wrapper.hittest = false; wrapper.hittestchildren = false; } context.hittest = false; context.hittestchildren = false; context.style.visibility = "collapse"; $.Msg("[LOA UI] Hero selection context collapsed; gameplay input released"); }
     function UpdatePartyStatus() { var state = CustomNetTables.GetTableValue("loa_selection", "party"); if (!state) { $("#PartyStatus").text = "Choose your class"; return; } $("#PartyStatus").text = (Number(state.ready_count) || 0) + " / " + (Number(state.player_count) || 1) + " players ready"; }
 
-    classOrder.forEach(function (key) {
-        var card = $("#" + CLASSES[key].card);
-        var slot = $.CreatePanel("Panel", $("#ClassCarouselTrack"), "Slot_" + key);
-        slot.AddClass("CarouselSlot");
-        slot.hittest = false;
-        card.SetParent(slot);
-    });
-
-    Object.keys(CLASSES).forEach(function (key) {
-        $("#" + CLASSES[key].select).SetPanelEvent("onactivate", function () {
-            if (classOrder[focusIndex] === key) SelectClass(key);
-            else UpdateCarousel(classOrder.indexOf(key) - focusIndex);
-        });
-    });
+    BuildClassCarousel();
     $("#CarouselLeft").SetPanelEvent("onactivate", function () { UpdateCarousel(-1); });
     $("#CarouselRight").SetPanelEvent("onactivate", function () { UpdateCarousel(1); });
     $("#BackButton").SetPanelEvent("onactivate", ShowClassStage);

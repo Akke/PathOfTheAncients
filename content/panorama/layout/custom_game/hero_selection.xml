@@ -1,6 +1,9 @@
 <root>
     <styles><include src="file://{resources}/styles/custom_game/hero_selection.css" /></styles>
-    <scripts><include src="file://{resources}/scripts/custom_game/hero_selection.js" /></scripts>
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/class_definitions.js" />
+        <include src="file://{resources}/scripts/custom_game/hero_selection.js" />
+    </scripts>
     <Panel class="HeroSelectionContainer">
         <Panel id="HeroSelectionRoot" hittest="true">
             <Panel id="Backdrop" hittest="false" />
@@ -8,145 +11,18 @@
                 <Panel id="Header">
                     <Label id="Eyebrow" text="LABYRINTH OF THE ANCIENTS" />
                     <Label id="ScreenTitle" text="Choose Your Class" />
-                    <Label id="ScreenSubtitle" text="Choose a path, then select one of its three ascendancys." />
+                    <Label id="ScreenSubtitle" text="Choose a path, then select one of its three ascendancies." />
                 </Panel>
 
                 <Panel id="BaseStage" class="SelectionStage">
                     <Panel id="ClassCarousel">
                         <Button id="CarouselLeft" class="CarouselArrow" hittestchildren="false"><Label text="‹" /></Button>
                         <Panel id="ClassCarouselViewport">
-                          <Panel id="ClassCarouselTrack">
-                            <Panel id="WarriorCard" class="CardShell BaseCard">
-                                <Panel class="CardArt">
-                                    <DOTAScenePanel id="WarriorScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
-                                    <Panel class="ArtVignette" hittest="false" />
-                                    <Panel class="ArtScrim" hittest="false" />
-                                </Panel>
-                                <Panel class="CardGlow" hittest="false" />
-                                <Button id="WarriorSelect" class="CardSelectArea" hittestchildren="false">
-                                    <Panel class="CardInfo">
-                                        <Panel class="InfoRule" hittest="false" />
-                                        <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="WARRIOR" hittest="false" />
-                                        <Label class="CardType" text="STRENGTH" hittest="false" />
-                                    </Panel>
-                                    <Panel class="ButtonRule" hittest="false" />
-                                    <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
-                                </Button>
-                            </Panel>
-                            <Panel id="RangerCard" class="CardShell BaseCard">
-                                <Panel class="CardArt">
-                                    <DOTAScenePanel id="RangerScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
-                                    <Panel class="ArtVignette" hittest="false" />
-                                    <Panel class="ArtScrim" hittest="false" />
-                                </Panel>
-                                <Panel class="CardGlow" hittest="false" />
-                                <Button id="RangerSelect" class="CardSelectArea" hittestchildren="false">
-                                    <Panel class="CardInfo">
-                                        <Panel class="InfoRule" hittest="false" />
-                                        <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="RANGER" hittest="false" />
-                                        <Label class="CardType" text="AGILITY" hittest="false" />
-                                    </Panel>
-                                    <Panel class="ButtonRule" hittest="false" />
-                                    <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
-                                </Button>
-                            </Panel>
-                            <Panel id="MageCard" class="CardShell BaseCard">
-                                <Panel class="CardArt">
-                                    <DOTAScenePanel id="MageScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
-                                    <Panel class="ArtVignette" hittest="false" />
-                                    <Panel class="ArtScrim" hittest="false" />
-                                </Panel>
-                                <Panel class="CardGlow" hittest="false" />
-                                <Button id="MageSelect" class="CardSelectArea" hittestchildren="false">
-                                    <Panel class="CardInfo">
-                                        <Panel class="InfoRule" hittest="false" />
-                                        <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="MAGE" hittest="false" />
-                                        <Label class="CardType" text="INTELLIGENCE" hittest="false" />
-                                    </Panel>
-                                    <Panel class="ButtonRule" hittest="false" />
-                                    <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
-                                </Button>
-                            </Panel>
-                            <Panel id="MercenaryCard" class="CardShell BaseCard">
-                                <Panel class="CardArt">
-                                    <DOTAScenePanel id="MercenaryScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
-                                    <Panel class="ArtVignette" hittest="false" />
-                                    <Panel class="ArtScrim" hittest="false" />
-                                </Panel>
-                                <Panel class="CardGlow" hittest="false" />
-                                <Button id="MercenarySelect" class="CardSelectArea" hittestchildren="false">
-                                    <Panel class="CardInfo">
-                                        <Panel class="InfoRule" hittest="false" />
-                                        <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="MERCENARY" hittest="false" />
-                                        <Label class="CardType" text="AGILITY / STRENGTH" hittest="false" />
-                                    </Panel>
-                                    <Panel class="ButtonRule" hittest="false" />
-                                    <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
-                                </Button>
-                            </Panel>
-                            <Panel id="SpecialistCard" class="CardShell BaseCard">
-                                <Panel class="CardArt">
-                                    <DOTAScenePanel id="SpecialistScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
-                                    <Panel class="ArtVignette" hittest="false" />
-                                    <Panel class="ArtScrim" hittest="false" />
-                                </Panel>
-                                <Panel class="CardGlow" hittest="false" />
-                                <Button id="SpecialistSelect" class="CardSelectArea" hittestchildren="false">
-                                    <Panel class="CardInfo">
-                                        <Panel class="InfoRule" hittest="false" />
-                                        <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="SPECIALIST" hittest="false" />
-                                        <Label class="CardType" text="UNIVERSAL" hittest="false" />
-                                    </Panel>
-                                    <Panel class="ButtonRule" hittest="false" />
-                                    <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
-                                </Button>
-                            </Panel>
-                            <Panel id="MartialArtistCard" class="CardShell BaseCard">
-                                <Panel class="CardArt">
-                                    <DOTAScenePanel id="MartialArtistScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
-                                    <Panel class="ArtVignette" hittest="false" />
-                                    <Panel class="ArtScrim" hittest="false" />
-                                </Panel>
-                                <Panel class="CardGlow" hittest="false" />
-                                <Button id="MartialArtistSelect" class="CardSelectArea" hittestchildren="false">
-                                    <Panel class="CardInfo">
-                                        <Panel class="InfoRule" hittest="false" />
-                                        <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="MARTIAL ARTIST" hittest="false" />
-                                        <Label class="CardType" text="INTELLIGENCE / STRENGTH" hittest="false" />
-                                    </Panel>
-                                    <Panel class="ButtonRule" hittest="false" />
-                                    <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
-                                </Button>
-                            </Panel>
-                            <Panel id="GunnerCard" class="CardShell BaseCard">
-                                <Panel class="CardArt">
-                                    <DOTAScenePanel id="GunnerScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
-                                    <Panel class="ArtVignette" hittest="false" />
-                                    <Panel class="ArtScrim" hittest="false" />
-                                </Panel>
-                                <Panel class="CardGlow" hittest="false" />
-                                <Button id="GunnerSelect" class="CardSelectArea" hittestchildren="false">
-                                    <Panel class="CardInfo">
-                                        <Panel class="InfoRule" hittest="false" />
-                                        <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="GUNNER" hittest="false" />
-                                        <Label class="CardType" text="AGILITY / INTELLIGENCE" hittest="false" />
-                                    </Panel>
-                                    <Panel class="ButtonRule" hittest="false" />
-                                    <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
-                                </Button>
-                            </Panel>
-                          </Panel>
+                            <Panel id="ClassCarouselTrack" />
                         </Panel>
                         <Button id="CarouselRight" class="CarouselArrow" hittestchildren="false"><Label text="›" /></Button>
                     </Panel>
-                    <Panel id="CarouselFooter"><Label id="CarouselPageLabel" text="WARRIOR" /><Label text="ARROWS TO BROWSE • DRAG TO ROTATE • CLICK A SIDE CARD TO FOCUS IT" /></Panel>
+                    <Panel id="CarouselFooter"><Label id="CarouselPageLabel" text="" /><Label text="ARROWS TO BROWSE • DRAG TO ROTATE • CLICK A SIDE CARD TO FOCUS IT" /></Panel>
                 </Panel>
 
                 <Panel id="AscendencyStage" class="SelectionStage AscendencyStage HiddenStage">
@@ -157,8 +33,8 @@
                 </Panel>
 
                 <Panel id="SelectionFooter">
-                    <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedRole" text="Select a class to reveal its ascendancys" /></Panel>
-                    <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" hittestchildren="false"><Label id="ConfirmLabel" text="CONFIRM ASCENDENCY" /></Button></Panel>
+                    <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedRole" text="Select a class to reveal its ascendancies" /></Panel>
+                    <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" hittestchildren="false"><Label id="ConfirmLabel" text="CONFIRM ASCENDANCY" /></Button></Panel>
                 </Panel>
                 <Panel id="PartyFooter"><Label id="PartyStatus" text="Preparing party…" /><Label text="Your ascendancy becomes your playable hero." /></Panel>
             </Panel>
