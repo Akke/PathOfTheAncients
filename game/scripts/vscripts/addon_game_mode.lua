@@ -80,7 +80,10 @@ function PathOfTheAncients:InitGameMode()
 
     ListenToGameEvent(
         "player_connect_full",
-        function() self:PublishPartyState() end,
+        function()
+            self:AssignTeams()
+            self:PublishPartyState()
+        end,
         nil
     )
     ListenToGameEvent(
@@ -103,6 +106,18 @@ function PathOfTheAncients:IsValidPlayer(playerID)
         and playerID >= 0
         and PlayerResource:IsValidPlayerID(playerID)
         and PlayerResource:GetPlayer(playerID) ~= nil
+end
+
+function PathOfTheAncients:AssignTeams()
+    local assigned = 0
+    for playerID = 0, DOTA_MAX_TEAM_PLAYERS - 1 do
+        if self:IsValidPlayer(playerID) and PlayerResource:GetTeam(playerID) ~= DOTA_TEAM_GOODGUYS then
+            PlayerResource:SetCustomTeamAssignment(playerID, DOTA_TEAM_GOODGUYS)
+            assigned = assigned + 1
+            print("[POA] Assigned player " .. tostring(playerID) .. " to team " .. tostring(DOTA_TEAM_GOODGUYS))
+        end
+    end
+    return assigned
 end
 
 function PathOfTheAncients:SendToPlayer(playerID, eventName, payload)
@@ -167,6 +182,8 @@ function PathOfTheAncients:OnConfirmSelection(event)
         message = archetype.display_name .. " confirmed",
     })
 
+    self:AssignTeams()
+
     local allPlayersReady = self:AllConnectedPlayersReady()
     local published, publishError = pcall(function()
         self:PublishPartyState()
@@ -184,6 +201,10 @@ function PathOfTheAncients:OnConfirmSelection(event)
         GameRules:ForceGameStart()
     elseif allPlayersReady then
         print("[POA] All players confirmed, but hero assignment is incomplete; game start deferred")
+    else
+        print("[POA] Game start deferred: connected="
+            .. tostring(self:GetConnectedPlayerCount())
+            .. ", ready=" .. tostring(self:GetReadyPlayerCount()))
     end
 end
 
@@ -275,6 +296,7 @@ function PathOfTheAncients:OnGameRulesStateChange()
     -- A zero auto-launch delay does not reliably skip the setup screen on
     -- every build, so force it closed as soon as the setup state is entered.
     if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
+        self:AssignTeams()
         GameRules:FinishCustomGameSetup()
         return
     end
@@ -309,8 +331,7 @@ end
 function PathOfTheAncients:GetConnectedPlayerCount()
     local count = 0
     for playerID = 0, DOTA_MAX_TEAM_PLAYERS - 1 do
-        if self:IsValidPlayer(playerID)
-            and PlayerResource:GetTeam(playerID) == DOTA_TEAM_GOODGUYS then
+        if self:IsValidPlayer(playerID) then
             count = count + 1
         end
     end
