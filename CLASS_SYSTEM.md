@@ -14,22 +14,22 @@ Server-side selection validation must still accept the same ascendancy keys and 
 | Warrior | Mars (`npc_dota_hero_mars`) | Berserker | Wraith King (`npc_dota_hero_skeleton_king`) | Arcana desired |
 | Warrior | Mars (`npc_dota_hero_mars`) | Slayer | Spectre (`npc_dota_hero_spectre`) | Base |
 | Ranger | Hoodwink (`npc_dota_hero_hoodwink`) | Deadeye | Windranger (`npc_dota_hero_windrunner`) | Base |
+| Ranger | Hoodwink (`npc_dota_hero_hoodwink`) | Gunslinger | Muerta (`npc_dota_hero_muerta`) | Base |
 | Ranger | Hoodwink (`npc_dota_hero_hoodwink`) | Witch Hunter | Drow Ranger (`npc_dota_hero_drow_ranger`) | Arcana desired |
-| Ranger | Hoodwink (`npc_dota_hero_hoodwink`) | Bone Fletcher | Clinkz (`npc_dota_hero_clinkz`) | Base |
 | Mage | Invoker (`npc_dota_hero_invoker`) | Fire Mage | Lina (`npc_dota_hero_lina`) | Base |
 | Mage | Invoker (`npc_dota_hero_invoker`) | Frost Mage | Crystal Maiden (`npc_dota_hero_crystal_maiden`) | Base |
 | Mage | Invoker (`npc_dota_hero_invoker`) | Lightning Mage | Zeus (`npc_dota_hero_zuus`) | Base |
+| Mercenary | Anti-Mage (`npc_dota_hero_antimage`) | Artillerist | Gyrocopter (`npc_dota_hero_gyrocopter`) | Base |
 | Mercenary | Anti-Mage (`npc_dota_hero_antimage`) | Death Blade | Legion Commander (`npc_dota_hero_legion_commander`) | Arcana desired |
-| Mercenary | Anti-Mage (`npc_dota_hero_antimage`) | Trickster | Monkey King (`npc_dota_hero_monkey_king`) | Base |
-| Mercenary | Anti-Mage (`npc_dota_hero_antimage`) | Drunkard | Brewmaster (`npc_dota_hero_brewmaster`) | Base |
+| Mercenary | Anti-Mage (`npc_dota_hero_antimage`) | Bloodhound | Bounty Hunter (`npc_dota_hero_bounty_hunter`) | Base |
 | Specialist | Arc Warden (`npc_dota_hero_arc_warden`) | Druid | Lone Druid (`npc_dota_hero_lone_druid`) | Base |
 | Specialist | Arc Warden (`npc_dota_hero_arc_warden`) | Spiritkin | Void Spirit (`npc_dota_hero_void_spirit`) | Base |
 | Specialist | Arc Warden (`npc_dota_hero_arc_warden`) | Summoner | Warlock (`npc_dota_hero_warlock`) | Base |
-| Gunner | Snapfire (`npc_dota_hero_snapfire`) | Gunslinger | Muerta (`npc_dota_hero_muerta`) | Base |
-| Gunner | Snapfire (`npc_dota_hero_snapfire`) | Artillerist | Gyrocopter (`npc_dota_hero_gyrocopter`) | Base |
-| Gunner | Snapfire (`npc_dota_hero_snapfire`) | Sharpshooter | Sniper (`npc_dota_hero_sniper`) | Base |
+| Performer | Monkey King (`npc_dota_hero_monkey_king`) | Bard | Largo (`npc_dota_hero_largo`) | Base |
+| Performer | Monkey King (`npc_dota_hero_monkey_king`) | Drunkard | Brewmaster (`npc_dota_hero_brewmaster`) | Base |
+| Performer | Monkey King (`npc_dota_hero_monkey_king`) | Puppeteer | Ringmaster (`npc_dota_hero_ringmaster`) | Base |
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | Striker | Marci (`npc_dota_hero_marci`) | Base |
-| Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | Glavier | Void Spirit (`npc_dota_hero_void_spirit`) | Base |
+| Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | Glaivier | Phantom Lancer (`npc_dota_hero_phantom_lancer`) | Base |
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | War Dancer | Axe (`npc_dota_hero_axe`) | Arcana desired |
 
 Arcana and persona entries are UI labels describing presentation intent only. The prototype does not force cosmetics or alter a player's Steam loadout.
