@@ -118,7 +118,7 @@
                                         <Panel class="InfoRule" hittest="false" />
                                         <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
                                         <Label class="CardTitle" text="MARTIAL ARTIST" hittest="false" />
-                                        <Label class="CardType" text="AGILITY / INTELLIGENCE" hittest="false" />
+                                        <Label class="CardType" text="INTELLIGENCE / STRENGTH" hittest="false" />
                                     </Panel>
                                     <Panel class="ButtonRule" hittest="false" />
                                     <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
@@ -136,7 +136,7 @@
                                         <Panel class="InfoRule" hittest="false" />
                                         <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
                                         <Label class="CardTitle" text="GUNNER" hittest="false" />
-                                        <Label class="CardType" text="AGILITY / UNIVERSAL" hittest="false" />
+                                        <Label class="CardType" text="AGILITY / INTELLIGENCE" hittest="false" />
                                     </Panel>
                                     <Panel class="ButtonRule" hittest="false" />
                                     <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>

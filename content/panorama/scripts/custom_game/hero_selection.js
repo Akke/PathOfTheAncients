@@ -27,12 +27,12 @@
             { key: "spiritkin", name: "Spiritkin", hero: "npc_dota_hero_void_spirit", presentation: "Void Spirit", desc: "A rider of the spirit planes, bound to storm, ember and stone." },
             { key: "summoner", name: "Summoner", hero: "npc_dota_hero_warlock", presentation: "Warlock", desc: "A chaos-touched conjurer whose golems and bindings crush all before them." }
         ]},
-        gunner: { card: "GunnerCard", scene: "GunnerScene", select: "GunnerSelect", name: "Gunner", base: "Sniper", attribute: "AGILITY / UNIVERSAL", baseHero: "npc_dota_hero_sniper", desc: "Ranged experts who trust in powder and precision — bullets, bombs and relentless barrages.", ascendencies: [
+        gunner: { card: "GunnerCard", scene: "GunnerScene", select: "GunnerSelect", name: "Gunner", base: "Snapfire", attribute: "AGILITY / INTELLIGENCE", baseHero: "npc_dota_hero_snapfire", desc: "Ranged experts who trust in powder and precision — bullets, bombs and relentless barrages.", ascendencies: [
             { key: "gunslinger", name: "Gunslinger", hero: "npc_dota_hero_muerta", presentation: "Muerta", desc: "A pistol-wielding duelist whose bullets tear through armor and soul alike." },
             { key: "artillerist", name: "Artillerist", hero: "npc_dota_hero_gyrocopter", presentation: "Gyrocopter", desc: "An airborne gunner who blankets the field in rockets, flak and seeking missiles." },
             { key: "sharpshooter", name: "Sharpshooter", hero: "npc_dota_hero_sniper", presentation: "Sniper", desc: "A patient marksman who ends fights from a mile away with one perfect shot." }
         ]},
-        martial_artist: { card: "MartialArtistCard", scene: "MartialArtistScene", select: "MartialArtistSelect", name: "Martial Artist", base: "Juggernaut", attribute: "AGILITY / INTELLIGENCE", baseHero: "npc_dota_hero_juggernaut", desc: "Disciplined artists of unarmed and weapon combat. Martial Artists turn motion itself into a lethal weapon.", ascendencies: [
+        martial_artist: { card: "MartialArtistCard", scene: "MartialArtistScene", select: "MartialArtistSelect", name: "Martial Artist", base: "Juggernaut", attribute: "INTELLIGENCE / STRENGTH", baseHero: "npc_dota_hero_juggernaut", desc: "Disciplined artists of unarmed and weapon combat. Martial Artists turn motion itself into a lethal weapon.", ascendencies: [
             { key: "striker", name: "Striker", hero: "npc_dota_hero_marci", presentation: "Marci", desc: "A loyal fist who vaults between allies and erupts in sudden fury." },
             { key: "glavier", name: "Glavier", hero: "npc_dota_hero_void_spirit", presentation: "Void Spirit", desc: "An astral spearman whose remnant blades guard every angle." },
             { key: "war_dancer", name: "War Dancer", hero: "npc_dota_hero_axe", presentation: "Axe • Arcana desired", desc: "A spinning executioner who dares enemies to strike, and pays them back in full." }

@@ -19,9 +19,9 @@ The hero picker uses two stages. First, the player chooses a base class, which e
 | Specialist | Arc Warden (`npc_dota_hero_arc_warden`) | Druid | Lone Druid (`npc_dota_hero_lone_druid`) | Base |
 | Specialist | Arc Warden (`npc_dota_hero_arc_warden`) | Spiritkin | Void Spirit (`npc_dota_hero_void_spirit`) | Base |
 | Specialist | Arc Warden (`npc_dota_hero_arc_warden`) | Summoner | Warlock (`npc_dota_hero_warlock`) | Base |
-| Gunner | Sniper (`npc_dota_hero_sniper`) | Gunslinger | Muerta (`npc_dota_hero_muerta`) | Base |
-| Gunner | Sniper (`npc_dota_hero_sniper`) | Artillerist | Gyrocopter (`npc_dota_hero_gyrocopter`) | Base |
-| Gunner | Sniper (`npc_dota_hero_sniper`) | Sharpshooter | Sniper (`npc_dota_hero_sniper`) | Base |
+| Gunner | Snapfire (`npc_dota_hero_snapfire`) | Gunslinger | Muerta (`npc_dota_hero_muerta`) | Base |
+| Gunner | Snapfire (`npc_dota_hero_snapfire`) | Artillerist | Gyrocopter (`npc_dota_hero_gyrocopter`) | Base |
+| Gunner | Snapfire (`npc_dota_hero_snapfire`) | Sharpshooter | Sniper (`npc_dota_hero_sniper`) | Base |
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | Striker | Marci (`npc_dota_hero_marci`) | Base |
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | Glavier | Void Spirit (`npc_dota_hero_void_spirit`) | Base |
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | War Dancer | Axe (`npc_dota_hero_axe`) | Arcana desired |
