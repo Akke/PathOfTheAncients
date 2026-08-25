@@ -82,25 +82,25 @@
                                         <Panel class="InfoRule" hittest="false" />
                                         <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
                                         <Label class="CardTitle" text="MERCENARY" hittest="false" />
-                                        <Label class="CardType" text="STRENGTH / AGILITY" hittest="false" />
+                                        <Label class="CardType" text="AGILITY / STRENGTH" hittest="false" />
                                     </Panel>
                                     <Panel class="ButtonRule" hittest="false" />
                                     <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
                                 </Button>
                             </Panel>
-                            <Panel id="DruidCard" class="CardShell BaseCard">
+                            <Panel id="SpecialistCard" class="CardShell BaseCard">
                                 <Panel class="CardArt">
-                                    <DOTAScenePanel id="DruidScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
+                                    <DOTAScenePanel id="SpecialistScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
                                     <Panel class="ArtVignette" hittest="false" />
                                     <Panel class="ArtScrim" hittest="false" />
                                 </Panel>
                                 <Panel class="CardGlow" hittest="false" />
-                                <Button id="DruidSelect" class="CardSelectArea" hittestchildren="false">
+                                <Button id="SpecialistSelect" class="CardSelectArea" hittestchildren="false">
                                     <Panel class="CardInfo">
                                         <Panel class="InfoRule" hittest="false" />
                                         <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="DRUID" hittest="false" />
-                                        <Label class="CardType" text="INTELLIGENCE / STRENGTH" hittest="false" />
+                                        <Label class="CardTitle" text="SPECIALIST" hittest="false" />
+                                        <Label class="CardType" text="UNIVERSAL" hittest="false" />
                                     </Panel>
                                     <Panel class="ButtonRule" hittest="false" />
                                     <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
@@ -124,19 +124,19 @@
                                     <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
                                 </Button>
                             </Panel>
-                            <Panel id="SpiritkinCard" class="CardShell BaseCard">
+                            <Panel id="GunnerCard" class="CardShell BaseCard">
                                 <Panel class="CardArt">
-                                    <DOTAScenePanel id="SpiritkinScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
+                                    <DOTAScenePanel id="GunnerScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
                                     <Panel class="ArtVignette" hittest="false" />
                                     <Panel class="ArtScrim" hittest="false" />
                                 </Panel>
                                 <Panel class="CardGlow" hittest="false" />
-                                <Button id="SpiritkinSelect" class="CardSelectArea" hittestchildren="false">
+                                <Button id="GunnerSelect" class="CardSelectArea" hittestchildren="false">
                                     <Panel class="CardInfo">
                                         <Panel class="InfoRule" hittest="false" />
                                         <Panel class="CardEmblem" hittest="false"><Panel class="CardEmblemCore" hittest="false" /></Panel>
-                                        <Label class="CardTitle" text="SPIRITKIN" hittest="false" />
-                                        <Label class="CardType" text="UNIVERSAL" hittest="false" />
+                                        <Label class="CardTitle" text="GUNNER" hittest="false" />
+                                        <Label class="CardType" text="AGILITY / UNIVERSAL" hittest="false" />
                                     </Panel>
                                     <Panel class="ButtonRule" hittest="false" />
                                     <Panel class="LearnMoreRow" hittest="false"><Panel class="LearnMoreLine Left" hittest="false" /><Label class="LearnMoreLabel" text="Learn More" hittest="false" /><Panel class="LearnMoreLine Right" hittest="false" /></Panel>
