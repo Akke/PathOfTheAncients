@@ -24,4 +24,12 @@ content/dota_addons/labyrinth_of_the_ancients -> repository content/
 game/dota_addons/labyrinth_of_the_ancients    -> repository game/
 ```
 
+On Windows, enable Developer Mode or open Command Prompt as Administrator, then run:
+
+```bat
+setup_dota_links.bat "C:\Program Files (x86)\Steam\steamapps\common\dota 2 beta"
+```
+
+The batch file creates the same two directory symlinks and refuses to replace an existing addon path.
+
 The reusable compiler and watcher are documented separately in `~/Documents/dota 2 beta/COMPILING_ADDONS.md` on the current development machine.
