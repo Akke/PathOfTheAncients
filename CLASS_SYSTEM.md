@@ -1,8 +1,8 @@
 # Class Selection System
 
-The hero picker uses two stages. First, the player chooses a base class, which establishes the class identity and determines the three specialist options shown next. The player then chooses a specialist; that specialist's mapped Dota hero is the playable hero spawned after confirmation. Back navigation returns to the six base classes and clears the specialist choice.
+The hero picker uses two stages. First, the player chooses a base class, which establishes the class identity and determines the three ascendency options shown next. The player then chooses an ascendency; that ascendency's mapped Dota hero is the playable hero spawned after confirmation. Back navigation returns to the seven base classes and clears the ascendancy choice.
 
-| Base class | Identity hero | Specialist | Playable hero | Presentation intent |
+| Base class | Identity hero | Ascendancy | Playable hero | Presentation intent |
 |---|---|---|---|---|
 | Warrior | Mars (`npc_dota_hero_mars`) | Paladin | Omniknight (`npc_dota_hero_omniknight`) | Base |
 | Warrior | Mars (`npc_dota_hero_mars`) | Berserker | Wraith King (`npc_dota_hero_skeleton_king`) | Arcana desired |
@@ -28,6 +28,6 @@ The hero picker uses two stages. First, the player chooses a base class, which e
 
 Arcana and persona entries are UI labels describing presentation intent only. The prototype does not force cosmetics or alter a player's Steam loadout.
 
-The current implementation boundary is selection, confirmation, party readiness, and assignment/control of the chosen specialist hero. It does not implement class or specialist abilities, stats, progression, or combat systems.
+The current implementation boundary is selection, confirmation, party readiness, and assignment/control of the chosen ascendancy hero. It does not implement class or ascendancy abilities, stats, progression, or combat systems.
 
 This implementation has passed static source validation but is not claimed to be tested in-engine.

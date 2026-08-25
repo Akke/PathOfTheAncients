@@ -8,7 +8,7 @@
                 <Panel id="Header">
                     <Label id="Eyebrow" text="LABYRINTH OF THE ANCIENTS" />
                     <Label id="ScreenTitle" text="Choose Your Class" />
-                    <Label id="ScreenSubtitle" text="Choose a path, then select one of its three specialists." />
+                    <Label id="ScreenSubtitle" text="Choose a path, then select one of its three ascendancys." />
                 </Panel>
 
                 <Panel id="BaseStage" class="SelectionStage">
@@ -149,18 +149,18 @@
                     <Panel id="CarouselFooter"><Label id="CarouselPageLabel" text="WARRIOR" /><Label text="ARROWS TO BROWSE • DRAG TO ROTATE • CLICK A SIDE CARD TO FOCUS IT" /></Panel>
                 </Panel>
 
-                <Panel id="SpecialistStage" class="SelectionStage SpecialistStage HiddenStage">
-                    <Panel id="SpecialistNav"><Button id="BackButton" hittestchildren="false"><Label text="‹ BACK TO CLASSES" /></Button><Label id="SpecialistHeading" text="Choose a Specialist" /></Panel>
-                    <Panel id="SpecialistBody">
-                        <Panel id="SpecialistCards" />
+                <Panel id="AscendencyStage" class="SelectionStage AscendencyStage HiddenStage">
+                    <Panel id="AscendencyNav"><Button id="BackButton" hittestchildren="false"><Label text="‹ BACK TO CLASSES" /></Button><Label id="AscendencyHeading" text="Choose an Ascendancy" /></Panel>
+                    <Panel id="AscendencyBody">
+                        <Panel id="AscendencyCards" />
                     </Panel>
                 </Panel>
 
                 <Panel id="SelectionFooter">
-                    <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedRole" text="Select a class to reveal its specialists" /></Panel>
-                    <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" hittestchildren="false"><Label id="ConfirmLabel" text="CONFIRM SPECIALIST" /></Button></Panel>
+                    <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedRole" text="Select a class to reveal its ascendancys" /></Panel>
+                    <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" hittestchildren="false"><Label id="ConfirmLabel" text="CONFIRM ASCENDENCY" /></Button></Panel>
                 </Panel>
-                <Panel id="PartyFooter"><Label id="PartyStatus" text="Preparing party…" /><Label text="Your specialist becomes your playable hero." /></Panel>
+                <Panel id="PartyFooter"><Label id="PartyStatus" text="Preparing party…" /><Label text="Your ascendancy becomes your playable hero." /></Panel>
             </Panel>
         </Panel>
     </Panel>

@@ -2,37 +2,37 @@
     "use strict";
 
     var CLASSES = {
-        warrior: { card: "WarriorCard", scene: "WarriorScene", select: "WarriorSelect", name: "Warrior", base: "Mars", attribute: "STRENGTH", baseHero: "npc_dota_hero_mars", desc: "Frontline masters of steel and fury. Warriors hold the line, shield their allies and break enemy ranks in a single charge.", specialists: [
+        warrior: { card: "WarriorCard", scene: "WarriorScene", select: "WarriorSelect", name: "Warrior", base: "Mars", attribute: "STRENGTH", baseHero: "npc_dota_hero_mars", desc: "Frontline masters of steel and fury. Warriors hold the line, shield their allies and break enemy ranks in a single charge.", ascendencies: [
             { key: "paladin", name: "Paladin", hero: "npc_dota_hero_omniknight", presentation: "Omniknight", desc: "A holy bulwark who mends wounds in the thick of battle and turns aside death itself." },
             { key: "berserker", name: "Berserker", hero: "npc_dota_hero_skeleton_king", presentation: "Wraith King • Arcana desired", desc: "An unkillable warlord who feeds on blood and rises again with every fall." },
             { key: "slayer", name: "Slayer", hero: "npc_dota_hero_spectre", presentation: "Spectre", desc: "A spectral huntress who isolates her prey and punishes any who stand alone." }
         ]},
-        ranger: { card: "RangerCard", scene: "RangerScene", select: "RangerSelect", name: "Ranger", base: "Hoodwink", attribute: "AGILITY", baseHero: "npc_dota_hero_hoodwink", desc: "Swift skirmishers and deadly marksmen. Rangers control the battlefield from afar, striking where the enemy is weakest.", specialists: [
+        ranger: { card: "RangerCard", scene: "RangerScene", select: "RangerSelect", name: "Ranger", base: "Hoodwink", attribute: "AGILITY", baseHero: "npc_dota_hero_hoodwink", desc: "Swift skirmishers and deadly marksmen. Rangers control the battlefield from afar, striking where the enemy is weakest.", ascendencies: [
             { key: "gunslinger", name: "Gunslinger", hero: "npc_dota_hero_muerta", presentation: "Muerta", desc: "A pistol-wielding duelist whose bullets tear through armor and soul alike." },
             { key: "sharpshooter", name: "Sharpshooter", hero: "npc_dota_hero_windrunner", presentation: "Windranger", desc: "A precision archer who binds foes together and unleashes relentless volleys." },
             { key: "witch_hunter", name: "Witch Hunter", hero: "npc_dota_hero_drow_ranger", presentation: "Drow Ranger • Arcana desired", desc: "A cold-eyed stalker whose frost-fletched arrows slow the arcane to a crawl." }
         ]},
-        mage: { card: "MageCard", scene: "MageScene", select: "MageSelect", name: "Mage", base: "Invoker", attribute: "INTELLIGENCE", baseHero: "npc_dota_hero_invoker", desc: "Wielders of raw arcane force. Mages reshape the fight with fire, frost and storm before their foes can close the distance.", specialists: [
+        mage: { card: "MageCard", scene: "MageScene", select: "MageSelect", name: "Mage", base: "Invoker", attribute: "INTELLIGENCE", baseHero: "npc_dota_hero_invoker", desc: "Wielders of raw arcane force. Mages reshape the fight with fire, frost and storm before their foes can close the distance.", ascendencies: [
             { key: "fire_mage", name: "Fire Mage", hero: "npc_dota_hero_lina", presentation: "Lina", desc: "A storm of living flame that consumes packs of enemies in a blink." },
             { key: "frost_mage", name: "Frost Mage", hero: "npc_dota_hero_crystal_maiden", presentation: "Crystal Maiden", desc: "A winter weaver who freezes the battlefield solid and feeds allies power." },
             { key: "lightning_mage", name: "Lightning Mage", hero: "npc_dota_hero_zuus", presentation: "Zeus", desc: "A thunder god's heir whose bolts arc from foe to foe without mercy." }
         ]},
-        mercenary: { card: "MercenaryCard", scene: "MercenaryScene", select: "MercenarySelect", name: "Mercenary", base: "Legion Commander", attribute: "STRENGTH / AGILITY", baseHero: "npc_dota_hero_legion_commander", desc: "Versatile fighters for hire. Mercenaries trade bladework, firepower and trickery — whatever the contract demands.", specialists: [
+        mercenary: { card: "MercenaryCard", scene: "MercenaryScene", select: "MercenarySelect", name: "Mercenary", base: "Legion Commander", attribute: "STRENGTH / AGILITY", baseHero: "npc_dota_hero_legion_commander", desc: "Versatile fighters for hire. Mercenaries trade bladework, firepower and trickery — whatever the contract demands.", ascendencies: [
             { key: "death_blade", name: "Death Blade", hero: "npc_dota_hero_antimage", presentation: "Anti-Mage • Persona desired", desc: "A spell-hunting blade who burns mana with every strike and blinks between kills." },
             { key: "artillerist", name: "Artillerist", hero: "npc_dota_hero_gyrocopter", presentation: "Gyrocopter", desc: "An airborne gunner who blankets the field in rockets, flak and seeking missiles." },
             { key: "trickster", name: "Trickster", hero: "npc_dota_hero_monkey_king", presentation: "Monkey King", desc: "A staff-wielding prankster who fights from the treetops and strikes wide." }
         ]},
-        druid: { card: "DruidCard", scene: "DruidScene", select: "DruidSelect", name: "Druid", base: "Nature's Prophet", attribute: "INTELLIGENCE / STRENGTH", baseHero: "npc_dota_hero_furion", desc: "Shapeshifting wardens of the wild. Druids fight beside fang, claw and wing, borrowing the shapes of beasts.", specialists: [
+        druid: { card: "DruidCard", scene: "DruidScene", select: "DruidSelect", name: "Druid", base: "Nature's Prophet", attribute: "INTELLIGENCE / STRENGTH", baseHero: "npc_dota_hero_furion", desc: "Shapeshifting wardens of the wild. Druids fight beside fang, claw and wing, borrowing the shapes of beasts.", ascendencies: [
             { key: "wolf", name: "Wolf", hero: "npc_dota_hero_lycan", presentation: "Lycan", desc: "A pack leader who hunts beside feral wolves and revels in the chase." },
             { key: "bear", name: "Bear", hero: "npc_dota_hero_lone_druid", presentation: "Lone Druid", desc: "A beast-bonded wanderer whose spirit companion rends enemies apart." },
             { key: "dragon", name: "Dragon", hero: "npc_dota_hero_dragon_knight", presentation: "Dragon Knight", desc: "An armored knight who sheds his shell to become elder dragonfire." }
         ]},
-        martial_artist: { card: "MartialArtistCard", scene: "MartialArtistScene", select: "MartialArtistSelect", name: "Martial Artist", base: "Juggernaut", attribute: "AGILITY / INTELLIGENCE", baseHero: "npc_dota_hero_juggernaut", desc: "Disciplined artists of unarmed and weapon combat. Martial Artists turn motion itself into a lethal weapon.", specialists: [
+        martial_artist: { card: "MartialArtistCard", scene: "MartialArtistScene", select: "MartialArtistSelect", name: "Martial Artist", base: "Juggernaut", attribute: "AGILITY / INTELLIGENCE", baseHero: "npc_dota_hero_juggernaut", desc: "Disciplined artists of unarmed and weapon combat. Martial Artists turn motion itself into a lethal weapon.", ascendencies: [
             { key: "striker", name: "Striker", hero: "npc_dota_hero_marci", presentation: "Marci", desc: "A loyal fist who vaults between allies and erupts in sudden fury." },
             { key: "glavier", name: "Glavier", hero: "npc_dota_hero_void_spirit", presentation: "Void Spirit", desc: "An astral spearman whose remnant blades guard every angle." },
             { key: "war_dancer", name: "War Dancer", hero: "npc_dota_hero_axe", presentation: "Axe • Arcana desired", desc: "A spinning executioner who dares enemies to strike, and pays them back in full." }
         ]},
-        spiritkin: { card: "SpiritkinCard", scene: "SpiritkinScene", select: "SpiritkinSelect", name: "Spiritkin", base: "Void Spirit", attribute: "UNIVERSAL", baseHero: "npc_dota_hero_void_spirit", desc: "Bound to the elemental spirits. Spiritkin ride storm, ember and stone between the planes of the world.", specialists: [
+        spiritkin: { card: "SpiritkinCard", scene: "SpiritkinScene", select: "SpiritkinSelect", name: "Spiritkin", base: "Void Spirit", attribute: "UNIVERSAL", baseHero: "npc_dota_hero_void_spirit", desc: "Bound to the elemental spirits. Spiritkin ride storm, ember and stone between the planes of the world.", ascendencies: [
             { key: "storm", name: "Storm", hero: "npc_dota_hero_storm_spirit", presentation: "Storm Spirit", desc: "A living thunderclap who rides the lightning across the fight." },
             { key: "ember", name: "Ember", hero: "npc_dota_hero_ember_spirit", presentation: "Ember Spirit", desc: "A flame dancer who dashes between burning remnants, striking all at once." },
             { key: "earth", name: "Earth", hero: "npc_dota_hero_earth_spirit", presentation: "Earth Spirit", desc: "A rolling boulder who shatters stone and magnetizes everything in his path." }
@@ -40,7 +40,7 @@
     };
 
     var selectedClass = null;
-    var selectedSpecialist = null;
+    var selectedAscendency = null;
     var confirmed = false;
     var classOrder = ["warrior", "ranger", "mage", "mercenary", "druid", "martial_artist", "spiritkin"];
     var focusIndex = 0;
@@ -57,7 +57,7 @@
         return positions;
     })();
     var classPreviewRequest = 0;
-    var specPreviewRequest = 0;
+    var ascendPreviewRequest = 0;
 
     function OffsetFromFocus(index) {
         var count = classOrder.length;
@@ -112,33 +112,33 @@
         });
     }
 
-    function FindSpecialist(key) {
+    function FindAscendency(key) {
         if (!selectedClass) return null;
-        var list = CLASSES[selectedClass].specialists;
+        var list = CLASSES[selectedClass].ascendencies;
         for (var i = 0; i < list.length; i++) if (list[i].key === key) return list[i];
         return null;
     }
 
-    function FocusSpecialist(key) {
-        var specialist = FindSpecialist(key);
-        if (!specialist || !selectedClass) return;
+    function FocusAscendency(key) {
+        var ascendancy = FindAscendency(key);
+        if (!ascendancy || !selectedClass) return;
         var definition = CLASSES[selectedClass];
-        definition.specialists.forEach(function (item) {
+        definition.ascendencies.forEach(function (item) {
             var tab = $("#Tab_" + item.key);
             if (tab) tab.SetHasClass("Selected", item.key === key);
         });
-        $("#AscendName").text = specialist.name.toUpperCase();
-        $("#AscendDesc").text = specialist.desc;
+        $("#AscendName").text = ascendancy.name.toUpperCase();
+        $("#AscendDesc").text = ascendancy.desc;
         var image = $("#AscendImage");
-        if (image) image.SetImage("s2r://panorama/images/heroes/" + specialist.hero + "_png.vtex");
-        specPreviewRequest += 1;
-        var request = specPreviewRequest;
+        if (image) image.SetImage("s2r://panorama/images/heroes/" + ascendancy.hero + "_png.vtex");
+        ascendPreviewRequest += 1;
+        var request = ascendPreviewRequest;
         $.Schedule(0.0, function () {
-            if (request !== specPreviewRequest || $("#SpecialistStage").BHasClass("HiddenStage")) return;
+            if (request !== ascendPreviewRequest || $("#AscendencyStage").BHasClass("HiddenStage")) return;
             var scene = $("#AscendScene");
             if (scene) {
-                scene.SetUnit(specialist.hero, "default", true);
-                $.Msg("[LOA UI] Showcase render: " + specialist.hero);
+                scene.SetUnit(ascendancy.hero, "default", true);
+                $.Msg("[LOA UI] Showcase render: " + ascendancy.hero);
             }
         });
     }
@@ -146,14 +146,14 @@
     function ShowClassStage() {
         if (confirmed) return;
         selectedClass = null;
-        selectedSpecialist = null;
-        $("#SpecialistCards").RemoveAndDeleteChildren();
+        selectedAscendency = null;
+        $("#AscendencyCards").RemoveAndDeleteChildren();
         $("#BaseStage").RemoveClass("HiddenStage");
-        $("#SpecialistStage").AddClass("HiddenStage");
+        $("#AscendencyStage").AddClass("HiddenStage");
         $("#ScreenTitle").text = "Choose Your Class";
-        $("#ScreenSubtitle").text = "Choose a path, then select one of its three specialists.";
+        $("#ScreenSubtitle").text = "Choose a path, then select one of its three ascendencies.";
         $("#SelectedHeroName").text = "Choose a class";
-        $("#SelectedRole").text = "Select a class to reveal its specialists";
+        $("#SelectedRole").text = "Select a class to reveal its ascendencies";
         $("#ReadyStatus").text = "Choose a class to continue";
         $("#ConfirmButton").enabled = false;
         QueueVisibleClassPreviews();
@@ -162,9 +162,9 @@
     function SelectClass(classKey) {
         if (confirmed || !CLASSES[classKey]) return;
         selectedClass = classKey;
-        selectedSpecialist = null;
+        selectedAscendency = null;
         var definition = CLASSES[classKey];
-        var holder = $("#SpecialistCards");
+        var holder = $("#AscendencyCards");
         holder.RemoveAndDeleteChildren();
         var layout = $.CreatePanel("Panel", holder, "AscendLayout"); layout.AddClass("AscendLayout"); layout.hittest = false;
         var showcase = $.CreatePanel("Panel", layout, "AscendShowcase"); showcase.AddClass("AscendShowcase");
@@ -173,52 +173,52 @@
         var overlay = $.CreatePanel("Panel", showcase, ""); overlay.AddClass("AscendOverlay"); overlay.hittest = false;
         var backdrop = $.CreatePanel("Panel", overlay, ""); backdrop.AddClass("AscendNameBackdrop"); backdrop.hittest = false;
         var overlayName = $.CreatePanel("Label", backdrop, "AscendName"); overlayName.AddClass("AscendNameText"); overlayName.hittest = false;
-        var overlayDesc = $.CreatePanel("Label", backdrop, "AscendDesc"); overlayDesc.AddClass("AscendDescText"); overlayDesc.text = definition.specialists[0].desc; overlayDesc.hittest = false;
+        var overlayDesc = $.CreatePanel("Label", backdrop, "AscendDesc"); overlayDesc.AddClass("AscendDescText"); overlayDesc.text = definition.ascendencies[0].desc; overlayDesc.hittest = false;
         var tabsHolder = $.CreatePanel("Panel", layout, "AscendTabs"); tabsHolder.AddClass("AscendTabs"); tabsHolder.hittest = false;
-        definition.specialists.forEach(function (specialist) {
-            var tab = $.CreatePanel("Button", tabsHolder, "Tab_" + specialist.key);
+        definition.ascendencies.forEach(function (ascendancy) {
+            var tab = $.CreatePanel("Button", tabsHolder, "Tab_" + ascendancy.key);
             tab.AddClass("AscendTab"); tab.hittestchildren = false;
             var copy = $.CreatePanel("Panel", tab, ""); copy.AddClass("AscendTabCopy"); copy.hittest = false;
-            var tabName = $.CreatePanel("Label", copy, ""); tabName.AddClass("AscendTabName"); tabName.text = specialist.name.toUpperCase(); tabName.hittest = false;
-            tab.SetPanelEvent("onactivate", function () { SelectSpecialist(specialist.key); });
+            var tabName = $.CreatePanel("Label", copy, ""); tabName.AddClass("AscendTabName"); tabName.text = ascendancy.name.toUpperCase(); tabName.hittest = false;
+            tab.SetPanelEvent("onactivate", function () { SelectAscendency(ascendancy.key); });
         });
         var portrait = $.CreatePanel("DOTAScenePanel", tabsHolder, "AscendScene"); portrait.AddClass("SpecPortrait"); portrait.allowrotation = true;
         $("#BaseStage").AddClass("HiddenStage");
-        $("#SpecialistStage").RemoveClass("HiddenStage");
-        $("#SpecialistHeading").text = "CHOOSE YOUR PATH";
+        $("#AscendencyStage").RemoveClass("HiddenStage");
+        $("#AscendencyHeading").text = "CHOOSE YOUR PATH";
         $("#ScreenTitle").text = definition.name + " Ascension";
         $("#ScreenSubtitle").text = definition.base + " ascends into three paths — inspect their gifts, then confirm below.";
         $("#SelectedHeroName").text = definition.name;
         $("#SelectedRole").text = "Base identity: " + definition.base;
         $("#ReadyStatus").text = "Choose a path to continue";
         $("#ConfirmButton").enabled = false;
-        FocusSpecialist(definition.specialists[0].key);
+        FocusAscendency(definition.ascendencies[0].key);
         $.Msg("[LOA UI] Selected base class: " + classKey);
     }
 
-    function SelectSpecialist(key) {
+    function SelectAscendency(key) {
         if (confirmed) return;
-        var specialist = FindSpecialist(key);
-        if (!specialist) return;
-        FocusSpecialist(key);
-        selectedSpecialist = key;
-        $("#SelectedHeroName").text = CLASSES[selectedClass].name + " — " + specialist.name;
-        $("#SelectedRole").text = specialist.presentation;
+        var ascendancy = FindAscendency(key);
+        if (!ascendancy) return;
+        FocusAscendency(key);
+        selectedAscendency = key;
+        $("#SelectedHeroName").text = CLASSES[selectedClass].name + " — " + ascendancy.name;
+        $("#SelectedRole").text = ascendancy.presentation;
         $("#ReadyStatus").text = "Ready to confirm";
         $("#ConfirmButton").enabled = true;
-        $.Msg("[LOA UI] Selected specialist: " + key + " (" + specialist.hero + ")");
+        $.Msg("[LOA UI] Selected ascendancy: " + key + " (" + ascendancy.hero + ")");
         GameEvents.SendCustomGameEventToServer("loa_preview_selection", { archetype: key });
     }
 
     function ConfirmSelection() {
-        if (confirmed || !selectedSpecialist) return;
+        if (confirmed || !selectedAscendency) return;
         confirmed = true; $("#HeroSelectionRoot").AddClass("IsConfirming"); $("#ConfirmButton").enabled = false;
         $("#ConfirmLabel").text = "LOCKING IN…"; $("#ReadyStatus").text = "Waiting for the server";
-        GameEvents.SendCustomGameEventToServer("loa_confirm_selection", { archetype: selectedSpecialist });
+        GameEvents.SendCustomGameEventToServer("loa_confirm_selection", { archetype: selectedAscendency });
     }
 
-    function OnSelectionAccepted(event) { $.Msg("[LOA UI] Selection accepted: " + (event.archetype || "unknown")); confirmed = true; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#HeroSelectionRoot").AddClass("Confirmed"); $("#ConfirmLabel").text = "READY"; $("#ReadyStatus").text = event.message || "Specialist confirmed"; }
-    function OnSelectionRejected(event) { confirmed = false; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#ConfirmButton").enabled = selectedSpecialist !== null; $("#ConfirmLabel").text = "CONFIRM SPECIALIST"; $("#ReadyStatus").text = event.message || "Selection could not be confirmed"; }
+    function OnSelectionAccepted(event) { $.Msg("[LOA UI] Selection accepted: " + (event.archetype || "unknown")); confirmed = true; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#HeroSelectionRoot").AddClass("Confirmed"); $("#ConfirmLabel").text = "READY"; $("#ReadyStatus").text = event.message || "Ascendency confirmed"; }
+    function OnSelectionRejected(event) { confirmed = false; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#ConfirmButton").enabled = selectedAscendency !== null; $("#ConfirmLabel").text = "CONFIRM ASCENDENCY"; $("#ReadyStatus").text = event.message || "Selection could not be confirmed"; }
     function OnPartyReady() { $.Msg("[LOA UI] Party ready; game start requested"); var root = $("#HeroSelectionRoot"), wrapper = root && root.GetParent(), context = $.GetContextPanel(); root.AddClass("PartyReady"); root.hittest = false; root.hittestchildren = false; if (wrapper) { wrapper.hittest = false; wrapper.hittestchildren = false; } context.hittest = false; context.hittestchildren = false; context.style.visibility = "collapse"; $.Msg("[LOA UI] Hero selection context collapsed; gameplay input released"); }
     function UpdatePartyStatus() { var state = CustomNetTables.GetTableValue("loa_selection", "party"); if (!state) { $("#PartyStatus").text = "Choose your class"; return; } $("#PartyStatus").text = (Number(state.ready_count) || 0) + " / " + (Number(state.player_count) || 1) + " players ready"; }
 
