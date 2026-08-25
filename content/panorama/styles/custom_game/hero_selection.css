@@ -215,14 +215,12 @@
 }
 
 .CardShell:hover {
-    transform: translateY(-7px);
     border: 1px solid #9a9a9a;
     brightness: 1.05;
     saturation: 1;
 }
 
 .CardShell.Selected {
-    transform: translateY(-7px);
     border: 1px solid #b7a06a;
     brightness: 1.08;
     saturation: 1;
@@ -260,6 +258,19 @@
 .CardScene {
     width: 100%;
     height: 100%;
+    transform: scale3d(0.88, 0.88, 1);
+    transform-origin: 50% 50%;
+    transition-property: transform;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+}
+
+.CardShell:hover .CardScene {
+    transform: scale3d(1, 1, 1);
+}
+
+.CardShell.Selected .CardScene {
+    transform: scale3d(1, 1, 1);
 }
 
 .ArtVignette {
