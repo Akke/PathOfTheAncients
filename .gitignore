@@ -1,0 +1,26 @@
+# Dota 2 compiled/runtime outputs
+*_c
+*.vpk
+*.vpk.*
+game/
+build/
+
+# Local backups and temporary files
+*.bak
+*.backup
+*.tmp
+*.temp
+*.orig
+*~
+
+# Editor and OS noise
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Tool caches and logs
+.cache/
+*.log
