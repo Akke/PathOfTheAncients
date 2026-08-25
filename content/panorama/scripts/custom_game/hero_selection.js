@@ -31,15 +31,31 @@
             { key: "striker", name: "Striker", hero: "npc_dota_hero_marci", presentation: "Marci" },
             { key: "glavier", name: "Glavier", hero: "npc_dota_hero_void_spirit", presentation: "Void Spirit" },
             { key: "war_dancer", name: "War Dancer", hero: "npc_dota_hero_axe", presentation: "Axe • Arcana desired" }
+        ]},
+        spiritkin: { card: "SpiritkinCard", scene: "SpiritkinScene", select: "SpiritkinSelect", name: "Spiritkin", base: "Void Spirit", attribute: "UNIVERSAL", baseHero: "npc_dota_hero_void_spirit", specialists: [
+            { key: "storm", name: "Storm", hero: "npc_dota_hero_storm_spirit", presentation: "Storm Spirit" },
+            { key: "ember", name: "Ember", hero: "npc_dota_hero_ember_spirit", presentation: "Ember Spirit" },
+            { key: "earth", name: "Earth", hero: "npc_dota_hero_earth_spirit", presentation: "Earth Spirit" }
         ]}
     };
 
     var selectedClass = null;
     var selectedSpecialist = null;
     var confirmed = false;
-    var classOrder = ["warrior", "ranger", "mage", "mercenary", "druid", "martial_artist"];
+    var classOrder = ["warrior", "ranger", "mage", "mercenary", "druid", "martial_artist", "spiritkin"];
     var focusIndex = 0;
-    var carouselSpacing = 170;
+    var carouselPositions = (function () {
+        var ringScales = [1, 0.8, 0.7, 0.6];
+        var cardWidth = 250;
+        var overlapRatio = 0.10;
+        var positions = [0];
+        for (var d = 1; d < ringScales.length; d++) {
+            var inner = cardWidth * ringScales[d - 1];
+            var outer = cardWidth * ringScales[d];
+            positions.push(positions[d - 1] + (inner + outer) / 2 - overlapRatio * outer);
+        }
+        return positions;
+    })();
     var classPreviewRequest = 0;
     var specPreviewRequest = 0;
 
@@ -60,7 +76,8 @@
             var distance = Math.abs(offset);
             entries.push({ key: key, distance: distance });
             var slot = $("#Slot_" + key);
-            slot.style.transform = "translateX(" + (offset * carouselSpacing) + "px)";
+            var position = carouselPositions[Math.min(distance, carouselPositions.length - 1)];
+            slot.style.transform = "translateX(" + (offset < 0 ? -position : position) + "px)";
             var card = $("#" + CLASSES[key].card);
             card.SetHasClass("Ring1", distance === 1);
             card.SetHasClass("Ring2", distance === 2);

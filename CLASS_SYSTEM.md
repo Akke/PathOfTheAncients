@@ -22,6 +22,9 @@ The hero picker uses two stages. First, the player chooses a base class, which e
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | Striker | Marci (`npc_dota_hero_marci`) | Base |
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | Glavier | Void Spirit (`npc_dota_hero_void_spirit`) | Base |
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | War Dancer | Axe (`npc_dota_hero_axe`) | Arcana desired |
+| Spiritkin | Void Spirit (`npc_dota_hero_void_spirit`) | Storm | Storm Spirit (`npc_dota_hero_storm_spirit`) | Base |
+| Spiritkin | Void Spirit (`npc_dota_hero_void_spirit`) | Ember | Ember Spirit (`npc_dota_hero_ember_spirit`) | Base |
+| Spiritkin | Void Spirit (`npc_dota_hero_void_spirit`) | Earth | Earth Spirit (`npc_dota_hero_earth_spirit`) | Base |
 
 Arcana and persona entries are UI labels describing presentation intent only. The prototype does not force cosmetics or alter a player's Steam loadout.
 

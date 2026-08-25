@@ -96,10 +96,10 @@
 }
 
 .CarouselArrow {
-    width: 64px;
+    width: 54px;
     height: 120px;
     vertical-align: center;
-    margin: 0 8px;
+    margin: 0 4px;
     background-color: #17232ddd;
     border: 1px solid #71818d;
     border-radius: 4px;
@@ -230,8 +230,8 @@
 }
 
 .BaseCard.Ring1 { transform: scale3d(0.8, 0.8, 1); brightness: 0.72; saturation: 0.75; }
-.BaseCard.Ring2 { transform: scale3d(0.66, 0.66, 1); brightness: 0.5; saturation: 0.6; }
-.BaseCard.Ring3 { transform: scale3d(0.55, 0.55, 1); brightness: 0.35; saturation: 0.5; }
+.BaseCard.Ring2 { transform: scale3d(0.7, 0.7, 1); brightness: 0.55; saturation: 0.65; }
+.BaseCard.Ring3 { transform: scale3d(0.6, 0.6, 1); brightness: 0.4; saturation: 0.55; }
 
 .CornerMask {
     width: 18px;
