@@ -194,15 +194,18 @@
 }
 
 .SpecialistCard {
-    margin: 12px 20px;
+    width: 300px;
+    height: 530px;
+    margin: 12px 22px;
+    saturation: 0.9;
+    brightness: 0.95;
 }
 
 .CardShell {
     width: 250px;
     height: 475px;
-    background-color: gradient(linear, 0% 0%, 0% 100%, from(#101317), color-stop(0.55, #07090c), to(#0a0705));
-    border: 1px solid #6f7a84;
-    border-radius: 5px;
+    background-color: gradient(linear, 0% 0%, 0% 100%, from(#0d0d0d), color-stop(0.55, #070707), to(#0a0705));
+    border: 1px solid #666666;
     box-shadow: 0 8px 24px 2 #000000cc;
     saturation: 0.85;
     brightness: 0.9;
@@ -212,40 +215,41 @@
 
 .CardShell:hover {
     transform: translateY(-7px);
-    border: 1px solid #c9d3dc;
+    border: 1px solid #9a9a9a;
     brightness: 1.05;
     saturation: 1;
 }
 
 .CardShell.Selected {
     transform: translateY(-7px);
-    border: 1px solid #e8bd72;
+    border: 1px solid #b7a06a;
     brightness: 1.08;
     saturation: 1;
     box-shadow: 0 0 26px 2 #d99c3d88;
 }
 
-.FrameDiamond {
-    horizontal-align: center;
-    color: #aab6c0;
-    font-size: 11px;
-    text-shadow: 0 1px 3px 1 #000000;
+.CornerMask {
+    width: 18px;
+    height: 18px;
+    background-color: #0c1016;
+    transform: rotateZ(45deg);
 }
 
-.FrameDiamond.Top {
-    margin-top: 5px;
-}
-
-.FrameDiamond.Bottom {
-    vertical-align: bottom;
-    margin-bottom: 4px;
-}
+.CornerMask.TopLeft { horizontal-align: left; vertical-align: top; margin-left: -9px; margin-top: -9px; }
+.CornerMask.TopRight { horizontal-align: right; vertical-align: top; margin-right: -9px; margin-top: -9px; }
+.CornerMask.BottomLeft { horizontal-align: left; vertical-align: bottom; margin-left: -9px; margin-bottom: -9px; }
+.CornerMask.BottomRight { horizontal-align: right; vertical-align: bottom; margin-right: -9px; margin-bottom: -9px; }
 
 .CardArt {
     width: 100%;
     height: 60%;
-    margin-top: 12px;
     overflow: clip;
+}
+
+.SpecialistCard .CardArt {
+    height: 350px;
+    margin-top: 8px;
+    background-color: gradient(linear, 0% 0%, 0% 100%, from(#131313), color-stop(0.3, #202020), color-stop(0.75, #101010), to(#080808));
 }
 
 .CardScene {
@@ -256,13 +260,13 @@
 .ArtVignette {
     width: 100%;
     height: 100%;
-    background-color: gradient(radial, 50% 45%, 0%, 50% 50%, 75%, from(#00000000), to(#000000aa));
+    background-color: gradient(radial, 50% 42%, 0%, 50% 50%, 75%, from(#00000000), to(#000000bb));
 }
 
 .ArtScrim {
     width: 100%;
     height: 100%;
-    background-color: gradient(linear, 0% 55%, 0% 100%, from(#00000000), color-stop(0.75, #05070acc), to(#05070aee));
+    background-color: gradient(linear, 0% 62%, 0% 100%, from(#00000000), color-stop(0.8, #05050588), to(#05050599));
 }
 
 .CardGlow {
@@ -274,17 +278,26 @@
     background-color: gradient(radial, 50% 60%, 0%, 50% 60%, 55%, from(#d98a2e30), to(#d98a2e00));
 }
 
+.SpecialistCard .CardGlow {
+    width: 280px;
+    height: 160px;
+    margin-bottom: 85px;
+    background-color: gradient(radial, 50% 60%, 0%, 50% 60%, 55%, from(#b4691459), to(#b4691400));
+}
+
 .CardSelectArea {
     width: 100%;
-    height: 172px;
+    height: 188px;
     vertical-align: bottom;
     flow-children: down;
     padding-bottom: 14px;
     background-color: gradient(linear, 0% 0%, 0% 100%, from(#0a0d1155), to(#05070ae0));
 }
 
-.CardSelectArea:hover {
-    brightness: 1.25;
+.SpecialistCard .CardSelectArea {
+    height: 174px;
+    padding-bottom: 10px;
+    background-color: #05050500;
 }
 
 .CardInfo {
@@ -295,41 +308,43 @@
 .InfoRule {
     width: 100%;
     height: 1px;
-    background-color: gradient(linear, 0% 0%, 100% 0%, from(#8b98a300), color-stop(0.5, #aab6c0cc), to(#8b98a300));
-}
-
-.InfoDiamond {
-    horizontal-align: center;
-    margin-top: 4px;
-    color: #aab6c0;
-    font-size: 10px;
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#9a9a9a00), color-stop(0.5, #9a9a9acc), to(#9a9a9a00));
 }
 
 .CardEmblem {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     horizontal-align: center;
-    margin-top: 12px;
-    border: 1px solid #c9d3dc;
+    margin-top: 26px;
+    border: 1px solid #cfd6dbaa;
     transform: rotateZ(45deg);
-    box-shadow: 0 0 6px 1 #ffffff22;
+    box-shadow: 0 0 8px 1 #b4691433;
+}
+
+.CardEmblemCore {
+    width: 6px;
+    height: 6px;
+    horizontal-align: center;
+    vertical-align: center;
+    background-color: #e5e5e5;
+    box-shadow: 0 0 6px 1 #e5e5e588;
 }
 
 .CardTitle {
     horizontal-align: center;
-    margin-top: 12px;
-    color: #eef2f5;
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 4px;
+    margin-top: 18px;
+    color: #e5e5e5;
+    font-size: 22px;
+    font-weight: medium;
+    letter-spacing: 2px;
     text-shadow: 0 2px 8px 2 #000000;
 }
 
 .CardType {
     horizontal-align: center;
     margin-top: 3px;
-    color: #8b98a3;
-    font-size: 12px;
+    color: #8d8d8d;
+    font-size: 11px;
     font-weight: bold;
     letter-spacing: 3px;
 }
@@ -337,21 +352,60 @@
 .ButtonRule {
     width: 100%;
     height: 1px;
-    margin-top: 12px;
-    background-color: gradient(linear, 0% 0%, 100% 0%, from(#8b98a300), color-stop(0.5, #aab6c088), to(#8b98a300));
+    margin-top: 24px;
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#9a9a9a00), color-stop(0.5, #9a9a9a88), to(#9a9a9a00));
 }
 
 .LearnMoreLabel {
+    vertical-align: center;
     horizontal-align: center;
-    margin-top: 10px;
-    color: #c3ccd3;
-    font-size: 16px;
+    color: #d6d6d6;
+    font-size: 15px;
     font-weight: semi-bold;
     letter-spacing: 1px;
+    transition-property: color;
+    transition-duration: 0.12s;
 }
 
 .CardShell:hover .LearnMoreLabel {
     color: #ffffff;
+    text-shadow: 0 0 8px 1 #b4691455;
+}
+
+.LearnMoreRow {
+    vertical-align: center;
+    horizontal-align: center;
+    flow-children: right;
+}
+
+.LearnMoreLine {
+    width: 0px;
+    height: 1px;
+    vertical-align: center;
+    margin: 0 8px;
+    transition-property: width;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+.LearnMoreLine.Left {
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#d6d6d600), to(#d6d6d6aa));
+}
+
+.LearnMoreLine.Right {
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#d6d6d6aa), to(#d6d6d600));
+}
+
+.CardShell:hover .LearnMoreLine {
+    width: 26px;
+}
+
+.CardShell:hover .LearnMoreLine.Left {
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#ffffff00), to(#ffffffcc));
+}
+
+.CardShell:hover .LearnMoreLine.Right {
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#ffffffcc), to(#ffffff00));
 }
 
 .CardShell.Selected .LearnMoreLabel {
