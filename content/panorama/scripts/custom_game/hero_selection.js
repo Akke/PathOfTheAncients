@@ -2,40 +2,40 @@
     "use strict";
 
     var CLASSES = {
-        warrior: { card: "WarriorCard", scene: "WarriorScene", select: "WarriorSelect", name: "Warrior", base: "Mars", attribute: "STRENGTH", baseHero: "npc_dota_hero_mars", specialists: [
-            { key: "paladin", name: "Paladin", hero: "npc_dota_hero_omniknight", presentation: "Omniknight" },
-            { key: "berserker", name: "Berserker", hero: "npc_dota_hero_skeleton_king", presentation: "Wraith King • Arcana desired" },
-            { key: "slayer", name: "Slayer", hero: "npc_dota_hero_spectre", presentation: "Spectre" }
+        warrior: { card: "WarriorCard", scene: "WarriorScene", select: "WarriorSelect", name: "Warrior", base: "Mars", attribute: "STRENGTH", baseHero: "npc_dota_hero_mars", desc: "Frontline masters of steel and fury. Warriors hold the line, shield their allies and break enemy ranks in a single charge.", specialists: [
+            { key: "paladin", name: "Paladin", hero: "npc_dota_hero_omniknight", presentation: "Omniknight", desc: "A holy bulwark who mends wounds in the thick of battle and turns aside death itself." },
+            { key: "berserker", name: "Berserker", hero: "npc_dota_hero_skeleton_king", presentation: "Wraith King • Arcana desired", desc: "An unkillable warlord who feeds on blood and rises again with every fall." },
+            { key: "slayer", name: "Slayer", hero: "npc_dota_hero_spectre", presentation: "Spectre", desc: "A spectral huntress who isolates her prey and punishes any who stand alone." }
         ]},
-        ranger: { card: "RangerCard", scene: "RangerScene", select: "RangerSelect", name: "Ranger", base: "Hoodwink", attribute: "AGILITY", baseHero: "npc_dota_hero_hoodwink", specialists: [
-            { key: "gunslinger", name: "Gunslinger", hero: "npc_dota_hero_muerta", presentation: "Muerta" },
-            { key: "sharpshooter", name: "Sharpshooter", hero: "npc_dota_hero_windrunner", presentation: "Windranger" },
-            { key: "witch_hunter", name: "Witch Hunter", hero: "npc_dota_hero_drow_ranger", presentation: "Drow Ranger • Arcana desired" }
+        ranger: { card: "RangerCard", scene: "RangerScene", select: "RangerSelect", name: "Ranger", base: "Hoodwink", attribute: "AGILITY", baseHero: "npc_dota_hero_hoodwink", desc: "Swift skirmishers and deadly marksmen. Rangers control the battlefield from afar, striking where the enemy is weakest.", specialists: [
+            { key: "gunslinger", name: "Gunslinger", hero: "npc_dota_hero_muerta", presentation: "Muerta", desc: "A pistol-wielding duelist whose bullets tear through armor and soul alike." },
+            { key: "sharpshooter", name: "Sharpshooter", hero: "npc_dota_hero_windrunner", presentation: "Windranger", desc: "A precision archer who binds foes together and unleashes relentless volleys." },
+            { key: "witch_hunter", name: "Witch Hunter", hero: "npc_dota_hero_drow_ranger", presentation: "Drow Ranger • Arcana desired", desc: "A cold-eyed stalker whose frost-fletched arrows slow the arcane to a crawl." }
         ]},
-        mage: { card: "MageCard", scene: "MageScene", select: "MageSelect", name: "Mage", base: "Invoker", attribute: "INTELLIGENCE", baseHero: "npc_dota_hero_invoker", specialists: [
-            { key: "fire_mage", name: "Fire Mage", hero: "npc_dota_hero_lina", presentation: "Lina" },
-            { key: "frost_mage", name: "Frost Mage", hero: "npc_dota_hero_crystal_maiden", presentation: "Crystal Maiden" },
-            { key: "lightning_mage", name: "Lightning Mage", hero: "npc_dota_hero_zuus", presentation: "Zeus" }
+        mage: { card: "MageCard", scene: "MageScene", select: "MageSelect", name: "Mage", base: "Invoker", attribute: "INTELLIGENCE", baseHero: "npc_dota_hero_invoker", desc: "Wielders of raw arcane force. Mages reshape the fight with fire, frost and storm before their foes can close the distance.", specialists: [
+            { key: "fire_mage", name: "Fire Mage", hero: "npc_dota_hero_lina", presentation: "Lina", desc: "A storm of living flame that consumes packs of enemies in a blink." },
+            { key: "frost_mage", name: "Frost Mage", hero: "npc_dota_hero_crystal_maiden", presentation: "Crystal Maiden", desc: "A winter weaver who freezes the battlefield solid and feeds allies power." },
+            { key: "lightning_mage", name: "Lightning Mage", hero: "npc_dota_hero_zuus", presentation: "Zeus", desc: "A thunder god's heir whose bolts arc from foe to foe without mercy." }
         ]},
-        mercenary: { card: "MercenaryCard", scene: "MercenaryScene", select: "MercenarySelect", name: "Mercenary", base: "Legion Commander", attribute: "STRENGTH / AGILITY", baseHero: "npc_dota_hero_legion_commander", specialists: [
-            { key: "death_blade", name: "Death Blade", hero: "npc_dota_hero_antimage", presentation: "Anti-Mage • Persona desired" },
-            { key: "artillerist", name: "Artillerist", hero: "npc_dota_hero_gyrocopter", presentation: "Gyrocopter" },
-            { key: "trickster", name: "Trickster", hero: "npc_dota_hero_monkey_king", presentation: "Monkey King" }
+        mercenary: { card: "MercenaryCard", scene: "MercenaryScene", select: "MercenarySelect", name: "Mercenary", base: "Legion Commander", attribute: "STRENGTH / AGILITY", baseHero: "npc_dota_hero_legion_commander", desc: "Versatile fighters for hire. Mercenaries trade bladework, firepower and trickery — whatever the contract demands.", specialists: [
+            { key: "death_blade", name: "Death Blade", hero: "npc_dota_hero_antimage", presentation: "Anti-Mage • Persona desired", desc: "A spell-hunting blade who burns mana with every strike and blinks between kills." },
+            { key: "artillerist", name: "Artillerist", hero: "npc_dota_hero_gyrocopter", presentation: "Gyrocopter", desc: "An airborne gunner who blankets the field in rockets, flak and seeking missiles." },
+            { key: "trickster", name: "Trickster", hero: "npc_dota_hero_monkey_king", presentation: "Monkey King", desc: "A staff-wielding prankster who fights from the treetops and strikes wide." }
         ]},
-        druid: { card: "DruidCard", scene: "DruidScene", select: "DruidSelect", name: "Druid", base: "Nature's Prophet", attribute: "INTELLIGENCE / STRENGTH", baseHero: "npc_dota_hero_furion", specialists: [
-            { key: "wolf", name: "Wolf", hero: "npc_dota_hero_lycan", presentation: "Lycan" },
-            { key: "bear", name: "Bear", hero: "npc_dota_hero_lone_druid", presentation: "Lone Druid" },
-            { key: "dragon", name: "Dragon", hero: "npc_dota_hero_dragon_knight", presentation: "Dragon Knight" }
+        druid: { card: "DruidCard", scene: "DruidScene", select: "DruidSelect", name: "Druid", base: "Nature's Prophet", attribute: "INTELLIGENCE / STRENGTH", baseHero: "npc_dota_hero_furion", desc: "Shapeshifting wardens of the wild. Druids fight beside fang, claw and wing, borrowing the shapes of beasts.", specialists: [
+            { key: "wolf", name: "Wolf", hero: "npc_dota_hero_lycan", presentation: "Lycan", desc: "A pack leader who hunts beside feral wolves and revels in the chase." },
+            { key: "bear", name: "Bear", hero: "npc_dota_hero_lone_druid", presentation: "Lone Druid", desc: "A beast-bonded wanderer whose spirit companion rends enemies apart." },
+            { key: "dragon", name: "Dragon", hero: "npc_dota_hero_dragon_knight", presentation: "Dragon Knight", desc: "An armored knight who sheds his shell to become elder dragonfire." }
         ]},
-        martial_artist: { card: "MartialArtistCard", scene: "MartialArtistScene", select: "MartialArtistSelect", name: "Martial Artist", base: "Juggernaut", attribute: "AGILITY / INTELLIGENCE", baseHero: "npc_dota_hero_juggernaut", specialists: [
-            { key: "striker", name: "Striker", hero: "npc_dota_hero_marci", presentation: "Marci" },
-            { key: "glavier", name: "Glavier", hero: "npc_dota_hero_void_spirit", presentation: "Void Spirit" },
-            { key: "war_dancer", name: "War Dancer", hero: "npc_dota_hero_axe", presentation: "Axe • Arcana desired" }
+        martial_artist: { card: "MartialArtistCard", scene: "MartialArtistScene", select: "MartialArtistSelect", name: "Martial Artist", base: "Juggernaut", attribute: "AGILITY / INTELLIGENCE", baseHero: "npc_dota_hero_juggernaut", desc: "Disciplined artists of unarmed and weapon combat. Martial Artists turn motion itself into a lethal weapon.", specialists: [
+            { key: "striker", name: "Striker", hero: "npc_dota_hero_marci", presentation: "Marci", desc: "A loyal fist who vaults between allies and erupts in sudden fury." },
+            { key: "glavier", name: "Glavier", hero: "npc_dota_hero_void_spirit", presentation: "Void Spirit", desc: "An astral spearman whose remnant blades guard every angle." },
+            { key: "war_dancer", name: "War Dancer", hero: "npc_dota_hero_axe", presentation: "Axe • Arcana desired", desc: "A spinning executioner who dares enemies to strike, and pays them back in full." }
         ]},
-        spiritkin: { card: "SpiritkinCard", scene: "SpiritkinScene", select: "SpiritkinSelect", name: "Spiritkin", base: "Void Spirit", attribute: "UNIVERSAL", baseHero: "npc_dota_hero_void_spirit", specialists: [
-            { key: "storm", name: "Storm", hero: "npc_dota_hero_storm_spirit", presentation: "Storm Spirit" },
-            { key: "ember", name: "Ember", hero: "npc_dota_hero_ember_spirit", presentation: "Ember Spirit" },
-            { key: "earth", name: "Earth", hero: "npc_dota_hero_earth_spirit", presentation: "Earth Spirit" }
+        spiritkin: { card: "SpiritkinCard", scene: "SpiritkinScene", select: "SpiritkinSelect", name: "Spiritkin", base: "Void Spirit", attribute: "UNIVERSAL", baseHero: "npc_dota_hero_void_spirit", desc: "Bound to the elemental spirits. Spiritkin ride storm, ember and stone between the planes of the world.", specialists: [
+            { key: "storm", name: "Storm", hero: "npc_dota_hero_storm_spirit", presentation: "Storm Spirit", desc: "A living thunderclap who rides the lightning across the fight." },
+            { key: "ember", name: "Ember", hero: "npc_dota_hero_ember_spirit", presentation: "Ember Spirit", desc: "A flame dancer who dashes between burning remnants, striking all at once." },
+            { key: "earth", name: "Earth", hero: "npc_dota_hero_earth_spirit", presentation: "Earth Spirit", desc: "A rolling boulder who shatters stone and magnetizes everything in his path." }
         ]}
     };
 
@@ -119,18 +119,27 @@
         return null;
     }
 
-    function QueueSpecialistPreviews() {
+    function FocusSpecialist(key) {
+        var specialist = FindSpecialist(key);
+        if (!specialist || !selectedClass) return;
+        var definition = CLASSES[selectedClass];
+        definition.specialists.forEach(function (item) {
+            var tab = $("#Tab_" + item.key);
+            if (tab) tab.SetHasClass("Selected", item.key === key);
+        });
+        $("#AscendName").text = specialist.name.toUpperCase();
+        $("#AscendDesc").text = specialist.desc;
+        var image = $("#AscendImage");
+        if (image) image.SetImage("s2r://panorama/images/heroes/" + specialist.hero + "_png.vtex");
         specPreviewRequest += 1;
         var request = specPreviewRequest;
         $.Schedule(0.0, function () {
             if (request !== specPreviewRequest || $("#SpecialistStage").BHasClass("HiddenStage")) return;
-            CLASSES[selectedClass].specialists.forEach(function (specialist) {
-                var scene = $("#SpecScene_" + specialist.key);
-                if (scene) {
-                    scene.SetUnit(specialist.hero, "default", true);
-                    $.Msg("[LOA UI] Lit specialist render: " + specialist.hero);
-                }
-            });
+            var scene = $("#AscendScene");
+            if (scene) {
+                scene.SetUnit(specialist.hero, "default", true);
+                $.Msg("[LOA UI] Showcase render: " + specialist.hero);
+            }
         });
     }
 
@@ -157,43 +166,33 @@
         var definition = CLASSES[classKey];
         var holder = $("#SpecialistCards");
         holder.RemoveAndDeleteChildren();
+        var layout = $.CreatePanel("Panel", holder, "AscendLayout"); layout.AddClass("AscendLayout"); layout.hittest = false;
+        var showcase = $.CreatePanel("Panel", layout, "AscendShowcase"); showcase.AddClass("AscendShowcase");
+        var image = $.CreatePanel("Image", showcase, "AscendImage"); image.AddClass("AscendImage"); image.SetScaling("stretch-to-fit-preserve-aspect");
+        var shade = $.CreatePanel("Panel", showcase, ""); shade.AddClass("AscendOverlayShade"); shade.hittest = false;
+        var overlay = $.CreatePanel("Panel", showcase, ""); overlay.AddClass("AscendOverlay"); overlay.hittest = false;
+        var backdrop = $.CreatePanel("Panel", overlay, ""); backdrop.AddClass("AscendNameBackdrop"); backdrop.hittest = false;
+        var overlayName = $.CreatePanel("Label", backdrop, "AscendName"); overlayName.AddClass("AscendNameText"); overlayName.hittest = false;
+        var overlayDesc = $.CreatePanel("Label", backdrop, "AscendDesc"); overlayDesc.AddClass("AscendDescText"); overlayDesc.text = definition.specialists[0].desc; overlayDesc.hittest = false;
+        var tabsHolder = $.CreatePanel("Panel", layout, "AscendTabs"); tabsHolder.AddClass("AscendTabs"); tabsHolder.hittest = false;
         definition.specialists.forEach(function (specialist) {
-            var card = $.CreatePanel("Panel", holder, "Specialist_" + specialist.key);
-            card.AddClass("CardShell"); card.AddClass("SpecialistCard");
-            var art = $.CreatePanel("Panel", card, ""); art.AddClass("CardArt"); art.hittest = false;
-            var scene = $.CreatePanel("DOTAScenePanel", art, "SpecScene_" + specialist.key);
-            scene.AddClass("CardScene"); scene.allowrotation = true;
-            var vignette = $.CreatePanel("Panel", art, ""); vignette.AddClass("ArtVignette"); vignette.hittest = false;
-            var scrim = $.CreatePanel("Panel", art, ""); scrim.AddClass("ArtScrim"); scrim.hittest = false;
-            var glow = $.CreatePanel("Panel", card, ""); glow.AddClass("CardGlow"); glow.hittest = false;
-            var select = $.CreatePanel("Button", card, "SpecialistSelect_" + specialist.key);
-            select.AddClass("CardSelectArea"); select.hittestchildren = false;
-            var info = $.CreatePanel("Panel", select, ""); info.AddClass("CardInfo"); info.hittest = false;
-            var rule = $.CreatePanel("Panel", info, ""); rule.AddClass("InfoRule"); rule.hittest = false;
-            var emblem = $.CreatePanel("Panel", info, ""); emblem.AddClass("CardEmblem"); emblem.hittest = false;
-            var emblemCore = $.CreatePanel("Panel", emblem, ""); emblemCore.AddClass("CardEmblemCore"); emblemCore.hittest = false;
-            var title = $.CreatePanel("Label", info, ""); title.AddClass("CardTitle"); title.text = specialist.name.toUpperCase(); title.hittest = false;
-            var type = $.CreatePanel("Label", info, ""); type.AddClass("CardType"); type.text = definition.attribute; type.hittest = false;
-            var buttonRule = $.CreatePanel("Panel", select, ""); buttonRule.AddClass("ButtonRule"); buttonRule.hittest = false;
-            var ctaRow = $.CreatePanel("Panel", select, ""); ctaRow.AddClass("LearnMoreRow"); ctaRow.hittest = false;
-            var ctaLeft = $.CreatePanel("Panel", ctaRow, ""); ctaLeft.AddClass("LearnMoreLine"); ctaLeft.AddClass("Left"); ctaLeft.hittest = false;
-            var cta = $.CreatePanel("Label", ctaRow, ""); cta.AddClass("LearnMoreLabel"); cta.text = "Learn More"; cta.hittest = false;
-            var ctaRight = $.CreatePanel("Panel", ctaRow, ""); ctaRight.AddClass("LearnMoreLine"); ctaRight.AddClass("Right"); ctaRight.hittest = false;
-            ["TopLeft", "TopRight", "BottomLeft", "BottomRight"].forEach(function (corner) {
-                var mask = $.CreatePanel("Panel", card, ""); mask.AddClass("CornerMask"); mask.AddClass(corner); mask.hittest = false;
-            });
-            select.SetPanelEvent("onactivate", function () { SelectSpecialist(specialist.key); });
+            var tab = $.CreatePanel("Button", tabsHolder, "Tab_" + specialist.key);
+            tab.AddClass("AscendTab"); tab.hittestchildren = false;
+            var copy = $.CreatePanel("Panel", tab, ""); copy.AddClass("AscendTabCopy"); copy.hittest = false;
+            var tabName = $.CreatePanel("Label", copy, ""); tabName.AddClass("AscendTabName"); tabName.text = specialist.name.toUpperCase(); tabName.hittest = false;
+            tab.SetPanelEvent("onactivate", function () { SelectSpecialist(specialist.key); });
         });
+        var portrait = $.CreatePanel("DOTAScenePanel", tabsHolder, "AscendScene"); portrait.AddClass("SpecPortrait"); portrait.allowrotation = true;
         $("#BaseStage").AddClass("HiddenStage");
         $("#SpecialistStage").RemoveClass("HiddenStage");
-        $("#SpecialistHeading").text = definition.name + " Specialists";
-        $("#ScreenTitle").text = definition.name;
-        $("#ScreenSubtitle").text = "Choose one specialist. This determines your playable hero.";
+        $("#SpecialistHeading").text = "CHOOSE YOUR PATH";
+        $("#ScreenTitle").text = definition.name + " Ascension";
+        $("#ScreenSubtitle").text = definition.base + " ascends into three paths — inspect their gifts, then confirm below.";
         $("#SelectedHeroName").text = definition.name;
         $("#SelectedRole").text = "Base identity: " + definition.base;
-        $("#ReadyStatus").text = "Choose a specialist to continue";
+        $("#ReadyStatus").text = "Choose a path to continue";
         $("#ConfirmButton").enabled = false;
-        QueueSpecialistPreviews();
+        FocusSpecialist(definition.specialists[0].key);
         $.Msg("[LOA UI] Selected base class: " + classKey);
     }
 
@@ -201,7 +200,7 @@
         if (confirmed) return;
         var specialist = FindSpecialist(key);
         if (!specialist) return;
-        CLASSES[selectedClass].specialists.forEach(function (item) { var panel = $("#Specialist_" + item.key); if (panel) panel.SetHasClass("Selected", item.key === key); });
+        FocusSpecialist(key);
         selectedSpecialist = key;
         $("#SelectedHeroName").text = CLASSES[selectedClass].name + " — " + specialist.name;
         $("#SelectedRole").text = specialist.presentation;
