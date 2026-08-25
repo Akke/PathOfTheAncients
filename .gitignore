@@ -2,8 +2,10 @@
 *_c
 *.vpk
 *.vpk.*
-game/
 build/
+
+# Local runtime/debug state
+game/panorama_debugger.cfg
 
 # Local backups and temporary files
 *.bak

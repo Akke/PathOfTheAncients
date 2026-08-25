@@ -4,7 +4,7 @@ The hero picker uses two stages. First, the player chooses a base class, which e
 
 ## UI source of truth
 
-`panorama/scripts/custom_game/class_definitions.js` is the authoritative client-side catalog for class order, base-class identity, attributes, descriptions, ascendancies, and hero mappings. The Panorama controller generates both the class carousel and ascendancy controls from that catalog; individual class cards are not duplicated in XML. Add, remove, rename, or reorder UI classes and ascendancies in the catalog rather than editing `hero_selection.xml`.
+`content/panorama/scripts/custom_game/class_definitions.js` is the authoritative client-side catalog for class order, base-class identity, attributes, descriptions, ascendancies, and hero mappings. The Panorama controller generates both the class carousel and ascendancy controls from that catalog; individual class cards are not duplicated in XML. Add, remove, rename, or reorder UI classes and ascendancies in the catalog rather than editing `hero_selection.xml`.
 
 Server-side selection validation must still accept the same ascendancy keys and hero mappings. Dota's Lua runtime cannot directly import a Panorama JavaScript file, so server definitions remain a separate runtime boundary until the catalog is moved to a server-published data format.
 
