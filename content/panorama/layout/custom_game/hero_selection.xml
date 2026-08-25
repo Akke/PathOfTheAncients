@@ -1,0 +1,52 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/hero_selection.css" /></styles>
+    <scripts><include src="file://{resources}/scripts/custom_game/hero_selection.js" /></scripts>
+    <Panel class="HeroSelectionContainer">
+        <Panel id="HeroSelectionRoot" hittest="true">
+            <Panel id="Backdrop" hittest="false" />
+            <Panel id="SelectionShell">
+                <Panel id="Header">
+                    <Label id="Eyebrow" text="LABYRINTH OF THE ANCIENTS" />
+                    <Label id="ScreenTitle" text="Choose Your Class" />
+                    <Label id="ScreenSubtitle" text="Choose a path, then select one of its three specialists." />
+                </Panel>
+
+                <Panel id="BaseStage" class="SelectionStage">
+                    <Panel id="ClassCarousel">
+                        <Button id="CarouselLeft" class="CarouselArrow" hittestchildren="false"><Label text="‹" /></Button>
+                        <Panel id="ClassCarouselViewport">
+                          <Panel id="ClassCarouselTrack">
+                        <Panel id="WarriorCard" class="HeroCard BaseCard"><DOTAScenePanel id="WarriorScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="WarriorSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="MARS" /><Label class="HeroName" text="Warrior" /><Label class="HeroDescription" text="Paladin • Berserker • Slayer" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
+                        <Panel id="RangerCard" class="HeroCard BaseCard"><DOTAScenePanel id="RangerScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="RangerSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="HOODWINK" /><Label class="HeroName" text="Ranger" /><Label class="HeroDescription" text="Gunslinger • Sharpshooter • Witch Hunter" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
+                        <Panel id="MageCard" class="HeroCard BaseCard"><DOTAScenePanel id="MageScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="MageSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="INVOKER" /><Label class="HeroName" text="Mage" /><Label class="HeroDescription" text="Fire Mage • Frost Mage • Lightning Mage" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
+                        <Panel id="MercenaryCard" class="HeroCard BaseCard"><DOTAScenePanel id="MercenaryScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="MercenarySelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="LEGION COMMANDER" /><Label class="HeroName" text="Mercenary" /><Label class="HeroDescription" text="Death Blade • Artillerist • Trickster" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
+                        <Panel id="DruidCard" class="HeroCard BaseCard"><DOTAScenePanel id="DruidScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="DruidSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="NATURE'S PROPHET" /><Label class="HeroName" text="Druid" /><Label class="HeroDescription" text="Wolf • Bear • Dragon" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
+                        <Panel id="MartialArtistCard" class="HeroCard BaseCard"><DOTAScenePanel id="MartialArtistScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="MartialArtistSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="JUGGERNAUT" /><Label class="HeroName" text="Martial Artist" /><Label class="HeroDescription" text="Striker • Glavier • War Dancer" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
+                          </Panel>
+                        </Panel>
+                        <Button id="CarouselRight" class="CarouselArrow" hittestchildren="false"><Label text="›" /></Button>
+                    </Panel>
+                    <Panel id="CarouselFooter"><Label id="CarouselPageLabel" text="1 / 2" /><Label text="DRAG HEROES TO ROTATE • USE ARROWS TO BROWSE" /></Panel>
+                </Panel>
+
+                <Panel id="SpecialistStage" class="SelectionStage SpecialistStage HiddenStage">
+                    <Panel id="SpecialistNav"><Button id="BackButton" hittestchildren="false"><Label text="‹ BACK TO CLASSES" /></Button><Label id="SpecialistHeading" text="Choose a Specialist" /></Panel>
+                    <Panel id="SpecialistBody">
+                        <Panel id="PreviewFrame">
+                            <DOTAScenePanel id="HeroScenePreview" unit="npc_dota_hero_mars" allowrotation="true" rotationlimits="-70 70" />
+                            <Panel id="PreviewShade" hittest="false" />
+                            <Label id="PreviewHint" text="DRAG TO ROTATE" hittest="false" />
+                        </Panel>
+                        <Panel id="SpecialistCards" />
+                    </Panel>
+                </Panel>
+
+                <Panel id="SelectionFooter">
+                    <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedRole" text="Select a class to reveal its specialists" /></Panel>
+                    <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" hittestchildren="false"><Label id="ConfirmLabel" text="CONFIRM SPECIALIST" /></Button></Panel>
+                </Panel>
+                <Panel id="PartyFooter"><Label id="PartyStatus" text="Preparing party…" /><Label text="Your specialist becomes your playable hero." /></Panel>
+            </Panel>
+        </Panel>
+    </Panel>
+</root>

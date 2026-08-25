@@ -1,0 +1,593 @@
+.HeroSelectionContainer {
+    width: 100%;
+    height: 100%;
+}
+
+#HeroSelectionRoot {
+    width: 100%;
+    height: 100%;
+    background-color: #070b10f8;
+    opacity: 1;
+    transition-property: opacity;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+}
+
+#HeroSelectionRoot.Leaving {
+    opacity: 0;
+}
+
+#Backdrop {
+    width: 100%;
+    height: 100%;
+    background-color: gradient(linear, 0% 0%, 100% 100%, from(#14202c), color-stop(0.5, #080d13), to(#18100c));
+    opacity: 0.95;
+}
+
+#SelectionShell {
+    width: 92%;
+    max-width: 1500px;
+    height: 980px;
+    horizontal-align: center;
+    vertical-align: center;
+    flow-children: down;
+    padding: 30px 54px 24px;
+}
+
+#Header {
+    width: 100%;
+    height: 125px;
+    flow-children: down;
+}
+
+#Eyebrow, #ScreenTitle, #ScreenSubtitle {
+    horizontal-align: center;
+    text-align: center;
+}
+
+#Eyebrow, .SectionLabel, .RoleLabel {
+    color: #c99a57;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+#ScreenTitle {
+    color: #f3eee5;
+    font-size: 46px;
+    font-weight: semi-bold;
+    letter-spacing: 1px;
+    margin-top: 5px;
+    text-shadow: 0 3px 10px 3 #000000cc;
+}
+
+#ScreenSubtitle {
+    color: #aeb8c1;
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+#HeroCards {
+    width: 100%;
+    height: 650px;
+    flow-children: down;
+}
+
+#ClassCarousel {
+    width: 100%;
+    height: 585px;
+    flow-children: right;
+}
+
+#ClassCarouselViewport {
+    width: fill-parent-flow(1);
+    height: 100%;
+    overflow: clip;
+}
+
+#ClassCarouselTrack {
+    width: 100%;
+    height: 100%;
+    flow-children: right;
+}
+
+#ClassCarouselTrack .BaseCard {
+    width: fill-parent-flow(1);
+    height: 550px;
+    margin: 12px 14px;
+}
+
+.ClassScenePreview {
+    width: 100%;
+    height: 72%;
+}
+
+.ClassSelectButton {
+    height: 40%;
+    background-color: gradient(linear, 0% 0%, 0% 100%, from(#10182022), to(#091017fa));
+    border-top: 1px solid #58667188;
+}
+
+.ClassSelectButton:hover {
+    brightness: 1.35;
+}
+
+.ChooseClassLabel {
+    color: #d8a856;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-top: 8px;
+}
+
+.CarouselHidden {
+    visibility: collapse;
+}
+
+.CarouselArrow {
+    width: 64px;
+    height: 120px;
+    vertical-align: center;
+    margin: 0 8px;
+    background-color: #17232ddd;
+    border: 1px solid #71818d;
+    border-radius: 4px;
+    transition-property: brightness, opacity;
+    transition-duration: 0.15s;
+}
+
+.CarouselArrow:hover:enabled {
+    brightness: 1.5;
+}
+
+.CarouselArrow:disabled {
+    opacity: 0.22;
+}
+
+.CarouselArrow Label {
+    horizontal-align: center;
+    vertical-align: center;
+    color: #e5b86f;
+    font-size: 52px;
+}
+
+#CarouselFooter {
+    width: 100%;
+    height: 52px;
+    flow-children: right;
+}
+
+#CarouselFooter Label {
+    color: #71808b;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-right: 18px;
+}
+
+#CarouselPageLabel {
+    width: fill-parent-flow(1);
+    text-align: right;
+    color: #c99a57;
+}
+
+.SelectionStage {
+    width: 100%;
+    height: 650px;
+    flow-children: down;
+}
+
+.HiddenStage {
+    visibility: collapse;
+}
+
+#SpecialistNav {
+    width: 100%;
+    height: 78px;
+}
+
+#BackButton {
+    width: 230px;
+    height: 48px;
+    vertical-align: center;
+    background-color: #17232d;
+    border: 1px solid #657582;
+}
+
+#BackButton:hover {
+    brightness: 1.35;
+}
+
+#BackButton Label {
+    horizontal-align: center;
+    vertical-align: center;
+    color: #c7d0d7;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#SpecialistHeading {
+    horizontal-align: center;
+    vertical-align: center;
+    color: #f3eee5;
+    font-size: 30px;
+    font-weight: semi-bold;
+}
+
+#SpecialistBody {
+    width: 100%;
+    height: 560px;
+    flow-children: down;
+}
+
+#PreviewFrame {
+    width: 100%;
+    height: 300px;
+    margin: 0 8px 8px 8px;
+    background-color: #080d12;
+    border: 1px solid #52616d;
+    box-shadow: inset 0 0 80px #000000cc;
+}
+
+#HeroScenePreview {
+    width: 420px;
+    height: 292px;
+    horizontal-align: center;
+    vertical-align: center;
+}
+
+#PreviewShade {
+    width: 100%;
+    height: 100%;
+    background-color: gradient(linear, 0% 65%, 0% 100%, from(#00000000), to(#05090dcc));
+}
+
+#PreviewHint {
+    horizontal-align: center;
+    vertical-align: bottom;
+    margin-bottom: 18px;
+    color: #9eabb5;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+#SpecialistCards {
+    width: 100%;
+    height: 252px;
+    margin: 0;
+    padding: 5px 16px 7px;
+    flow-children: right;
+    overflow: noclip;
+}
+
+.SpecialistCard {
+    width: fill-parent-flow(1);
+    height: 230px;
+    margin: 7px 13px;
+    border: 1px solid #78613faa;
+    background-color: #080d12;
+    box-shadow: 0 8px 24px 2 #000000cc;
+    transform: scale3d(1, 1, 1);
+    transform-origin: 50% 50%;
+    overflow: clip;
+    transition-property: transform, border, brightness, saturation, box-shadow;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+}
+
+.SpecialistCard:hover {
+    transform: scale3d(1.045, 1.045, 1);
+    border: 2px solid #d7ad67;
+    brightness: 1.14;
+    saturation: 1.05;
+    box-shadow: 0 0 22px 2 #c7914255;
+}
+
+.SpecialistCard.Selected {
+    transform: scale3d(1.035, 1.035, 1);
+    border: 3px solid #e8bd72;
+    brightness: 1.1;
+    saturation: 1.08;
+    box-shadow: 0 0 28px 3 #d99c3d77;
+}
+
+.SpecialistPortrait {
+    width: 100%;
+    height: 100%;
+    wash-color: #aeb5b8;
+}
+
+.SpecialistSmoke {
+    width: 100%;
+    height: 100%;
+    background-color: gradient(linear, 0% 8%, 0% 100%, from(#11192322), color-stop(0.42, #080d1244), color-stop(0.68, #080d12dd), to(#030609ff));
+}
+
+.SpecialistTopRule {
+    width: 62%;
+    height: 1px;
+    horizontal-align: center;
+    margin-top: 13px;
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#c99a5700), color-stop(0.5, #d8ad69cc), to(#c99a5700));
+}
+
+.SpecialistDiamond {
+    horizontal-align: center;
+    margin-top: 6px;
+    color: #d8ad69;
+    font-size: 12px;
+    text-shadow: 0 1px 4px 2 #000000;
+}
+
+.SpecialistCard .HeroCopy {
+    vertical-align: bottom;
+    padding: 0 18px 13px;
+}
+
+.SpecialistHeroLabel {
+    color: #c6cdd2;
+    font-size: 12px;
+    font-weight: semi-bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 5px 2 #000000;
+}
+
+.SpecialistCard .HeroName {
+    color: #f4eadb;
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 6px 2 #000000;
+}
+
+.SpecialistClassLabel {
+    color: #b48b50;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-top: 1px;
+}
+
+.SpecialistCTA {
+    width: 100%;
+    height: 29px;
+    margin-top: 7px;
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#6a4a22cc), color-stop(0.5, #a77836dd), to(#6a4a22cc));
+    border-top: 1px solid #e2bd7a88;
+}
+
+.SpecialistCTA Label {
+    horizontal-align: center;
+    vertical-align: center;
+    color: #f5ead7;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.SpecialistCard.Selected .SpecialistCTA {
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#8b622acc), color-stop(0.5, #cf9b4bdd), to(#8b622acc));
+}
+
+.CardRow {
+    width: 100%;
+    height: fill-parent-flow(1);
+    flow-children: right;
+}
+
+.HeroCard {
+    width: fill-parent-flow(1);
+    height: 300px;
+    margin: 8px 12px;
+    border: 2px solid #475461aa;
+    background-color: #101820;
+    box-shadow: 0 8px 24px 2 #000000bb;
+    saturation: 0.72;
+    brightness: 0.76;
+    transition-property: transform, border, brightness, saturation, box-shadow;
+    transition-duration: 0.18s;
+}
+
+.HeroCard:hover {
+    transform: translateY(-7px);
+    border: 2px solid #a9b8c5;
+    brightness: 1;
+    saturation: 1;
+}
+
+.HeroCard.Selected {
+    transform: translateY(-9px);
+    border: 3px solid #e5b86f;
+    brightness: 1.08;
+    saturation: 1;
+    box-shadow: 0 0 22px 2 #d99c3d55;
+}
+
+.HeroPortrait, .HeroGradient {
+    width: 100%;
+    height: 100%;
+}
+
+.HeroPortrait {
+    background-size: cover;
+    background-position: 50% 15%;
+    background-repeat: no-repeat;
+}
+
+.HeroGradient {
+    background-color: gradient(linear, 0% 35%, 0% 100%, from(#00000000), color-stop(0.45, #0b1015c8), to(#080c10ff));
+}
+
+.HeroCopy {
+    width: 100%;
+    vertical-align: bottom;
+    flow-children: down;
+    padding: 0 20px 18px;
+}
+
+.HeroName {
+    color: #f5f0e7;
+    font-size: 29px;
+    font-weight: bold;
+    margin-top: 3px;
+    text-shadow: 0 2px 6px 2 #000000;
+}
+
+.HeroDescription {
+    color: #b8c0c7;
+    font-size: 15px;
+    line-height: 18px;
+    margin-top: 5px;
+}
+
+.CardSelectionMark {
+    width: 42px;
+    height: 42px;
+    horizontal-align: right;
+    margin: 16px;
+    border-radius: 50%;
+    background-color: #d8a856;
+    opacity: 0;
+}
+
+.CardSelectionMark Label {
+    horizontal-align: center;
+    vertical-align: center;
+    color: #111820;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.HeroCard.Selected .CardSelectionMark {
+    opacity: 1;
+}
+
+.UndecidedCard {
+    wash-color: #82909b;
+    saturation: 0.18;
+}
+
+.UndecidedCard:hover {
+    transform: none;
+    border: 2px solid #475461aa;
+    brightness: 0.8;
+    saturation: 0.18;
+}
+
+.CasterSigil {
+    width: 150px;
+    height: 150px;
+    horizontal-align: center;
+    vertical-align: center;
+    margin-bottom: 60px;
+    border: 2px solid #8898a566;
+    border-radius: 50%;
+    background-color: #1e2833cc;
+    box-shadow: 0 0 30px 4 #536b7f22;
+}
+
+.CasterSigil Label {
+    horizontal-align: center;
+    vertical-align: center;
+    color: #aebac4;
+    font-size: 78px;
+    font-weight: thin;
+}
+
+#SelectionFooter {
+    width: 100%;
+    height: 145px;
+    flow-children: right;
+    padding: 22px 28px;
+    background-color: #101820e8;
+    border: 1px solid #4b5964aa;
+}
+
+#SelectionSummary {
+    width: fill-parent-flow(1);
+    height: 100%;
+    flow-children: down;
+}
+
+#SelectedHeroName {
+    color: #f2ede4;
+    font-size: 30px;
+    font-weight: semi-bold;
+    margin-top: 10px;
+}
+
+#SelectedRole {
+    color: #9eabb5;
+    font-size: 19px;
+    margin-top: 4px;
+}
+
+#ConfirmArea {
+    width: 370px;
+    height: 100%;
+    flow-children: down;
+}
+
+#ReadyStatus {
+    width: 100%;
+    color: #98a6b2;
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+#ConfirmButton {
+    width: 350px;
+    height: 64px;
+    horizontal-align: right;
+    background-color: gradient(linear, 0% 0%, 0% 100%, from(#d6a85c), to(#8f632d));
+    border: 1px solid #f0cb87;
+    box-shadow: 0 3px 12px 1 #000000aa;
+    transition-property: brightness, transform;
+    transition-duration: 0.12s;
+}
+
+#ConfirmButton:hover:enabled {
+    brightness: 1.25;
+    transform: translateY(-2px);
+}
+
+#ConfirmButton:disabled {
+    wash-color: #52606a;
+    saturation: 0.2;
+    brightness: 0.5;
+}
+
+#ConfirmButton Label {
+    horizontal-align: center;
+    vertical-align: center;
+    color: #111820;
+    font-size: 19px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+#HeroSelectionRoot.Confirmed #ConfirmButton,
+#HeroSelectionRoot.PartyReady #ConfirmButton {
+    background-color: #6d9b68;
+    border: 1px solid #a9d5a4;
+}
+
+#PartyFooter {
+    width: 100%;
+    height: 58px;
+    flow-children: right;
+    padding-top: 17px;
+}
+
+#PartyFooter Label {
+    color: #667581;
+    font-size: 14px;
+}
+
+#PartyStatus {
+    width: fill-parent-flow(1);
+    color: #b9c3cb;
+}
