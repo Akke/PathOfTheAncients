@@ -9,7 +9,7 @@
             <Panel id="Backdrop" hittest="false" />
             <Panel id="SelectionShell">
                 <Panel id="Header">
-                    <Label id="Eyebrow" text="LABYRINTH OF THE ANCIENTS" />
+                    <Label id="Eyebrow" text="PATH OF THE ANCIENTS" />
                     <Label id="ScreenTitle" text="Choose Your Class" />
                     <Label id="ScreenSubtitle" text="Choose a path, then select one of its three ascendancies." />
                 </Panel>

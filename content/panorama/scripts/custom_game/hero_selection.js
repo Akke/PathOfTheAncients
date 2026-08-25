@@ -1,12 +1,12 @@
 (function () {
     "use strict";
 
-    var CLASSES = LOA_CLASS_DEFINITIONS;
+    var CLASSES = POA_CLASS_DEFINITIONS;
 
     var selectedClass = null;
     var selectedAscendency = null;
     var confirmed = false;
-    var classOrder = LOA_CLASS_ORDER.slice();
+    var classOrder = POA_CLASS_ORDER.slice();
     var focusIndex = 0;
     var carouselPositions = (function () {
         var ringScales = [1, 0.8, 0.7, 0.6];
@@ -102,7 +102,7 @@
             if (first !== slot) track.MoveChildBefore(slot, first);
         }
         $("#CarouselPageLabel").text = CLASSES[classOrder[focusIndex]].name.toUpperCase();
-        $.Msg("[LOA UI] Carousel focus: " + classOrder[focusIndex]);
+        $.Msg("[POA UI] Carousel focus: " + classOrder[focusIndex]);
         QueueVisibleClassPreviews();
     }
 
@@ -150,7 +150,7 @@
             var scene = $("#AscendScene");
             if (scene) {
                 scene.SetUnit(ascendancy.hero, "default", true);
-                $.Msg("[LOA UI] Showcase render: " + ascendancy.hero);
+                $.Msg("[POA UI] Showcase render: " + ascendancy.hero);
             }
         });
     }
@@ -205,7 +205,7 @@
         $("#ReadyStatus").text = "Choose a path to continue";
         $("#ConfirmButton").enabled = false;
         FocusAscendency(definition.ascendencies[0].key);
-        $.Msg("[LOA UI] Selected base class: " + classKey);
+        $.Msg("[POA UI] Selected base class: " + classKey);
     }
 
     function SelectAscendency(key) {
@@ -218,21 +218,21 @@
         $("#SelectedRole").text = ascendancy.presentation;
         $("#ReadyStatus").text = "Ready to confirm";
         $("#ConfirmButton").enabled = true;
-        $.Msg("[LOA UI] Selected ascendancy: " + key + " (" + ascendancy.hero + ")");
-        GameEvents.SendCustomGameEventToServer("loa_preview_selection", { archetype: key });
+        $.Msg("[POA UI] Selected ascendancy: " + key + " (" + ascendancy.hero + ")");
+        GameEvents.SendCustomGameEventToServer("poa_preview_selection", { archetype: key });
     }
 
     function ConfirmSelection() {
         if (confirmed || !selectedAscendency) return;
         confirmed = true; $("#HeroSelectionRoot").AddClass("IsConfirming"); $("#ConfirmButton").enabled = false;
         $("#ConfirmLabel").text = "LOCKING IN…"; $("#ReadyStatus").text = "Waiting for the server";
-        GameEvents.SendCustomGameEventToServer("loa_confirm_selection", { archetype: selectedAscendency });
+        GameEvents.SendCustomGameEventToServer("poa_confirm_selection", { archetype: selectedAscendency });
     }
 
-    function OnSelectionAccepted(event) { $.Msg("[LOA UI] Selection accepted: " + (event.archetype || "unknown")); confirmed = true; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#HeroSelectionRoot").AddClass("Confirmed"); $("#ConfirmLabel").text = "READY"; $("#ReadyStatus").text = event.message || "Ascendency confirmed"; }
+    function OnSelectionAccepted(event) { $.Msg("[POA UI] Selection accepted: " + (event.archetype || "unknown")); confirmed = true; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#HeroSelectionRoot").AddClass("Confirmed"); $("#ConfirmLabel").text = "READY"; $("#ReadyStatus").text = event.message || "Ascendency confirmed"; }
     function OnSelectionRejected(event) { confirmed = false; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#ConfirmButton").enabled = selectedAscendency !== null; $("#ConfirmLabel").text = "CONFIRM ASCENDENCY"; $("#ReadyStatus").text = event.message || "Selection could not be confirmed"; }
-    function OnPartyReady() { $.Msg("[LOA UI] Party ready; game start requested"); var root = $("#HeroSelectionRoot"), wrapper = root && root.GetParent(), context = $.GetContextPanel(); root.AddClass("PartyReady"); root.hittest = false; root.hittestchildren = false; if (wrapper) { wrapper.hittest = false; wrapper.hittestchildren = false; } context.hittest = false; context.hittestchildren = false; context.style.visibility = "collapse"; $.Msg("[LOA UI] Hero selection context collapsed; gameplay input released"); }
-    function UpdatePartyStatus() { var state = CustomNetTables.GetTableValue("loa_selection", "party"); if (!state) { $("#PartyStatus").text = "Choose your class"; return; } $("#PartyStatus").text = (Number(state.ready_count) || 0) + " / " + (Number(state.player_count) || 1) + " players ready"; }
+    function OnPartyReady() { $.Msg("[POA UI] Party ready; game start requested"); var root = $("#HeroSelectionRoot"), wrapper = root && root.GetParent(), context = $.GetContextPanel(); root.AddClass("PartyReady"); root.hittest = false; root.hittestchildren = false; if (wrapper) { wrapper.hittest = false; wrapper.hittestchildren = false; } context.hittest = false; context.hittestchildren = false; context.style.visibility = "collapse"; $.Msg("[POA UI] Hero selection context collapsed; gameplay input released"); }
+    function UpdatePartyStatus() { var state = CustomNetTables.GetTableValue("poa_selection", "party"); if (!state) { $("#PartyStatus").text = "Choose your class"; return; } $("#PartyStatus").text = (Number(state.ready_count) || 0) + " / " + (Number(state.player_count) || 1) + " players ready"; }
 
     BuildClassCarousel();
     $("#CarouselLeft").SetPanelEvent("onactivate", function () { UpdateCarousel(-1); });
@@ -240,8 +240,8 @@
     $("#BackButton").SetPanelEvent("onactivate", ShowClassStage);
     $("#ConfirmButton").SetPanelEvent("onactivate", ConfirmSelection);
     HideDefaultHeroSelection();
-    GameEvents.Subscribe("loa_selection_accepted", OnSelectionAccepted); GameEvents.Subscribe("loa_selection_rejected", OnSelectionRejected); GameEvents.Subscribe("loa_party_ready", OnPartyReady);
-    CustomNetTables.SubscribeNetTableListener("loa_selection", function (table, key) { if (table === "loa_selection" && key === "party") UpdatePartyStatus(); });
+    GameEvents.Subscribe("poa_selection_accepted", OnSelectionAccepted); GameEvents.Subscribe("poa_selection_rejected", OnSelectionRejected); GameEvents.Subscribe("poa_party_ready", OnPartyReady);
+    CustomNetTables.SubscribeNetTableListener("poa_selection", function (table, key) { if (table === "poa_selection" && key === "party") UpdatePartyStatus(); });
     UpdatePartyStatus();
     UpdateCarousel(0);
 })();

@@ -1,5 +1,5 @@
-if LabyrinthOfTheAncients == nil then
-    LabyrinthOfTheAncients = class({})
+if PathOfTheAncients == nil then
+    PathOfTheAncients = class({})
 end
 
 -- Fallback cap only: the game normally starts early via ForceGameStart once
@@ -49,11 +49,11 @@ function Precache(context)
 end
 
 function Activate()
-    GameRules.LabyrinthOfTheAncients = LabyrinthOfTheAncients()
-    GameRules.LabyrinthOfTheAncients:InitGameMode()
+    GameRules.PathOfTheAncients = PathOfTheAncients()
+    GameRules.PathOfTheAncients:InitGameMode()
 end
 
-function LabyrinthOfTheAncients:InitGameMode()
+function PathOfTheAncients:InitGameMode()
     self.selections = {}
 
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, 4)
@@ -70,11 +70,11 @@ function LabyrinthOfTheAncients:InitGameMode()
     mode:SetKillingSpreeAnnouncerDisabled(true)
 
     CustomGameEventManager:RegisterListener(
-        "loa_preview_selection",
+        "poa_preview_selection",
         function(_, event) self:OnPreviewSelection(event) end
     )
     CustomGameEventManager:RegisterListener(
-        "loa_confirm_selection",
+        "poa_confirm_selection",
         function(_, event) self:OnConfirmSelection(event) end
     )
 
@@ -95,17 +95,17 @@ function LabyrinthOfTheAncients:InitGameMode()
     )
 
     self:PublishPartyState()
-    print("[LOA] Custom hero selection initialized")
+    print("[POA] Custom hero selection initialized")
 end
 
-function LabyrinthOfTheAncients:IsValidPlayer(playerID)
+function PathOfTheAncients:IsValidPlayer(playerID)
     return playerID ~= nil
         and playerID >= 0
         and PlayerResource:IsValidPlayerID(playerID)
         and PlayerResource:GetPlayer(playerID) ~= nil
 end
 
-function LabyrinthOfTheAncients:SendToPlayer(playerID, eventName, payload)
+function PathOfTheAncients:SendToPlayer(playerID, eventName, payload)
     if not self:IsValidPlayer(playerID) then
         return
     end
@@ -117,7 +117,7 @@ function LabyrinthOfTheAncients:SendToPlayer(playerID, eventName, payload)
     )
 end
 
-function LabyrinthOfTheAncients:OnPreviewSelection(event)
+function PathOfTheAncients:OnPreviewSelection(event)
     local playerID = event.PlayerID
     local archetype = ARCHETYPES[event.archetype]
 
@@ -135,12 +135,12 @@ function LabyrinthOfTheAncients:OnPreviewSelection(event)
     }
 end
 
-function LabyrinthOfTheAncients:OnConfirmSelection(event)
+function PathOfTheAncients:OnConfirmSelection(event)
     local playerID = event.PlayerID
     local archetype = ARCHETYPES[event.archetype]
 
     if not self:IsValidPlayer(playerID) or archetype == nil then
-        self:SendToPlayer(playerID, "loa_selection_rejected", {
+        self:SendToPlayer(playerID, "poa_selection_rejected", {
             message = "That champion is not available.",
         })
         return
@@ -155,13 +155,13 @@ function LabyrinthOfTheAncients:OnConfirmSelection(event)
         confirmed = true,
     }
 
-    print("[LOA] Confirmed " .. event.archetype .. " for player " .. tostring(playerID))
+    print("[POA] Confirmed " .. event.archetype .. " for player " .. tostring(playerID))
 
     local heroAssigned, assignedHero = self:ApplySelectedHero(playerID, archetype.hero)
     self.selections[playerID].hero_assigned = heroAssigned
     self.selections[playerID].hero_entindex = assignedHero ~= nil and assignedHero:entindex() or nil
 
-    self:SendToPlayer(playerID, "loa_selection_accepted", {
+    self:SendToPlayer(playerID, "poa_selection_accepted", {
         archetype = event.archetype,
         hero = archetype.hero,
         message = archetype.display_name .. " confirmed",
@@ -173,30 +173,30 @@ function LabyrinthOfTheAncients:OnConfirmSelection(event)
     end)
 
     if not published then
-        print("[LOA] Party state publish failed: " .. tostring(publishError))
+        print("[POA] Party state publish failed: " .. tostring(publishError))
     end
 
     local allHeroesAssigned = self:AllConfirmedPlayersHaveAssignedHeroes()
 
     if allPlayersReady and allHeroesAssigned then
-        print("[LOA] All connected players ready; starting game")
-        CustomGameEventManager:Send_ServerToAllClients("loa_party_ready", {})
+        print("[POA] All connected players ready; starting game")
+        CustomGameEventManager:Send_ServerToAllClients("poa_party_ready", {})
         GameRules:ForceGameStart()
     elseif allPlayersReady then
-        print("[LOA] All players confirmed, but hero assignment is incomplete; game start deferred")
+        print("[POA] All players confirmed, but hero assignment is incomplete; game start deferred")
     end
 end
 
-function LabyrinthOfTheAncients:ApplySelectedHero(playerID, heroName)
+function PathOfTheAncients:ApplySelectedHero(playerID, heroName)
     local player = PlayerResource:GetPlayer(playerID)
     if player == nil then
-        print("[LOA] Hero assignment failed for player " .. tostring(playerID) .. ": player handle unavailable")
+        print("[POA] Hero assignment failed for player " .. tostring(playerID) .. ": player handle unavailable")
         return false
     end
 
     local currentHero = PlayerResource:GetSelectedHeroEntity(playerID) or player:GetAssignedHero()
     if currentHero ~= nil and currentHero:GetUnitName() == heroName then
-        print("[LOA] Hero already assigned for player " .. tostring(playerID) .. ": " .. heroName)
+        print("[POA] Hero already assigned for player " .. tostring(playerID) .. ": " .. heroName)
         return true, currentHero
     end
 
@@ -206,7 +206,7 @@ function LabyrinthOfTheAncients:ApplySelectedHero(playerID, heroName)
         end)
 
         if not created then
-            print("[LOA] Hero creation failed for player " .. tostring(playerID) .. ": " .. tostring(createdHeroOrError))
+            print("[POA] Hero creation failed for player " .. tostring(playerID) .. ": " .. tostring(createdHeroOrError))
             return false
         end
 
@@ -216,7 +216,7 @@ function LabyrinthOfTheAncients:ApplySelectedHero(playerID, heroName)
 
         if currentHero ~= nil and currentHero:GetUnitName() == heroName then
             if currentHero:GetPlayerOwnerID() ~= playerID then
-                print("[LOA] Hero handoff failed for player " .. tostring(playerID)
+                print("[POA] Hero handoff failed for player " .. tostring(playerID)
                     .. ": created hero has owner " .. tostring(currentHero:GetPlayerOwnerID()))
                 return false
             end
@@ -227,25 +227,25 @@ function LabyrinthOfTheAncients:ApplySelectedHero(playerID, heroName)
             end)
 
             if not handedOff then
-                print("[LOA] Hero handoff failed for player " .. tostring(playerID)
+                print("[POA] Hero handoff failed for player " .. tostring(playerID)
                     .. ": " .. tostring(handoffError))
                 return false
             end
 
             local assignedHero = player:GetAssignedHero()
             if assignedHero ~= currentHero then
-                print("[LOA] Hero handoff incomplete for player " .. tostring(playerID)
+                print("[POA] Hero handoff incomplete for player " .. tostring(playerID)
                     .. ": assigned hero does not match created hero")
                 return false
             end
 
-            print("[LOA] Created, assigned, and enabled control of " .. heroName
+            print("[POA] Created, assigned, and enabled control of " .. heroName
                 .. " for player " .. tostring(playerID))
             return true, currentHero
         end
 
         local createdName = currentHero ~= nil and currentHero:GetUnitName() or "none"
-        print("[LOA] Hero creation incomplete for player " .. tostring(playerID)
+        print("[POA] Hero creation incomplete for player " .. tostring(playerID)
             .. "; requested " .. heroName .. ", found " .. createdName)
         return false
     end
@@ -255,23 +255,23 @@ function LabyrinthOfTheAncients:ApplySelectedHero(playerID, heroName)
     end)
 
     if not replaced then
-        print("[LOA] Hero assignment failed for player " .. tostring(playerID) .. ": " .. tostring(replacementError))
+        print("[POA] Hero assignment failed for player " .. tostring(playerID) .. ": " .. tostring(replacementError))
         return false
     end
 
     local assignedHero = PlayerResource:GetSelectedHeroEntity(playerID) or player:GetAssignedHero()
     if assignedHero ~= nil and assignedHero:GetUnitName() == heroName then
-        print("[LOA] Assigned " .. heroName .. " to player " .. tostring(playerID))
+        print("[POA] Assigned " .. heroName .. " to player " .. tostring(playerID))
         return true, assignedHero
     end
 
     local assignedName = assignedHero ~= nil and assignedHero:GetUnitName() or "none"
-    print("[LOA] Hero assignment incomplete for player " .. tostring(playerID)
+    print("[POA] Hero assignment incomplete for player " .. tostring(playerID)
         .. "; requested " .. heroName .. ", found " .. assignedName)
     return false
 end
 
-function LabyrinthOfTheAncients:OnGameRulesStateChange()
+function PathOfTheAncients:OnGameRulesStateChange()
     -- A zero auto-launch delay does not reliably skip the setup screen on
     -- every build, so force it closed as soon as the setup state is entered.
     if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
@@ -296,17 +296,17 @@ function LabyrinthOfTheAncients:OnGameRulesStateChange()
                 and hero:GetUnitName() == archetype.hero
                 and hero:GetPlayerOwnerID() == playerID
                 and player:GetAssignedHero() == hero then
-                print("[LOA] Verified existing hero for player " .. tostring(playerID)
+                print("[POA] Verified existing hero for player " .. tostring(playerID)
                     .. "; duplicate creation prevented")
             else
-                print("[LOA] Recorded hero validation failed for player " .. tostring(playerID)
+                print("[POA] Recorded hero validation failed for player " .. tostring(playerID)
                     .. "; no replacement hero created")
             end
         end
     end
 end
 
-function LabyrinthOfTheAncients:GetConnectedPlayerCount()
+function PathOfTheAncients:GetConnectedPlayerCount()
     local count = 0
     for playerID = 0, DOTA_MAX_TEAM_PLAYERS - 1 do
         if self:IsValidPlayer(playerID)
@@ -317,7 +317,7 @@ function LabyrinthOfTheAncients:GetConnectedPlayerCount()
     return count
 end
 
-function LabyrinthOfTheAncients:GetReadyPlayerCount()
+function PathOfTheAncients:GetReadyPlayerCount()
     local count = 0
     for playerID, selection in pairs(self.selections) do
         if selection.confirmed and self:IsValidPlayer(playerID) then
@@ -327,12 +327,12 @@ function LabyrinthOfTheAncients:GetReadyPlayerCount()
     return count
 end
 
-function LabyrinthOfTheAncients:AllConnectedPlayersReady()
+function PathOfTheAncients:AllConnectedPlayersReady()
     local playerCount = self:GetConnectedPlayerCount()
     return playerCount > 0 and self:GetReadyPlayerCount() >= playerCount
 end
 
-function LabyrinthOfTheAncients:AllConfirmedPlayersHaveAssignedHeroes()
+function PathOfTheAncients:AllConfirmedPlayersHaveAssignedHeroes()
     for playerID, selection in pairs(self.selections) do
         if selection.confirmed then
             local archetype = ARCHETYPES[selection.archetype]
@@ -355,8 +355,8 @@ function LabyrinthOfTheAncients:AllConfirmedPlayersHaveAssignedHeroes()
     return true
 end
 
-function LabyrinthOfTheAncients:PublishPartyState()
-    CustomNetTables:SetTableValue("loa_selection", "party", {
+function PathOfTheAncients:PublishPartyState()
+    CustomNetTables:SetTableValue("poa_selection", "party", {
         player_count = self:GetConnectedPlayerCount(),
         ready_count = self:GetReadyPlayerCount(),
     })

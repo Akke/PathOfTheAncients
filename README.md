@@ -20,8 +20,8 @@ Close Dota and any addon watcher, then link both project roots into an installed
 The script creates only these addon links:
 
 ```text
-content/dota_addons/labyrinth_of_the_ancients -> repository content/
-game/dota_addons/labyrinth_of_the_ancients    -> repository game/
+content/dota_addons/path_of_the_ancients -> repository content/
+game/dota_addons/path_of_the_ancients    -> repository game/
 ```
 
 On Windows, enable Developer Mode or open Command Prompt as Administrator, then run:

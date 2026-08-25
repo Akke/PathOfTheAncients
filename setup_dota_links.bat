@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
 
-set "ADDON_NAME=labyrinth_of_the_ancients"
+set "ADDON_NAME=path_of_the_ancients"
 set "PROJECT_ROOT=%~dp0"
 
 if "%~1"=="" (

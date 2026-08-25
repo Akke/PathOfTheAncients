@@ -2,7 +2,7 @@
 
 // Authoritative client-side catalog for the class-selection UI. Keep class
 // definitions in display order and each ascendencies array sorted by name.
-var LOA_CLASS_ORDER = [
+var POA_CLASS_ORDER = [
     "warrior",
     "mercenary",
     "ranger",
@@ -12,7 +12,7 @@ var LOA_CLASS_ORDER = [
     "specialist"
 ];
 
-var LOA_CLASS_DEFINITIONS = {
+var POA_CLASS_DEFINITIONS = {
     warrior: { name: "Warrior", base: "Mars", attribute: "STRENGTH", baseHero: "npc_dota_hero_mars", desc: "Frontline masters of steel and fury. Warriors hold the line, shield their allies and break enemy ranks in a single charge.", ascendencies: [
         { key: "berserker", name: "Berserker", hero: "npc_dota_hero_skeleton_king", presentation: "Wraith King • Arcana desired", desc: "An unkillable warlord who feeds on blood and rises again with every fall." },
         { key: "paladin", name: "Paladin", hero: "npc_dota_hero_omniknight", presentation: "Omniknight", desc: "A holy bulwark who mends wounds in the thick of battle and turns aside death itself." },

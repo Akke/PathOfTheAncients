@@ -2,6 +2,6 @@
 {
     custom_net_tables =
     [
-        "loa_selection"
+        "poa_selection"
     ]
 }

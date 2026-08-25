@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-ADDON_NAME="labyrinth_of_the_ancients"
+ADDON_NAME="path_of_the_ancients"
 PROJECT_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 DOTA_ROOT=${1:-}
 
