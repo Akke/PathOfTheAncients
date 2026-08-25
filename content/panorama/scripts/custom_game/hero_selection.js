@@ -38,19 +38,42 @@
     var selectedSpecialist = null;
     var confirmed = false;
     var classOrder = ["warrior", "ranger", "mage", "mercenary", "druid", "martial_artist"];
-    var carouselPage = 0;
+    var focusIndex = 0;
+    var carouselSpacing = 170;
     var classPreviewRequest = 0;
     var specPreviewRequest = 0;
 
-    function UpdateCarousel(page) {
-        carouselPage = Math.max(0, Math.min(1, page));
+    function OffsetFromFocus(index) {
+        var count = classOrder.length;
+        var offset = ((index - focusIndex) % count + count) % count;
+        if (offset > count / 2) offset -= count;
+        return offset;
+    }
+
+    function UpdateCarousel(step) {
+        var count = classOrder.length;
+        focusIndex = ((focusIndex + step) % count + count) % count;
+        var track = $("#ClassCarouselTrack");
+        var entries = [];
         classOrder.forEach(function (key, index) {
-            $("#" + CLASSES[key].card).SetHasClass("CarouselHidden", Math.floor(index / 3) !== carouselPage);
+            var offset = OffsetFromFocus(index);
+            var distance = Math.abs(offset);
+            entries.push({ key: key, distance: distance });
+            var slot = $("#Slot_" + key);
+            slot.style.transform = "translateX(" + (offset * carouselSpacing) + "px)";
+            var card = $("#" + CLASSES[key].card);
+            card.SetHasClass("Ring1", distance === 1);
+            card.SetHasClass("Ring2", distance === 2);
+            card.SetHasClass("Ring3", distance >= 3);
         });
-        $("#CarouselLeft").enabled = carouselPage > 0;
-        $("#CarouselRight").enabled = carouselPage < 1;
-        $("#CarouselPageLabel").text = (carouselPage + 1) + " / 2";
-        $.Msg("[LOA UI] Class carousel page: " + (carouselPage + 1));
+        entries.sort(function (a, b) { return b.distance - a.distance; });
+        for (var i = entries.length - 1; i >= 0; i--) {
+            var slot = $("#Slot_" + entries[i].key);
+            var first = track.GetChild(0);
+            if (first !== slot) track.MoveChildBefore(slot, first);
+        }
+        $("#CarouselPageLabel").text = CLASSES[classOrder[focusIndex]].name.toUpperCase();
+        $.Msg("[LOA UI] Carousel focus: " + classOrder[focusIndex]);
         QueueVisibleClassPreviews();
     }
 
@@ -59,15 +82,9 @@
         var request = classPreviewRequest;
         $.Schedule(0.0, function () {
             if (request !== classPreviewRequest || $("#BaseStage").BHasClass("HiddenStage")) return;
-            classOrder.forEach(function (key, index) {
-                if (Math.floor(index / 3) !== carouselPage) return;
-                var definition = CLASSES[key];
-                var card = $("#" + definition.card);
-                var scene = $("#" + definition.scene);
-                if (card && scene && !card.BHasClass("CarouselHidden")) {
-                    scene.SetUnit(definition.baseHero, "default", true);
-                    $.Msg("[LOA UI] Lit class portrait: " + definition.baseHero);
-                }
+            classOrder.forEach(function (key) {
+                var scene = $("#" + CLASSES[key].scene);
+                if (scene) scene.SetUnit(CLASSES[key].baseHero, "default", true);
             });
         });
     }
@@ -189,11 +206,22 @@
     function OnPartyReady() { $.Msg("[LOA UI] Party ready; game start requested"); var root = $("#HeroSelectionRoot"), wrapper = root && root.GetParent(), context = $.GetContextPanel(); root.AddClass("PartyReady"); root.hittest = false; root.hittestchildren = false; if (wrapper) { wrapper.hittest = false; wrapper.hittestchildren = false; } context.hittest = false; context.hittestchildren = false; context.style.visibility = "collapse"; $.Msg("[LOA UI] Hero selection context collapsed; gameplay input released"); }
     function UpdatePartyStatus() { var state = CustomNetTables.GetTableValue("loa_selection", "party"); if (!state) { $("#PartyStatus").text = "Choose your class"; return; } $("#PartyStatus").text = (Number(state.ready_count) || 0) + " / " + (Number(state.player_count) || 1) + " players ready"; }
 
-    Object.keys(CLASSES).forEach(function (key) {
-        $("#" + CLASSES[key].select).SetPanelEvent("onactivate", function () { SelectClass(key); });
+    classOrder.forEach(function (key) {
+        var card = $("#" + CLASSES[key].card);
+        var slot = $.CreatePanel("Panel", $("#ClassCarouselTrack"), "Slot_" + key);
+        slot.AddClass("CarouselSlot");
+        slot.hittest = false;
+        card.SetParent(slot);
     });
-    $("#CarouselLeft").SetPanelEvent("onactivate", function () { UpdateCarousel(carouselPage - 1); });
-    $("#CarouselRight").SetPanelEvent("onactivate", function () { UpdateCarousel(carouselPage + 1); });
+
+    Object.keys(CLASSES).forEach(function (key) {
+        $("#" + CLASSES[key].select).SetPanelEvent("onactivate", function () {
+            if (classOrder[focusIndex] === key) SelectClass(key);
+            else UpdateCarousel(classOrder.indexOf(key) - focusIndex);
+        });
+    });
+    $("#CarouselLeft").SetPanelEvent("onactivate", function () { UpdateCarousel(-1); });
+    $("#CarouselRight").SetPanelEvent("onactivate", function () { UpdateCarousel(1); });
     $("#BackButton").SetPanelEvent("onactivate", ShowClassStage);
     $("#ConfirmButton").SetPanelEvent("onactivate", ConfirmSelection);
     HideDefaultHeroSelection();

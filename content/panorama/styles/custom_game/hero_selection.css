@@ -78,16 +78,21 @@
 #ClassCarouselTrack {
     width: 100%;
     height: 100%;
-    flow-children: right;
+}
+
+.CarouselSlot {
+    width: 250px;
+    height: 475px;
     horizontal-align: center;
+    vertical-align: center;
+    transition-property: transform;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
 }
 
-#ClassCarouselTrack .BaseCard {
-    margin: 12px 20px;
-}
-
-.CarouselHidden {
-    visibility: collapse;
+.CarouselSlot .CardShell {
+    horizontal-align: center;
+    vertical-align: center;
 }
 
 .CarouselArrow {
@@ -104,10 +109,6 @@
 
 .CarouselArrow:hover:enabled {
     brightness: 1.5;
-}
-
-.CarouselArrow:disabled {
-    opacity: 0.22;
 }
 
 .CarouselArrow Label {
@@ -228,6 +229,10 @@
     box-shadow: 0 0 26px 2 #d99c3d88;
 }
 
+.BaseCard.Ring1 { transform: scale3d(0.8, 0.8, 1); brightness: 0.72; saturation: 0.75; }
+.BaseCard.Ring2 { transform: scale3d(0.66, 0.66, 1); brightness: 0.5; saturation: 0.6; }
+.BaseCard.Ring3 { transform: scale3d(0.55, 0.55, 1); brightness: 0.35; saturation: 0.5; }
+
 .CornerMask {
     width: 18px;
     height: 18px;
@@ -290,7 +295,6 @@
     height: 188px;
     vertical-align: bottom;
     flow-children: down;
-    padding-bottom: 14px;
     background-color: gradient(linear, 0% 0%, 0% 100%, from(#0a0d1155), to(#05070ae0));
 }
 
