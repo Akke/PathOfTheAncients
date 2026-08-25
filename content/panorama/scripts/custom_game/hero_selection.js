@@ -39,8 +39,8 @@
     var confirmed = false;
     var classOrder = ["warrior", "ranger", "mage", "mercenary", "druid", "martial_artist"];
     var carouselPage = 0;
-    var previewRequest = 0;
     var classPreviewRequest = 0;
+    var specPreviewRequest = 0;
 
     function UpdateCarousel(page) {
         carouselPage = Math.max(0, Math.min(1, page));
@@ -85,15 +85,18 @@
         return null;
     }
 
-    function SetPreviewUnit(heroName) {
-        var preview = $("#HeroScenePreview");
-        if (!preview || !heroName) return;
-        previewRequest += 1;
-        var request = previewRequest;
+    function QueueSpecialistPreviews() {
+        specPreviewRequest += 1;
+        var request = specPreviewRequest;
         $.Schedule(0.0, function () {
-            if (request !== previewRequest || $("#SpecialistStage").BHasClass("HiddenStage")) return;
-            preview.SetUnit(heroName, "default", true);
-            $.Msg("[LOA UI] Post-layout 3D preview unit: " + heroName);
+            if (request !== specPreviewRequest || $("#SpecialistStage").BHasClass("HiddenStage")) return;
+            CLASSES[selectedClass].specialists.forEach(function (specialist) {
+                var scene = $("#SpecScene_" + specialist.key);
+                if (scene) {
+                    scene.SetUnit(specialist.hero, "default", true);
+                    $.Msg("[LOA UI] Lit specialist render: " + specialist.hero);
+                }
+            });
         });
     }
 
@@ -121,25 +124,27 @@
         var holder = $("#SpecialistCards");
         holder.RemoveAndDeleteChildren();
         definition.specialists.forEach(function (specialist) {
-            var card = $.CreatePanel("Button", holder, "Specialist_" + specialist.key);
-            card.AddClass("HeroCard"); card.AddClass("SpecialistCard"); card.hittestchildren = false;
-            var portrait = $.CreatePanel("DOTAHeroImage", card, "");
-            portrait.AddClass("SpecialistPortrait");
-            portrait.SetAttributeString("heroname", specialist.hero);
-            portrait.SetAttributeString("heroimagestyle", "landscape");
-            portrait.hittest = false;
-            var smoke = $.CreatePanel("Panel", card, ""); smoke.AddClass("SpecialistSmoke"); smoke.hittest = false;
-            var topRule = $.CreatePanel("Panel", card, ""); topRule.AddClass("SpecialistTopRule"); topRule.hittest = false;
-            var diamond = $.CreatePanel("Label", card, ""); diamond.AddClass("SpecialistDiamond"); diamond.text = "◆"; diamond.hittest = false;
-            var mark = $.CreatePanel("Panel", card, ""); mark.AddClass("CardSelectionMark"); mark.hittest = false;
-            var check = $.CreatePanel("Label", mark, ""); check.text = "✓"; check.hittest = false;
-            var copy = $.CreatePanel("Panel", card, ""); copy.AddClass("HeroCopy"); copy.hittest = false;
-            var heroLabel = $.CreatePanel("Label", copy, ""); heroLabel.AddClass("SpecialistHeroLabel"); heroLabel.text = specialist.presentation;
-            var title = $.CreatePanel("Label", copy, ""); title.AddClass("HeroName"); title.text = specialist.name;
-            var classLabel = $.CreatePanel("Label", copy, ""); classLabel.AddClass("SpecialistClassLabel"); classLabel.text = definition.name + " SPECIALIST";
-            var cta = $.CreatePanel("Panel", copy, ""); cta.AddClass("SpecialistCTA"); cta.hittest = false;
-            var ctaLabel = $.CreatePanel("Label", cta, ""); ctaLabel.text = "CHOOSE SPECIALIST"; ctaLabel.hittest = false;
-            card.SetPanelEvent("onactivate", function () { SelectSpecialist(specialist.key); });
+            var card = $.CreatePanel("Panel", holder, "Specialist_" + specialist.key);
+            card.AddClass("CardShell"); card.AddClass("SpecialistCard");
+            var topDiamond = $.CreatePanel("Label", card, ""); topDiamond.AddClass("FrameDiamond"); topDiamond.AddClass("Top"); topDiamond.text = "◆"; topDiamond.hittest = false;
+            var art = $.CreatePanel("Panel", card, ""); art.AddClass("CardArt"); art.hittest = false;
+            var scene = $.CreatePanel("DOTAScenePanel", art, "SpecScene_" + specialist.key);
+            scene.AddClass("CardScene"); scene.allowrotation = true;
+            var vignette = $.CreatePanel("Panel", art, ""); vignette.AddClass("ArtVignette"); vignette.hittest = false;
+            var scrim = $.CreatePanel("Panel", art, ""); scrim.AddClass("ArtScrim"); scrim.hittest = false;
+            var glow = $.CreatePanel("Panel", card, ""); glow.AddClass("CardGlow"); glow.hittest = false;
+            var select = $.CreatePanel("Button", card, "SpecialistSelect_" + specialist.key);
+            select.AddClass("CardSelectArea"); select.hittestchildren = false;
+            var info = $.CreatePanel("Panel", select, ""); info.AddClass("CardInfo"); info.hittest = false;
+            var rule = $.CreatePanel("Panel", info, ""); rule.AddClass("InfoRule"); rule.hittest = false;
+            var diamond = $.CreatePanel("Label", info, ""); diamond.AddClass("InfoDiamond"); diamond.text = "◆"; diamond.hittest = false;
+            var emblem = $.CreatePanel("Panel", info, ""); emblem.AddClass("CardEmblem"); emblem.hittest = false;
+            var title = $.CreatePanel("Label", info, ""); title.AddClass("CardTitle"); title.text = specialist.name.toUpperCase(); title.hittest = false;
+            var type = $.CreatePanel("Label", info, ""); type.AddClass("CardType"); type.text = definition.name.toUpperCase(); type.hittest = false;
+            var buttonRule = $.CreatePanel("Panel", select, ""); buttonRule.AddClass("ButtonRule"); buttonRule.hittest = false;
+            var cta = $.CreatePanel("Label", select, ""); cta.AddClass("LearnMoreLabel"); cta.text = "Learn More"; cta.hittest = false;
+            var bottomDiamond = $.CreatePanel("Label", card, ""); bottomDiamond.AddClass("FrameDiamond"); bottomDiamond.AddClass("Bottom"); bottomDiamond.text = "◆"; bottomDiamond.hittest = false;
+            select.SetPanelEvent("onactivate", function () { SelectSpecialist(specialist.key); });
         });
         $("#BaseStage").AddClass("HiddenStage");
         $("#SpecialistStage").RemoveClass("HiddenStage");
@@ -150,7 +155,7 @@
         $("#SelectedRole").text = "Base identity: " + definition.base;
         $("#ReadyStatus").text = "Choose a specialist to continue";
         $("#ConfirmButton").enabled = false;
-        SetPreviewUnit(definition.baseHero);
+        QueueSpecialistPreviews();
         $.Msg("[LOA UI] Selected base class: " + classKey);
     }
 
@@ -160,7 +165,6 @@
         if (!specialist) return;
         CLASSES[selectedClass].specialists.forEach(function (item) { var panel = $("#Specialist_" + item.key); if (panel) panel.SetHasClass("Selected", item.key === key); });
         selectedSpecialist = key;
-        SetPreviewUnit(specialist.hero);
         $("#SelectedHeroName").text = CLASSES[selectedClass].name + " — " + specialist.name;
         $("#SelectedRole").text = specialist.presentation;
         $("#ReadyStatus").text = "Ready to confirm";

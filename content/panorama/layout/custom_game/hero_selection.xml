@@ -16,12 +16,132 @@
                         <Button id="CarouselLeft" class="CarouselArrow" hittestchildren="false"><Label text="‹" /></Button>
                         <Panel id="ClassCarouselViewport">
                           <Panel id="ClassCarouselTrack">
-                        <Panel id="WarriorCard" class="HeroCard BaseCard"><DOTAScenePanel id="WarriorScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="WarriorSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="MARS" /><Label class="HeroName" text="Warrior" /><Label class="HeroDescription" text="Paladin • Berserker • Slayer" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
-                        <Panel id="RangerCard" class="HeroCard BaseCard"><DOTAScenePanel id="RangerScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="RangerSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="HOODWINK" /><Label class="HeroName" text="Ranger" /><Label class="HeroDescription" text="Gunslinger • Sharpshooter • Witch Hunter" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
-                        <Panel id="MageCard" class="HeroCard BaseCard"><DOTAScenePanel id="MageScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="MageSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="INVOKER" /><Label class="HeroName" text="Mage" /><Label class="HeroDescription" text="Fire Mage • Frost Mage • Lightning Mage" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
-                        <Panel id="MercenaryCard" class="HeroCard BaseCard"><DOTAScenePanel id="MercenaryScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="MercenarySelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="LEGION COMMANDER" /><Label class="HeroName" text="Mercenary" /><Label class="HeroDescription" text="Death Blade • Artillerist • Trickster" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
-                        <Panel id="DruidCard" class="HeroCard BaseCard"><DOTAScenePanel id="DruidScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="DruidSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="NATURE'S PROPHET" /><Label class="HeroName" text="Druid" /><Label class="HeroDescription" text="Wolf • Bear • Dragon" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
-                        <Panel id="MartialArtistCard" class="HeroCard BaseCard"><DOTAScenePanel id="MartialArtistScene" class="ClassScenePreview" allowrotation="true" rotationlimits="-70 70" /><Panel class="HeroGradient" hittest="false" /><Button id="MartialArtistSelect" class="HeroCopy ClassSelectButton" hittestchildren="false"><Label class="RoleLabel" text="JUGGERNAUT" /><Label class="HeroName" text="Martial Artist" /><Label class="HeroDescription" text="Striker • Glavier • War Dancer" /><Label class="ChooseClassLabel" text="CHOOSE CLASS" /></Button></Panel>
+                            <Panel id="WarriorCard" class="CardShell BaseCard">
+                                <Label class="FrameDiamond Top" text="◆" hittest="false" />
+                                <Panel class="CardArt">
+                                    <DOTAScenePanel id="WarriorScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
+                                    <Panel class="ArtVignette" hittest="false" />
+                                    <Panel class="ArtScrim" hittest="false" />
+                                </Panel>
+                                <Panel class="CardGlow" hittest="false" />
+                                <Button id="WarriorSelect" class="CardSelectArea" hittestchildren="false">
+                                    <Panel class="CardInfo">
+                                        <Panel class="InfoRule" hittest="false" />
+                                        <Label class="InfoDiamond" text="◆" hittest="false" />
+                                        <Panel class="CardEmblem" hittest="false" />
+                                        <Label class="CardTitle" text="WARRIOR" hittest="false" />
+                                        <Label class="CardType" text="MARS" hittest="false" />
+                                    </Panel>
+                                    <Panel class="ButtonRule" hittest="false" />
+                                    <Label class="LearnMoreLabel" text="Learn More" hittest="false" />
+                                </Button>
+                                <Label class="FrameDiamond Bottom" text="◆" hittest="false" />
+                            </Panel>
+                            <Panel id="RangerCard" class="CardShell BaseCard">
+                                <Label class="FrameDiamond Top" text="◆" hittest="false" />
+                                <Panel class="CardArt">
+                                    <DOTAScenePanel id="RangerScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
+                                    <Panel class="ArtVignette" hittest="false" />
+                                    <Panel class="ArtScrim" hittest="false" />
+                                </Panel>
+                                <Panel class="CardGlow" hittest="false" />
+                                <Button id="RangerSelect" class="CardSelectArea" hittestchildren="false">
+                                    <Panel class="CardInfo">
+                                        <Panel class="InfoRule" hittest="false" />
+                                        <Label class="InfoDiamond" text="◆" hittest="false" />
+                                        <Panel class="CardEmblem" hittest="false" />
+                                        <Label class="CardTitle" text="RANGER" hittest="false" />
+                                        <Label class="CardType" text="HOODWINK" hittest="false" />
+                                    </Panel>
+                                    <Panel class="ButtonRule" hittest="false" />
+                                    <Label class="LearnMoreLabel" text="Learn More" hittest="false" />
+                                </Button>
+                                <Label class="FrameDiamond Bottom" text="◆" hittest="false" />
+                            </Panel>
+                            <Panel id="MageCard" class="CardShell BaseCard">
+                                <Label class="FrameDiamond Top" text="◆" hittest="false" />
+                                <Panel class="CardArt">
+                                    <DOTAScenePanel id="MageScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
+                                    <Panel class="ArtVignette" hittest="false" />
+                                    <Panel class="ArtScrim" hittest="false" />
+                                </Panel>
+                                <Panel class="CardGlow" hittest="false" />
+                                <Button id="MageSelect" class="CardSelectArea" hittestchildren="false">
+                                    <Panel class="CardInfo">
+                                        <Panel class="InfoRule" hittest="false" />
+                                        <Label class="InfoDiamond" text="◆" hittest="false" />
+                                        <Panel class="CardEmblem" hittest="false" />
+                                        <Label class="CardTitle" text="MAGE" hittest="false" />
+                                        <Label class="CardType" text="INVOKER" hittest="false" />
+                                    </Panel>
+                                    <Panel class="ButtonRule" hittest="false" />
+                                    <Label class="LearnMoreLabel" text="Learn More" hittest="false" />
+                                </Button>
+                                <Label class="FrameDiamond Bottom" text="◆" hittest="false" />
+                            </Panel>
+                            <Panel id="MercenaryCard" class="CardShell BaseCard">
+                                <Label class="FrameDiamond Top" text="◆" hittest="false" />
+                                <Panel class="CardArt">
+                                    <DOTAScenePanel id="MercenaryScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
+                                    <Panel class="ArtVignette" hittest="false" />
+                                    <Panel class="ArtScrim" hittest="false" />
+                                </Panel>
+                                <Panel class="CardGlow" hittest="false" />
+                                <Button id="MercenarySelect" class="CardSelectArea" hittestchildren="false">
+                                    <Panel class="CardInfo">
+                                        <Panel class="InfoRule" hittest="false" />
+                                        <Label class="InfoDiamond" text="◆" hittest="false" />
+                                        <Panel class="CardEmblem" hittest="false" />
+                                        <Label class="CardTitle" text="MERCENARY" hittest="false" />
+                                        <Label class="CardType" text="LEGION COMMANDER" hittest="false" />
+                                    </Panel>
+                                    <Panel class="ButtonRule" hittest="false" />
+                                    <Label class="LearnMoreLabel" text="Learn More" hittest="false" />
+                                </Button>
+                                <Label class="FrameDiamond Bottom" text="◆" hittest="false" />
+                            </Panel>
+                            <Panel id="DruidCard" class="CardShell BaseCard">
+                                <Label class="FrameDiamond Top" text="◆" hittest="false" />
+                                <Panel class="CardArt">
+                                    <DOTAScenePanel id="DruidScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
+                                    <Panel class="ArtVignette" hittest="false" />
+                                    <Panel class="ArtScrim" hittest="false" />
+                                </Panel>
+                                <Panel class="CardGlow" hittest="false" />
+                                <Button id="DruidSelect" class="CardSelectArea" hittestchildren="false">
+                                    <Panel class="CardInfo">
+                                        <Panel class="InfoRule" hittest="false" />
+                                        <Label class="InfoDiamond" text="◆" hittest="false" />
+                                        <Panel class="CardEmblem" hittest="false" />
+                                        <Label class="CardTitle" text="DRUID" hittest="false" />
+                                        <Label class="CardType" text="NATURE'S PROPHET" hittest="false" />
+                                    </Panel>
+                                    <Panel class="ButtonRule" hittest="false" />
+                                    <Label class="LearnMoreLabel" text="Learn More" hittest="false" />
+                                </Button>
+                                <Label class="FrameDiamond Bottom" text="◆" hittest="false" />
+                            </Panel>
+                            <Panel id="MartialArtistCard" class="CardShell BaseCard">
+                                <Label class="FrameDiamond Top" text="◆" hittest="false" />
+                                <Panel class="CardArt">
+                                    <DOTAScenePanel id="MartialArtistScene" class="CardScene" allowrotation="true" rotationlimits="-70 70" />
+                                    <Panel class="ArtVignette" hittest="false" />
+                                    <Panel class="ArtScrim" hittest="false" />
+                                </Panel>
+                                <Panel class="CardGlow" hittest="false" />
+                                <Button id="MartialArtistSelect" class="CardSelectArea" hittestchildren="false">
+                                    <Panel class="CardInfo">
+                                        <Panel class="InfoRule" hittest="false" />
+                                        <Label class="InfoDiamond" text="◆" hittest="false" />
+                                        <Panel class="CardEmblem" hittest="false" />
+                                        <Label class="CardTitle" text="MARTIAL ARTIST" hittest="false" />
+                                        <Label class="CardType" text="JUGGERNAUT" hittest="false" />
+                                    </Panel>
+                                    <Panel class="ButtonRule" hittest="false" />
+                                    <Label class="LearnMoreLabel" text="Learn More" hittest="false" />
+                                </Button>
+                                <Label class="FrameDiamond Bottom" text="◆" hittest="false" />
+                            </Panel>
                           </Panel>
                         </Panel>
                         <Button id="CarouselRight" class="CarouselArrow" hittestchildren="false"><Label text="›" /></Button>
@@ -32,11 +152,6 @@
                 <Panel id="SpecialistStage" class="SelectionStage SpecialistStage HiddenStage">
                     <Panel id="SpecialistNav"><Button id="BackButton" hittestchildren="false"><Label text="‹ BACK TO CLASSES" /></Button><Label id="SpecialistHeading" text="Choose a Specialist" /></Panel>
                     <Panel id="SpecialistBody">
-                        <Panel id="PreviewFrame">
-                            <DOTAScenePanel id="HeroScenePreview" unit="npc_dota_hero_mars" allowrotation="true" rotationlimits="-70 70" />
-                            <Panel id="PreviewShade" hittest="false" />
-                            <Label id="PreviewHint" text="DRAG TO ROTATE" hittest="false" />
-                        </Panel>
                         <Panel id="SpecialistCards" />
                     </Panel>
                 </Panel>

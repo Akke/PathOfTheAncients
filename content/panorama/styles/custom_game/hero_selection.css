@@ -13,10 +13,6 @@
     transition-timing-function: ease-out;
 }
 
-#HeroSelectionRoot.Leaving {
-    opacity: 0;
-}
-
 #Backdrop {
     width: 100%;
     height: 100%;
@@ -45,7 +41,7 @@
     text-align: center;
 }
 
-#Eyebrow, .SectionLabel, .RoleLabel {
+#Eyebrow, .SectionLabel {
     color: #c99a57;
     font-size: 16px;
     font-weight: bold;
@@ -67,15 +63,9 @@
     margin-top: 5px;
 }
 
-#HeroCards {
-    width: 100%;
-    height: 650px;
-    flow-children: down;
-}
-
 #ClassCarousel {
     width: 100%;
-    height: 585px;
+    height: 520px;
     flow-children: right;
 }
 
@@ -89,35 +79,11 @@
     width: 100%;
     height: 100%;
     flow-children: right;
+    horizontal-align: center;
 }
 
 #ClassCarouselTrack .BaseCard {
-    width: fill-parent-flow(1);
-    height: 550px;
-    margin: 12px 14px;
-}
-
-.ClassScenePreview {
-    width: 100%;
-    height: 72%;
-}
-
-.ClassSelectButton {
-    height: 40%;
-    background-color: gradient(linear, 0% 0%, 0% 100%, from(#10182022), to(#091017fa));
-    border-top: 1px solid #58667188;
-}
-
-.ClassSelectButton:hover {
-    brightness: 1.35;
-}
-
-.ChooseClassLabel {
-    color: #d8a856;
-    font-size: 13px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    margin-top: 8px;
+    margin: 12px 20px;
 }
 
 .CarouselHidden {
@@ -220,280 +186,176 @@
     flow-children: down;
 }
 
-#PreviewFrame {
-    width: 100%;
-    height: 300px;
-    margin: 0 8px 8px 8px;
-    background-color: #080d12;
-    border: 1px solid #52616d;
-    box-shadow: inset 0 0 80px #000000cc;
-}
-
-#HeroScenePreview {
-    width: 420px;
-    height: 292px;
-    horizontal-align: center;
-    vertical-align: center;
-}
-
-#PreviewShade {
-    width: 100%;
-    height: 100%;
-    background-color: gradient(linear, 0% 65%, 0% 100%, from(#00000000), to(#05090dcc));
-}
-
-#PreviewHint {
-    horizontal-align: center;
-    vertical-align: bottom;
-    margin-bottom: 18px;
-    color: #9eabb5;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
 #SpecialistCards {
     width: 100%;
-    height: 252px;
-    margin: 0;
-    padding: 5px 16px 7px;
+    height: 100%;
     flow-children: right;
-    overflow: noclip;
+    horizontal-align: center;
 }
 
 .SpecialistCard {
-    width: fill-parent-flow(1);
-    height: 230px;
-    margin: 7px 13px;
-    border: 1px solid #78613faa;
-    background-color: #080d12;
+    margin: 12px 20px;
+}
+
+.CardShell {
+    width: 250px;
+    height: 475px;
+    background-color: gradient(linear, 0% 0%, 0% 100%, from(#101317), color-stop(0.55, #07090c), to(#0a0705));
+    border: 1px solid #6f7a84;
+    border-radius: 5px;
     box-shadow: 0 8px 24px 2 #000000cc;
-    transform: scale3d(1, 1, 1);
-    transform-origin: 50% 50%;
-    overflow: clip;
-    transition-property: transform, border, brightness, saturation, box-shadow;
-    transition-duration: 0.18s;
-    transition-timing-function: ease-out;
-}
-
-.SpecialistCard:hover {
-    transform: scale3d(1.045, 1.045, 1);
-    border: 2px solid #d7ad67;
-    brightness: 1.14;
-    saturation: 1.05;
-    box-shadow: 0 0 22px 2 #c7914255;
-}
-
-.SpecialistCard.Selected {
-    transform: scale3d(1.035, 1.035, 1);
-    border: 3px solid #e8bd72;
-    brightness: 1.1;
-    saturation: 1.08;
-    box-shadow: 0 0 28px 3 #d99c3d77;
-}
-
-.SpecialistPortrait {
-    width: 100%;
-    height: 100%;
-    wash-color: #aeb5b8;
-}
-
-.SpecialistSmoke {
-    width: 100%;
-    height: 100%;
-    background-color: gradient(linear, 0% 8%, 0% 100%, from(#11192322), color-stop(0.42, #080d1244), color-stop(0.68, #080d12dd), to(#030609ff));
-}
-
-.SpecialistTopRule {
-    width: 62%;
-    height: 1px;
-    horizontal-align: center;
-    margin-top: 13px;
-    background-color: gradient(linear, 0% 0%, 100% 0%, from(#c99a5700), color-stop(0.5, #d8ad69cc), to(#c99a5700));
-}
-
-.SpecialistDiamond {
-    horizontal-align: center;
-    margin-top: 6px;
-    color: #d8ad69;
-    font-size: 12px;
-    text-shadow: 0 1px 4px 2 #000000;
-}
-
-.SpecialistCard .HeroCopy {
-    vertical-align: bottom;
-    padding: 0 18px 13px;
-}
-
-.SpecialistHeroLabel {
-    color: #c6cdd2;
-    font-size: 12px;
-    font-weight: semi-bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 5px 2 #000000;
-}
-
-.SpecialistCard .HeroName {
-    color: #f4eadb;
-    font-size: 25px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 6px 2 #000000;
-}
-
-.SpecialistClassLabel {
-    color: #b48b50;
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    margin-top: 1px;
-}
-
-.SpecialistCTA {
-    width: 100%;
-    height: 29px;
-    margin-top: 7px;
-    background-color: gradient(linear, 0% 0%, 100% 0%, from(#6a4a22cc), color-stop(0.5, #a77836dd), to(#6a4a22cc));
-    border-top: 1px solid #e2bd7a88;
-}
-
-.SpecialistCTA Label {
-    horizontal-align: center;
-    vertical-align: center;
-    color: #f5ead7;
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.SpecialistCard.Selected .SpecialistCTA {
-    background-color: gradient(linear, 0% 0%, 100% 0%, from(#8b622acc), color-stop(0.5, #cf9b4bdd), to(#8b622acc));
-}
-
-.CardRow {
-    width: 100%;
-    height: fill-parent-flow(1);
-    flow-children: right;
-}
-
-.HeroCard {
-    width: fill-parent-flow(1);
-    height: 300px;
-    margin: 8px 12px;
-    border: 2px solid #475461aa;
-    background-color: #101820;
-    box-shadow: 0 8px 24px 2 #000000bb;
-    saturation: 0.72;
-    brightness: 0.76;
+    saturation: 0.85;
+    brightness: 0.9;
     transition-property: transform, border, brightness, saturation, box-shadow;
     transition-duration: 0.18s;
 }
 
-.HeroCard:hover {
+.CardShell:hover {
     transform: translateY(-7px);
-    border: 2px solid #a9b8c5;
-    brightness: 1;
+    border: 1px solid #c9d3dc;
+    brightness: 1.05;
     saturation: 1;
 }
 
-.HeroCard.Selected {
-    transform: translateY(-9px);
-    border: 3px solid #e5b86f;
+.CardShell.Selected {
+    transform: translateY(-7px);
+    border: 1px solid #e8bd72;
     brightness: 1.08;
     saturation: 1;
-    box-shadow: 0 0 22px 2 #d99c3d55;
+    box-shadow: 0 0 26px 2 #d99c3d88;
 }
 
-.HeroPortrait, .HeroGradient {
-    width: 100%;
-    height: 100%;
+.FrameDiamond {
+    horizontal-align: center;
+    color: #aab6c0;
+    font-size: 11px;
+    text-shadow: 0 1px 3px 1 #000000;
 }
 
-.HeroPortrait {
-    background-size: cover;
-    background-position: 50% 15%;
-    background-repeat: no-repeat;
-}
-
-.HeroGradient {
-    background-color: gradient(linear, 0% 35%, 0% 100%, from(#00000000), color-stop(0.45, #0b1015c8), to(#080c10ff));
-}
-
-.HeroCopy {
-    width: 100%;
-    vertical-align: bottom;
-    flow-children: down;
-    padding: 0 20px 18px;
-}
-
-.HeroName {
-    color: #f5f0e7;
-    font-size: 29px;
-    font-weight: bold;
-    margin-top: 3px;
-    text-shadow: 0 2px 6px 2 #000000;
-}
-
-.HeroDescription {
-    color: #b8c0c7;
-    font-size: 15px;
-    line-height: 18px;
+.FrameDiamond.Top {
     margin-top: 5px;
 }
 
-.CardSelectionMark {
-    width: 42px;
-    height: 42px;
-    horizontal-align: right;
-    margin: 16px;
-    border-radius: 50%;
-    background-color: #d8a856;
-    opacity: 0;
+.FrameDiamond.Bottom {
+    vertical-align: bottom;
+    margin-bottom: 4px;
 }
 
-.CardSelectionMark Label {
+.CardArt {
+    width: 100%;
+    height: 60%;
+    margin-top: 12px;
+    overflow: clip;
+}
+
+.CardScene {
+    width: 100%;
+    height: 100%;
+}
+
+.ArtVignette {
+    width: 100%;
+    height: 100%;
+    background-color: gradient(radial, 50% 45%, 0%, 50% 50%, 75%, from(#00000000), to(#000000aa));
+}
+
+.ArtScrim {
+    width: 100%;
+    height: 100%;
+    background-color: gradient(linear, 0% 55%, 0% 100%, from(#00000000), color-stop(0.75, #05070acc), to(#05070aee));
+}
+
+.CardGlow {
+    width: 320px;
+    height: 180px;
     horizontal-align: center;
-    vertical-align: center;
-    color: #111820;
-    font-size: 25px;
+    vertical-align: bottom;
+    margin-bottom: 110px;
+    background-color: gradient(radial, 50% 60%, 0%, 50% 60%, 55%, from(#d98a2e30), to(#d98a2e00));
+}
+
+.CardSelectArea {
+    width: 100%;
+    height: 172px;
+    vertical-align: bottom;
+    flow-children: down;
+    padding-bottom: 14px;
+    background-color: gradient(linear, 0% 0%, 0% 100%, from(#0a0d1155), to(#05070ae0));
+}
+
+.CardSelectArea:hover {
+    brightness: 1.25;
+}
+
+.CardInfo {
+    width: 100%;
+    flow-children: down;
+}
+
+.InfoRule {
+    width: 100%;
+    height: 1px;
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#8b98a300), color-stop(0.5, #aab6c0cc), to(#8b98a300));
+}
+
+.InfoDiamond {
+    horizontal-align: center;
+    margin-top: 4px;
+    color: #aab6c0;
+    font-size: 10px;
+}
+
+.CardEmblem {
+    width: 14px;
+    height: 14px;
+    horizontal-align: center;
+    margin-top: 12px;
+    border: 1px solid #c9d3dc;
+    transform: rotateZ(45deg);
+    box-shadow: 0 0 6px 1 #ffffff22;
+}
+
+.CardTitle {
+    horizontal-align: center;
+    margin-top: 12px;
+    color: #eef2f5;
+    font-size: 24px;
     font-weight: bold;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 8px 2 #000000;
 }
 
-.HeroCard.Selected .CardSelectionMark {
-    opacity: 1;
-}
-
-.UndecidedCard {
-    wash-color: #82909b;
-    saturation: 0.18;
-}
-
-.UndecidedCard:hover {
-    transform: none;
-    border: 2px solid #475461aa;
-    brightness: 0.8;
-    saturation: 0.18;
-}
-
-.CasterSigil {
-    width: 150px;
-    height: 150px;
+.CardType {
     horizontal-align: center;
-    vertical-align: center;
-    margin-bottom: 60px;
-    border: 2px solid #8898a566;
-    border-radius: 50%;
-    background-color: #1e2833cc;
-    box-shadow: 0 0 30px 4 #536b7f22;
+    margin-top: 3px;
+    color: #8b98a3;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 3px;
 }
 
-.CasterSigil Label {
+.ButtonRule {
+    width: 100%;
+    height: 1px;
+    margin-top: 12px;
+    background-color: gradient(linear, 0% 0%, 100% 0%, from(#8b98a300), color-stop(0.5, #aab6c088), to(#8b98a300));
+}
+
+.LearnMoreLabel {
     horizontal-align: center;
-    vertical-align: center;
-    color: #aebac4;
-    font-size: 78px;
-    font-weight: thin;
+    margin-top: 10px;
+    color: #c3ccd3;
+    font-size: 16px;
+    font-weight: semi-bold;
+    letter-spacing: 1px;
+}
+
+.CardShell:hover .LearnMoreLabel {
+    color: #ffffff;
+}
+
+.CardShell.Selected .LearnMoreLabel {
+    color: #f0e6c8;
 }
 
 #SelectionFooter {
