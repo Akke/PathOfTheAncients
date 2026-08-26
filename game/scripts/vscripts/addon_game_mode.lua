@@ -1,3 +1,5 @@
+require("libraries/timers")
+
 if PathOfTheAncients == nil then
     PathOfTheAncients = class({})
 end
@@ -136,6 +138,7 @@ function PathOfTheAncients:InitGameMode()
     GameRules:SetPreGameTime(0)
 
     local mode = GameRules:GetGameModeEntity()
+
     mode:SetAnnouncerDisabled(true)
     mode:SetKillingSpreeAnnouncerDisabled(true)
 
@@ -648,6 +651,22 @@ function PathOfTheAncients:ApplySelectedHero(playerID, heroName)
     return false
 end
 
+function PathOfTheAncients:ForceDummyHeroes()
+    for playerID = 0, DOTA_MAX_TEAM_PLAYERS - 1 do
+        if self:IsValidPlayer(playerID) then
+            local player = PlayerResource:GetPlayer(playerID)
+            if player ~= nil then
+                local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+                    or player:GetAssignedHero()
+                if hero == nil or hero:IsNull() then
+                    player:SetSelectedHero("npc_dota_hero_wisp")
+                    print("[POA] Successfully forced dummy hero for player " .. tostring(playerID))
+                end
+            end
+        end
+    end
+end
+
 function PathOfTheAncients:OnGameRulesStateChange()
     -- A zero auto-launch delay does not reliably skip the setup screen on
     -- every build, so force it closed as soon as the setup state is entered.
@@ -657,7 +676,8 @@ function PathOfTheAncients:OnGameRulesStateChange()
         return
     end
 
-    if GameRules:State_Get() ~= DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+    if GameRules:State_Get() == DOTA_GAMERULES_STATE_HERO_SELECTION then
+        self:ForceDummyHeroes()
         return
     end
 
