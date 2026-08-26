@@ -139,6 +139,8 @@ function PathOfTheAncients:InitGameMode()
 
     local mode = GameRules:GetGameModeEntity()
 
+    mode:SetExecuteOrderFilter(Dynamic_Wrap(PathOfTheAncients, "OrderFilter"), self)
+
     mode:SetAnnouncerDisabled(true)
     mode:SetKillingSpreeAnnouncerDisabled(true)
 
@@ -190,6 +192,19 @@ function PathOfTheAncients:InitGameMode()
         end
         print("[POA] entity API: " .. table.concat(parts, ", "))
     end
+end
+
+function PathOfTheAncients:OrderFilter(filterTable)
+	local order = filterTable.order_type
+	local units = filterTable.units
+	local playerID = filterTable.issuer_player_id_const
+    local player = PlayerResource:GetPlayer(playerID)
+
+    if player ~= nil then
+        if player:GetAssignedHero():GetName() == "npc_dota_hero_wisp" then return false end
+    end
+
+    return true
 end
 
 function PathOfTheAncients:IsValidPlayer(playerID)
