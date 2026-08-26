@@ -1,0 +1,43 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/hero_selection.css" /></styles>
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/class_definitions.js" />
+        <include src="file://{resources}/scripts/custom_game/hero_selection.js" />
+    </scripts>
+    <Panel class="HeroSelectionContainer">
+        <Panel id="HeroSelectionRoot" hittest="true">
+            <Panel id="Backdrop" hittest="false" />
+            <Panel id="SelectionShell">
+                <Panel id="Header">
+                    <Label id="Eyebrow" text="PATH OF THE ANCIENTS" />
+                    <Label id="ScreenTitle" text="Choose Your Class" />
+                    <Label id="ScreenSubtitle" text="Choose a path, then select one of its three ascendancies." />
+                </Panel>
+
+                <Panel id="BaseStage" class="SelectionStage">
+                    <Panel id="ClassCarousel">
+                        <Button id="CarouselLeft" class="CarouselArrow" hittestchildren="false"><Label text="‹" /></Button>
+                        <Panel id="ClassCarouselViewport">
+                            <Panel id="ClassCarouselTrack" />
+                        </Panel>
+                        <Button id="CarouselRight" class="CarouselArrow" hittestchildren="false"><Label text="›" /></Button>
+                    </Panel>
+                    <Panel id="CarouselFooter"><Label id="CarouselPageLabel" text="" /><Label text="ARROWS TO BROWSE • DRAG TO ROTATE • CLICK A SIDE CARD TO FOCUS IT" /></Panel>
+                </Panel>
+
+                <Panel id="AscendencyStage" class="SelectionStage AscendencyStage HiddenStage">
+                    <Panel id="AscendencyNav"><Button id="BackButton" hittestchildren="false"><Label text="‹ BACK TO CLASSES" /></Button><Label id="AscendencyHeading" text="Choose an Ascendancy" /></Panel>
+                    <Panel id="AscendencyBody">
+                        <Panel id="AscendencyCards" />
+                    </Panel>
+                </Panel>
+
+                <Panel id="SelectionFooter">
+                    <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedRole" text="Select a class to reveal its ascendancies" /></Panel>
+                    <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" hittestchildren="false"><Label id="ConfirmLabel" text="CONFIRM ASCENDANCY" /></Button></Panel>
+                </Panel>
+                <Panel id="PartyFooter"><Label id="PartyStatus" text="Preparing party…" /><Label text="Your ascendancy becomes your playable hero." /></Panel>
+            </Panel>
+        </Panel>
+    </Panel>
+</root>
