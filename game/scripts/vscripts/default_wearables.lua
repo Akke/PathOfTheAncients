@@ -17,7 +17,7 @@ return {
         "models/heroes/wraith_king/wraith_king_shoulder.vmdl",
         "models/heroes/wraith_king/wraith_king_weapon.vmdl",
     },
-    -- Omniknight (no wings — Guardian Angel ult FX)
+    -- Omniknight
     ["npc_dota_hero_omniknight"] = {
         "models/heroes/omniknight/bracer.vmdl",
         "models/heroes/omniknight/cape.vmdl",
@@ -25,6 +25,7 @@ return {
         "models/heroes/omniknight/hammer.vmdl",
         "models/heroes/omniknight/head.vmdl",
         "models/heroes/omniknight/shoulder.vmdl",
+        -- omniknightwings is Guardian Angel ult FX, not a default body slot
     },
     -- Spectre
     ["npc_dota_hero_spectre"] = {
@@ -33,7 +34,7 @@ return {
         "models/heroes/spectre/spectre_weapon.vmdl",
         "models/heroes/spectre/spectre_wings.vmdl",
     },
-    -- Gyrocopter (no missile/sidegunner — ability models)
+    -- Gyrocopter (no missile/sidegunner — Homing Missile / Flak ability models)
     ["npc_dota_hero_gyrocopter"] = {
         "models/heroes/gyro/gyro_bottles.vmdl",
         "models/heroes/gyro/gyro_goggles.vmdl",
@@ -41,7 +42,7 @@ return {
         "models/heroes/gyro/gyro_head.vmdl",
         "models/heroes/gyro/gyro_propeller.vmdl",
     },
-    -- Bounty Hunter (no shuriken — ability prop)
+    -- Bounty Hunter (no shuriken — Shuriken Toss, not a default body slot)
     ["npc_dota_hero_bounty_hunter"] = {
         "models/heroes/bounty_hunter/bounty_hunter_backpack.vmdl",
         "models/heroes/bounty_hunter/bounty_hunter_bandana.vmdl",
@@ -50,13 +51,12 @@ return {
         "models/heroes/bounty_hunter/bounty_hunter_pads.vmdl",
         "models/heroes/bounty_hunter/bounty_hunter_rweapon.vmdl",
     },
-    -- Legion Commander
+    -- Legion Commander body slots; Blades of Voth Domosh handled via _visual_presets.
     ["npc_dota_hero_legion_commander"] = {
         "models/heroes/legion_commander/legion_commander_arms.vmdl",
         "models/heroes/legion_commander/legion_commander_back.vmdl",
         "models/heroes/legion_commander/legion_commander_head.vmdl",
         "models/heroes/legion_commander/legion_commander_shoulders.vmdl",
-        "models/heroes/legion_commander/legion_commander_weapon.vmdl",
     },
     -- Windranger
     ["npc_dota_hero_windrunner"] = {
@@ -73,15 +73,15 @@ return {
         "models/heroes/muerta/muerta_head.vmdl",
         "models/heroes/muerta/muerta_weapons.vmdl",
     },
-    -- Drow Ranger
+    -- Drow Ranger arcana clothing slots (body model comes from _visual_presets).
     ["npc_dota_hero_drow_ranger"] = {
-        "models/heroes/drow/drow_armor.vmdl",
-        "models/heroes/drow/drow_bracer.vmdl",
-        "models/heroes/drow/drow_cape.vmdl",
-        "models/heroes/drow/drow_haircowl.vmdl",
-        "models/heroes/drow/drow_legs.vmdl",
-        "models/heroes/drow/drow_quiver.vmdl",
-        "models/heroes/drow/drow_weapon.vmdl",
+        "models/items/drow/drow_arcana/drow_arcana_arms.vmdl",
+        "models/items/drow/drow_arcana/drow_arcana_back.vmdl",
+        "models/items/drow/drow_arcana/drow_arcana_head.vmdl",
+        "models/items/drow/drow_arcana/drow_arcana_legs.vmdl",
+        "models/items/drow/drow_arcana/drow_arcana_quiver.vmdl",
+        "models/items/drow/drow_arcana/drow_arcana_shoulder.vmdl",
+        { model = "models/items/drow/drow_arcana/drow_arcana_weapon.vmdl", bone_merge = true },
     },
     -- Largo
     ["npc_dota_hero_largo"] = {
@@ -89,7 +89,7 @@ return {
         "models/heroes/bard/bard_frog_lowerbody.vmdl",
         "models/heroes/bard/bard_frog_weapon.vmdl",
     },
-    -- Brewmaster (no mug — ability prop)
+    -- Brewmaster (no mug — ability prop, not default loadout)
     ["npc_dota_hero_brewmaster"] = {
         "models/heroes/brewmaster/back.vmdl",
         "models/heroes/brewmaster/barrel.vmdl",
@@ -97,7 +97,7 @@ return {
         "models/heroes/brewmaster/shoulder.vmdl",
         "models/heroes/brewmaster/weapon.vmdl",
     },
-    -- Ringmaster (no whip/hands — ability props)
+    -- Ringmaster (no whip/hands — ability props, not default loadout)
     ["npc_dota_hero_ringmaster"] = {
         "models/heroes/ringmaster/ringmaster_armor.vmdl",
         "models/heroes/ringmaster/ringmaster_belt.vmdl",
@@ -119,12 +119,10 @@ return {
         "models/heroes/crystal_maiden/crystal_maiden_staff.vmdl",
         "models/heroes/crystal_maiden/head_item.vmdl",
     },
-    -- Zeus (no sigil — ability/nimbus FX)
+    -- Zeus
+    -- Zeus arcana clothing (body model + chariot FX from _visual_presets).
     ["npc_dota_hero_zuus"] = {
-        "models/heroes/zeus/zeus_belt.vmdl",
-        "models/heroes/zeus/zeus_bracers.vmdl",
-        "models/heroes/zeus/zeus_hair.vmdl",
-        "models/heroes/zeus/zeus_vest.vmdl",
+        "models/heroes/zeus/zeus_hair_arcana.vmdl",
     },
     -- Phantom Lancer
     ["npc_dota_hero_phantom_lancer"] = {
@@ -141,12 +139,10 @@ return {
         "models/heroes/marci/marci_head.vmdl",
         "models/heroes/marci/marci_shoulders.vmdl",
     },
-    -- Axe
+    -- Axe Unleashed (TI9 jungle immortal) clothing; body from _visual_presets.
     ["npc_dota_hero_axe"] = {
-        "models/heroes/axe/axe_armor.vmdl",
-        "models/heroes/axe/axe_belt.vmdl",
-        "models/heroes/axe/axe_ponytail.vmdl",
-        "models/heroes/axe/axe_weapon.vmdl",
+        "models/items/axe/ti9_jungle_axe/ti9_jungle_axe_hair.vmdl",
+        "models/items/axe/ti9_jungle_axe/ti9_jungle_axe_belt.vmdl",
     },
     -- Lone Druid
     ["npc_dota_hero_lone_druid"] = {
@@ -226,5 +222,60 @@ return {
         "models/heroes/arc_warden/arc_warden_back.vmdl",
         "models/heroes/arc_warden/arc_warden_bracers.vmdl",
         "models/heroes/arc_warden/arc_warden_shoulder.vmdl",
+    },
+
+    -- Hero activity modifiers applied with AddActivityModifier (not wearable models).
+    _activity_modifiers = {
+        ["npc_dota_hero_legion_commander"] = { "dualwield", "arcana" },
+        ["npc_dota_hero_zuus"] = { "arcana" },
+        ["npc_dota_hero_axe"] = { "ti9" },
+    },
+
+    -- Full arcana / immortal visuals that need model swap, dual-wield, and particles
+    -- (from items_game.txt asset_modifiers). Applied by ApplyVisualPreset.
+    _visual_presets = {
+        ["npc_dota_hero_drow_ranger"] = {
+            -- entity_model replacement from the Dread Retribution arcana weapon item
+            model = "models/items/drow/drow_arcana/drow_arcana.vmdl",
+            skin = 0,
+            particles = {
+                { path = "particles/econ/items/drow/drow_arcana/drow_arcana_ambient.vpcf", attach = "follow_origin" },
+                { path = "particles/econ/items/drow/drow_arcana/drow_arcana_arm_ambient.vpcf", attach = "follow_origin" },
+                { path = "particles/econ/items/drow/drow_arcana/drow_arcana_weapon_ambient.vpcf", attach = "attach_attack1" },
+                { path = "particles/econ/items/drow/drow_arcana/drow_arcana_ambient_head.vpcf", attach = "attach_hitloc" },
+            },
+        },
+        ["npc_dota_hero_legion_commander"] = {
+            activity_modifiers = { "dualwield", "arcana" },
+            skin = 1,
+            -- Single dual-blade mesh bone-merged; dualwield activity drives two-hand hold.
+            weapons = {
+                { model = "models/items/legion_commander/demon_sword.vmdl", bone_merge = true },
+            },
+            particles = {
+                { path = "particles/econ/items/legion/legion_weapon_voth_domosh/legion_ambient_arcana.vpcf", attach = "follow_origin" },
+                { path = "particles/econ/items/legion/legion_weapon_voth_domosh/legion_arcana_weapon.vpcf", attach = "attach_attack1" },
+                { path = "particles/econ/items/legion/legion_weapon_voth_domosh/legion_arcana_weapon_offhand.vpcf", attach = "attach_attack2" },
+            },
+        },
+        ["npc_dota_hero_zuus"] = {
+            -- entity_model replacement from Zeus arcana (Thundergod's chariot look)
+            model = "models/heroes/zeus/zeus_arcana.vmdl",
+            activity_modifiers = { "arcana" },
+            particles = {
+                { path = "particles/econ/items/zeus/arcana_chariot/zeus_ambient_arcana_eyes.vpcf", attach = "attach_hitloc" },
+                { path = "particles/econ/items/zeus/arcana_chariot/zeus_arcana_chariot.vpcf", attach = "follow_origin" },
+            },
+        },
+        ["npc_dota_hero_axe"] = {
+            -- Axe Unleashed (TI9 jungle immortal persona)
+            model = "models/items/axe/ti9_jungle_axe/axe_bare.vmdl",
+            activity_modifiers = { "ti9" },
+            particles = {
+                { path = "particles/econ/items/axe/ti9_jungle_axe/ti9_jungle_axe_armor_ambient.vpcf", attach = "follow_origin" },
+                { path = "particles/econ/items/axe/ti9_jungle_axe/ti9_jungle_axe_head_ambient.vpcf", attach = "attach_hitloc" },
+                { path = "particles/econ/items/axe/ti9_jungle_axe/ti9_jungle_axe_belt_ambient.vpcf", attach = "follow_origin" },
+            },
+        },
     },
 }
