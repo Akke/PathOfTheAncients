@@ -11,7 +11,7 @@
                 <Panel id="Header">
                     <Label id="Eyebrow" text="PATH OF THE ANCIENTS" />
                     <Label id="ScreenTitle" text="Choose Your Class" />
-                    <Label id="ScreenSubtitle" text="Choose a path, then select one of its three ascendancies." />
+                    <Label id="ScreenSubtitle" text="Select a class to view its ascendancies." />
                 </Panel>
 
                 <Panel id="BaseStage" class="SelectionStage">
@@ -22,7 +22,7 @@
                         </Panel>
                         <Button id="CarouselRight" class="CarouselArrow" hittestchildren="false"><Label text="›" /></Button>
                     </Panel>
-                    <Panel id="CarouselFooter"><Label id="CarouselPageLabel" text="" /><Label text="ARROWS TO BROWSE • DRAG TO ROTATE • CLICK A SIDE CARD TO FOCUS IT" /></Panel>
+                    <Panel id="CarouselFooter"><Label id="CarouselPageLabel" text="" /><Label text="CLICK ON A CLASS TO SELECT IT" /></Panel>
                 </Panel>
 
                 <Panel id="AscendencyStage" class="SelectionStage AscendencyStage HiddenStage">
@@ -34,7 +34,7 @@
 
                 <Panel id="SelectionFooter">
                     <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedRole" text="Select a class to reveal its ascendancies" /></Panel>
-                    <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" hittestchildren="false"><Label id="ConfirmLabel" text="CONFIRM ASCENDANCY" /></Button></Panel>
+                    <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" disabled="true" hittestchildren="false"><Label id="ConfirmLabel" text="CURRENTLY PICKING..." /></Button></Panel>
                 </Panel>
                 <Panel id="PartyFooter"><Label id="PartyStatus" text="Preparing party…" /><Label text="Your ascendancy becomes your playable hero." /></Panel>
             </Panel>

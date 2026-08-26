@@ -59,7 +59,7 @@
         learnLabel.text = "Learn More";
         AddPanel("Panel", learnRow, "", "LearnMoreLine Right", false);
 
-        select.SetPanelEvent("onactivate", function () {
+        slot.SetPanelEvent("onactivate", function () {
             if (classOrder[focusIndex] === classKey) SelectClass(classKey);
             else UpdateCarousel(classOrder.indexOf(classKey) - focusIndex);
         });
@@ -94,6 +94,7 @@
             card.SetHasClass("Ring1", distance === 1);
             card.SetHasClass("Ring2", distance === 2);
             card.SetHasClass("Ring3", distance >= 3);
+            card.SetHasClass("Selected", distance === 0);
         });
         entries.sort(function (a, b) { return b.distance - a.distance; });
         for (var i = entries.length - 1; i >= 0; i--) {
@@ -163,9 +164,9 @@
         $("#BaseStage").RemoveClass("HiddenStage");
         $("#AscendencyStage").AddClass("HiddenStage");
         $("#ScreenTitle").text = "Choose Your Class";
-        $("#ScreenSubtitle").text = "Choose a path, then select one of its three ascendencies.";
+        $("#ScreenSubtitle").text = "Select a class to view its ascendencies.";
         $("#SelectedHeroName").text = "Choose a class";
-        $("#SelectedRole").text = "Select a class to reveal its ascendencies";
+        $("#SelectedRole").text = "Select a class to view its ascendencies.";
         $("#ReadyStatus").text = "Choose a class to continue";
         $("#ConfirmButton").enabled = false;
         QueueVisibleClassPreviews();
@@ -197,14 +198,14 @@
         var portrait = $.CreatePanel("DOTAScenePanel", tabsHolder, "AscendScene"); portrait.AddClass("SpecPortrait"); portrait.allowrotation = true;
         $("#BaseStage").AddClass("HiddenStage");
         $("#AscendencyStage").RemoveClass("HiddenStage");
-        $("#AscendencyHeading").text = "CHOOSE YOUR PATH";
-        $("#ScreenTitle").text = definition.name + " Ascension";
-        $("#ScreenSubtitle").text = definition.base + " ascends into three paths — inspect their gifts, then confirm below.";
+        $("#AscendencyHeading").text = "Ascendencies";
+        $("#ScreenTitle").text = definition.name;
+        $("#ScreenSubtitle").text = "Choose an ascendancy that best fits your playstyle. Can be changed later in the game.";
         $("#SelectedHeroName").text = definition.name;
-        $("#SelectedRole").text = "Base identity: " + definition.base;
+        $("#SelectedRole").text = "Choose an ascendancy to view its details.";
         $("#ReadyStatus").text = "Choose a path to continue";
         $("#ConfirmButton").enabled = false;
-        FocusAscendency(definition.ascendencies[0].key);
+        SelectAscendency(definition.ascendencies[0].key);
         $.Msg("[POA UI] Selected base class: " + classKey);
     }
 
@@ -214,10 +215,11 @@
         if (!ascendancy) return;
         FocusAscendency(key);
         selectedAscendency = key;
-        $("#SelectedHeroName").text = CLASSES[selectedClass].name + " — " + ascendancy.name;
+        $("#SelectedHeroName").text = ascendancy.name;
         $("#SelectedRole").text = ascendancy.presentation;
         $("#ReadyStatus").text = "Ready to confirm";
         $("#ConfirmButton").enabled = true;
+        $("#ConfirmLabel").text = "CONFIRM CHOICE";
         $.Msg("[POA UI] Selected ascendancy: " + key + " (" + ascendancy.hero + ")");
         GameEvents.SendCustomGameEventToServer("poa_preview_selection", { archetype: key });
     }
@@ -229,15 +231,20 @@
         GameEvents.SendCustomGameEventToServer("poa_confirm_selection", { archetype: selectedAscendency });
     }
 
+    function ReturnToClassSelection() {
+        $("#ConfirmLabel").text = "CURRENTLY PICKING...";
+        ShowClassStage();
+    }
+
     function OnSelectionAccepted(event) { $.Msg("[POA UI] Selection accepted: " + (event.archetype || "unknown")); confirmed = true; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#HeroSelectionRoot").AddClass("Confirmed"); $("#ConfirmLabel").text = "READY"; $("#ReadyStatus").text = event.message || "Ascendency confirmed"; }
-    function OnSelectionRejected(event) { confirmed = false; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#ConfirmButton").enabled = selectedAscendency !== null; $("#ConfirmLabel").text = "CONFIRM ASCENDENCY"; $("#ReadyStatus").text = event.message || "Selection could not be confirmed"; }
+    function OnSelectionRejected(event) { confirmed = false; $("#HeroSelectionRoot").RemoveClass("IsConfirming"); $("#ConfirmButton").enabled = selectedAscendency !== null; $("#ConfirmLabel").text = "CONFIRM CHOICE"; $("#ReadyStatus").text = event.message || "Selection could not be confirmed"; }
     function OnPartyReady() { $.Msg("[POA UI] Party ready; game start requested"); var root = $("#HeroSelectionRoot"), wrapper = root && root.GetParent(), context = $.GetContextPanel(); root.AddClass("PartyReady"); root.hittest = false; root.hittestchildren = false; if (wrapper) { wrapper.hittest = false; wrapper.hittestchildren = false; } context.hittest = false; context.hittestchildren = false; context.style.visibility = "collapse"; $.Msg("[POA UI] Hero selection context collapsed; gameplay input released"); }
     function UpdatePartyStatus() { var state = CustomNetTables.GetTableValue("poa_selection", "party"); if (!state) { $("#PartyStatus").text = "Choose your class"; return; } $("#PartyStatus").text = (Number(state.ready_count) || 0) + " / " + (Number(state.player_count) || 1) + " players ready"; }
 
     BuildClassCarousel();
     $("#CarouselLeft").SetPanelEvent("onactivate", function () { UpdateCarousel(-1); });
     $("#CarouselRight").SetPanelEvent("onactivate", function () { UpdateCarousel(1); });
-    $("#BackButton").SetPanelEvent("onactivate", ShowClassStage);
+    $("#BackButton").SetPanelEvent("onactivate", ReturnToClassSelection);
     $("#ConfirmButton").SetPanelEvent("onactivate", ConfirmSelection);
     HideDefaultHeroSelection();
     GameEvents.Subscribe("poa_selection_accepted", OnSelectionAccepted); GameEvents.Subscribe("poa_selection_rejected", OnSelectionRejected); GameEvents.Subscribe("poa_party_ready", OnPartyReady);
