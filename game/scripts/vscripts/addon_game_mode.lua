@@ -39,8 +39,7 @@ local ARCHETYPES = {
 }
 
 -- Optional per-archetype cosmetic overrides; see precache_cosmetics.lua.
--- Heroes otherwise render with default wearables only (client econ loadouts
--- are disabled client-side via dota_clientside_wearables 0).
+-- When set, these replace the hero's default_wearables.lua pieces.
 local COSMETIC_OVERRIDES = require("precache_cosmetics")
 
 -- Default wearable models per hero for heroes whose KV override sets
@@ -80,9 +79,41 @@ function Precache(context)
             PrecacheModel(model, context)
         end
     end
-    for _, models in pairs(DEFAULT_WEARABLES) do
-        for _, model in pairs(models) do
-            PrecacheModel(model, context)
+    for key, models in pairs(DEFAULT_WEARABLES) do
+        if type(key) == "string" and string.sub(key, 1, 1) ~= "_" and type(models) == "table" then
+            for _, entry in pairs(models) do
+                local model = nil
+                if type(entry) == "string" then
+                    model = entry
+                elseif type(entry) == "table" then
+                    model = entry.model
+                end
+                if type(model) == "string" then
+                    PrecacheModel(model, context)
+                end
+            end
+        end
+    end
+    local presets = DEFAULT_WEARABLES._visual_presets
+    if type(presets) == "table" then
+        for _, preset in pairs(presets) do
+            if type(preset.model) == "string" then
+                PrecacheModel(preset.model, context)
+            end
+            if type(preset.weapons) == "table" then
+                for _, weapon in pairs(preset.weapons) do
+                    if type(weapon.model) == "string" then
+                        PrecacheModel(weapon.model, context)
+                    end
+                end
+            end
+            if type(preset.particles) == "table" then
+                for _, particle in pairs(preset.particles) do
+                    if type(particle.path) == "string" then
+                        PrecacheResource("particle", particle.path, context)
+                    end
+                end
+            end
         end
     end
 end
@@ -293,37 +324,168 @@ function PathOfTheAncients:CreateWearableEntity()
     return nil
 end
 
+function PathOfTheAncients:NormalizeWearableEntry(entry)
+    if type(entry) == "string" then
+        return entry, nil, true, nil
+    end
+    if type(entry) == "table" and type(entry.model) == "string" then
+        local boneMerge = entry.bone_merge
+        if boneMerge == nil then
+            boneMerge = (entry.attach == nil or entry.attach == "")
+        end
+        return entry.model, entry.attach, boneMerge, entry.offset
+    end
+    return nil, nil, true, nil
+end
+
 function PathOfTheAncients:AttachWearables(hero, archetypeKey, models, label)
     if hero == nil or hero:IsNull() or models == nil or #models == 0 then
         return
     end
 
     local attached = 0
-    for _, model in pairs(models) do
-        local ok, result = pcall(function()
-            local wearable = self:CreateWearableEntity()
-            if wearable == nil then
-                error("no entity creation API available")
-            end
-            wearable:FollowEntity(hero, true)
-            wearable:SetModel(model)
-            return wearable
-        end)
-        if ok and result ~= nil then
-            attached = attached + 1
-            local playerID = hero:GetPlayerOwnerID()
-            local selection = self.selections[playerID]
-            if selection ~= nil then
-                selection.override_entindexes = selection.override_entindexes or {}
-                table.insert(selection.override_entindexes, result:entindex())
-            end
+    for _, entry in pairs(models) do
+        local model, attach, boneMerge, offset = self:NormalizeWearableEntry(entry)
+        if model == nil then
+            print("[POA] " .. label .. " wearable entry invalid: " .. tostring(entry))
         else
-            print("[POA] " .. label .. " wearable attach failed for " .. model
-                .. ": " .. tostring(result))
+            local ok, result = pcall(function()
+                local wearable = self:CreateWearableEntity()
+                if wearable == nil then
+                    error("no entity creation API available")
+                end
+                if boneMerge or attach == nil or attach == "" then
+                    wearable:FollowEntity(hero, true)
+                else
+                    wearable:SetParent(hero, attach)
+                    local origin = Vector(0, 0, 0)
+                    if type(offset) == "table" then
+                        origin = Vector(offset[1] or 0, offset[2] or 0, offset[3] or 0)
+                    elseif offset ~= nil then
+                        origin = offset
+                    end
+                    wearable:SetLocalOrigin(origin)
+                    wearable:SetLocalAngles(0, 0, 0)
+                end
+                wearable:SetModel(model)
+                return wearable
+            end)
+            if ok and result ~= nil then
+                attached = attached + 1
+                local playerID = hero:GetPlayerOwnerID()
+                local selection = self.selections[playerID]
+                if selection ~= nil then
+                    selection.override_entindexes = selection.override_entindexes or {}
+                    table.insert(selection.override_entindexes, result:entindex())
+                end
+            else
+                print("[POA] " .. label .. " wearable attach failed for " .. model
+                    .. " attach=" .. tostring(attach) .. ": " .. tostring(result))
+            end
         end
     end
     print("[POA] Attached " .. tostring(attached) .. "/" .. tostring(#models) .. " " .. label
         .. " wearables to " .. hero:GetUnitName() .. " for " .. archetypeKey)
+end
+
+function PathOfTheAncients:ApplyActivityModifiers(hero, modifiers)
+    if hero == nil or hero:IsNull() or modifiers == nil then
+        return
+    end
+    for _, modifier in pairs(modifiers) do
+        local ok, err = pcall(function()
+            hero:AddActivityModifier(modifier)
+        end)
+        if ok then
+            print("[POA] Applied activity modifier '" .. modifier .. "' to " .. hero:GetUnitName())
+        else
+            print("[POA] Activity modifier '" .. modifier .. "' failed: " .. tostring(err))
+        end
+    end
+end
+
+function PathOfTheAncients:AttachHeroParticles(hero, particles)
+    if hero == nil or hero:IsNull() or particles == nil then
+        return
+    end
+    for _, particle in pairs(particles) do
+        if type(particle.path) == "string" then
+            local ok, err = pcall(function()
+                local attach = particle.attach or "follow_origin"
+                local pid
+                if attach == "follow_origin" then
+                    pid = ParticleManager:CreateParticle(particle.path, PATTACH_ABSORIGIN_FOLLOW, hero)
+                elseif attach == "attach_hitloc" or attach == "attach_attack1" or attach == "attach_attack2" then
+                    pid = ParticleManager:CreateParticle(particle.path, PATTACH_POINT_FOLLOW, hero)
+                    ParticleManager:SetParticleControlEnt(
+                        pid, 0, hero, PATTACH_POINT_FOLLOW, attach, hero:GetAbsOrigin(), true
+                    )
+                else
+                    pid = ParticleManager:CreateParticle(particle.path, PATTACH_ABSORIGIN_FOLLOW, hero)
+                end
+                -- Do not ReleaseParticleIndex: ambient arcana FX must keep playing.
+            end)
+            if ok then
+                print("[POA] Spawned particle " .. particle.path)
+            else
+                print("[POA] Particle failed " .. particle.path .. ": " .. tostring(err))
+            end
+        end
+    end
+end
+
+function PathOfTheAncients:ApplyVisualPreset(hero, heroName)
+    local presets = DEFAULT_WEARABLES._visual_presets
+    local preset = presets and presets[heroName]
+    if hero == nil or hero:IsNull() or preset == nil then
+        return false
+    end
+
+    if type(preset.activity_modifiers) == "table" then
+        self:ApplyActivityModifiers(hero, preset.activity_modifiers)
+    end
+
+    if type(preset.model) == "string" then
+        local ok, err = pcall(function()
+            if hero.SetOriginalModel ~= nil then
+                hero:SetOriginalModel(preset.model)
+            end
+            hero:SetModel(preset.model)
+        end)
+        if ok then
+            print("[POA] Set visual model " .. preset.model .. " on " .. hero:GetUnitName())
+        else
+            print("[POA] Set visual model failed: " .. tostring(err))
+        end
+    end
+
+    if preset.skin ~= nil then
+        pcall(function()
+            hero:SetSkin(preset.skin)
+        end)
+        pcall(function()
+            hero:SetMaterialGroup(tostring(preset.skin))
+        end)
+    end
+
+    if type(preset.weapons) == "table" then
+        local pieces = {}
+        for _, weapon in pairs(preset.weapons) do
+            if weapon.bone_merge then
+                table.insert(pieces, weapon.model)
+            else
+                table.insert(pieces, {
+                    model = weapon.model,
+                    attach = weapon.attach or "attach_attack1",
+                })
+            end
+        end
+        self:AttachWearables(hero, heroName, pieces, "preset-weapon")
+    end
+
+    self:AttachHeroParticles(hero, preset.particles)
+    -- true = preset applied; caller still attaches DEFAULT_WEARABLES body pieces
+    return true
 end
 
 function PathOfTheAncients:ApplyCosmeticOverrides(hero, archetypeKey)
@@ -331,7 +493,17 @@ function PathOfTheAncients:ApplyCosmeticOverrides(hero, archetypeKey)
 end
 
 function PathOfTheAncients:ApplyDefaultWearables(hero, archetypeKey, heroName)
-    self:AttachWearables(hero, archetypeKey, DEFAULT_WEARABLES[heroName], "default")
+    local modifiers = DEFAULT_WEARABLES._activity_modifiers
+        and DEFAULT_WEARABLES._activity_modifiers[heroName]
+    self:ApplyActivityModifiers(hero, modifiers)
+
+    local usedPreset = self:ApplyVisualPreset(hero, heroName)
+    if not usedPreset then
+        self:AttachWearables(hero, archetypeKey, DEFAULT_WEARABLES[heroName], "default")
+    elseif DEFAULT_WEARABLES[heroName] ~= nil and #DEFAULT_WEARABLES[heroName] > 0 then
+        -- Preset may still want body-slot pieces (e.g. LC body + arcana blades).
+        self:AttachWearables(hero, archetypeKey, DEFAULT_WEARABLES[heroName], "default")
+    end
 end
 
 function PathOfTheAncients:IsOverrideWearable(entity)
