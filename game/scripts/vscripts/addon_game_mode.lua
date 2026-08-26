@@ -38,12 +38,51 @@ local ARCHETYPES = {
     summoner = { hero = "npc_dota_hero_warlock", display_name = "Summoner" },
 }
 
+-- Optional per-archetype cosmetic overrides; see precache_cosmetics.lua.
+-- Heroes otherwise render with default wearables only (client econ loadouts
+-- are disabled client-side via dota_clientside_wearables 0).
+local COSMETIC_OVERRIDES = require("precache_cosmetics")
+
+-- Default wearable models per hero for heroes whose KV override sets
+-- DisableWearables 1; see default_wearables.lua.
+local DEFAULT_WEARABLES = require("default_wearables")
+
+-- Carousel preview heroes from panorama/scripts/custom_game/class_definitions.js.
+-- Never spawned in-game, but their default wearables (hair, helmets) are
+-- separate models that must be made resident or the DOTAScenePanel previews
+-- on the selection screen render the bare body only.
+local PREVIEW_HEROES = {
+    "npc_dota_hero_mars",
+    "npc_dota_hero_antimage",
+    "npc_dota_hero_hoodwink",
+    "npc_dota_hero_monkey_king",
+    "npc_dota_hero_invoker",
+    "npc_dota_hero_juggernaut",
+    "npc_dota_hero_arc_warden",
+}
+
 function Precache(context)
     local precached = {}
+    local function precacheUnit(heroName)
+        if not precached[heroName] then
+            PrecacheUnitByNameSync(heroName, context)
+            precached[heroName] = true
+        end
+    end
     for _, archetype in pairs(ARCHETYPES) do
-        if not precached[archetype.hero] then
-            PrecacheUnitByNameSync(archetype.hero, context)
-            precached[archetype.hero] = true
+        precacheUnit(archetype.hero)
+    end
+    for _, heroName in pairs(PREVIEW_HEROES) do
+        precacheUnit(heroName)
+    end
+    for _, models in pairs(COSMETIC_OVERRIDES) do
+        for _, model in pairs(models) do
+            PrecacheModel(model, context)
+        end
+    end
+    for _, models in pairs(DEFAULT_WEARABLES) do
+        for _, model in pairs(models) do
+            PrecacheModel(model, context)
         end
     end
 end
@@ -99,6 +138,24 @@ function PathOfTheAncients:InitGameMode()
 
     self:PublishPartyState()
     print("[POA] Custom hero selection initialized")
+
+    if not self.entityApiDumped then
+        self.entityApiDumped = true
+        local apis = {}
+        for _, name in pairs({ "CreateUnitByName", "CreateEntityByName", "CreateEntity", "SpawnEntityFromTable" }) do
+            apis[name] = type(_G[name])
+        end
+        if type(Entities) == "table" then
+            for _, name in pairs({ "CreateByClassname", "FindByClassname", "FindAllByClassname", "First", "Next" }) do
+                apis["Entities." .. name] = type(Entities[name])
+            end
+        end
+        local parts = {}
+        for k, v in pairs(apis) do
+            table.insert(parts, k .. "=" .. v)
+        end
+        print("[POA] entity API: " .. table.concat(parts, ", "))
+    end
 end
 
 function PathOfTheAncients:IsValidPlayer(playerID)
@@ -176,6 +233,15 @@ function PathOfTheAncients:OnConfirmSelection(event)
     self.selections[playerID].hero_assigned = heroAssigned
     self.selections[playerID].hero_entindex = assignedHero ~= nil and assignedHero:entindex() or nil
 
+    if heroAssigned and assignedHero ~= nil then
+        self:ScheduleEconWearableStripping(assignedHero)
+        if COSMETIC_OVERRIDES[event.archetype] ~= nil then
+            self:ApplyCosmeticOverrides(assignedHero, event.archetype)
+        else
+            self:ApplyDefaultWearables(assignedHero, event.archetype, archetype.hero)
+        end
+    end
+
     self:SendToPlayer(playerID, "poa_selection_accepted", {
         archetype = event.archetype,
         hero = archetype.hero,
@@ -206,6 +272,124 @@ function PathOfTheAncients:OnConfirmSelection(event)
             .. tostring(self:GetConnectedPlayerCount())
             .. ", ready=" .. tostring(self:GetReadyPlayerCount()))
     end
+end
+
+-- Econ cosmetics worn by a player's Steam inventory are networked to the
+-- server in online games, but their models are not resident in the addon
+-- mount and render as "error" quads. Strip them server-side so every hero
+-- uses its default look; default wearables live under models/heroes/ and are
+-- kept. Per-archetype overrides in precache_cosmetics.lua survive stripping.
+local ECON_WEARABLE_MODEL_PREFIX = "models/items/"
+local WEARABLE_STRIP_DURATION_SECONDS = 60
+local WEARABLE_STRIP_INTERVAL_SECONDS = 0.5
+
+function PathOfTheAncients:CreateWearableEntity()
+    -- prop_dynamic, not dota_item_wearable: the hero KV sets DisableWearables 1,
+    -- which makes the client hide every dota_item_wearable child (including
+    -- server-attached ones). prop_dynamic renders normally and bone-follows.
+    if type(Entities) == "table" and Entities.CreateByClassname ~= nil then
+        return Entities:CreateByClassname("prop_dynamic")
+    end
+    return nil
+end
+
+function PathOfTheAncients:AttachWearables(hero, archetypeKey, models, label)
+    if hero == nil or hero:IsNull() or models == nil or #models == 0 then
+        return
+    end
+
+    local attached = 0
+    for _, model in pairs(models) do
+        local ok, result = pcall(function()
+            local wearable = self:CreateWearableEntity()
+            if wearable == nil then
+                error("no entity creation API available")
+            end
+            wearable:FollowEntity(hero, true)
+            wearable:SetModel(model)
+            return wearable
+        end)
+        if ok and result ~= nil then
+            attached = attached + 1
+            local playerID = hero:GetPlayerOwnerID()
+            local selection = self.selections[playerID]
+            if selection ~= nil then
+                selection.override_entindexes = selection.override_entindexes or {}
+                table.insert(selection.override_entindexes, result:entindex())
+            end
+        else
+            print("[POA] " .. label .. " wearable attach failed for " .. model
+                .. ": " .. tostring(result))
+        end
+    end
+    print("[POA] Attached " .. tostring(attached) .. "/" .. tostring(#models) .. " " .. label
+        .. " wearables to " .. hero:GetUnitName() .. " for " .. archetypeKey)
+end
+
+function PathOfTheAncients:ApplyCosmeticOverrides(hero, archetypeKey)
+    self:AttachWearables(hero, archetypeKey, COSMETIC_OVERRIDES[archetypeKey], "override")
+end
+
+function PathOfTheAncients:ApplyDefaultWearables(hero, archetypeKey, heroName)
+    self:AttachWearables(hero, archetypeKey, DEFAULT_WEARABLES[heroName], "default")
+end
+
+function PathOfTheAncients:IsOverrideWearable(entity)
+    for _, selection in pairs(self.selections) do
+        if selection.override_entindexes ~= nil then
+            for _, entindex in pairs(selection.override_entindexes) do
+                if entindex == entity:entindex() then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+function PathOfTheAncients:StripEconWearables(hero)
+    if hero == nil or hero:IsNull() then
+        return 0
+    end
+
+    local removed = 0
+    local child = hero:FirstMoveChild()
+    while child ~= nil do
+        local nextChild = child:NextMovePeer()
+        local model = child:GetModelName()
+        if child:GetClassname() == "dota_item_wearable"
+            and model ~= nil
+            and string.sub(model, 1, #ECON_WEARABLE_MODEL_PREFIX) == ECON_WEARABLE_MODEL_PREFIX
+            and not self:IsOverrideWearable(child)
+        then
+            child:Remove()
+            removed = removed + 1
+        end
+        child = nextChild
+    end
+
+    if removed > 0 then
+        print("[POA] Removed " .. tostring(removed) .. " econ wearables from " .. hero:GetUnitName())
+    end
+    return removed
+end
+
+function PathOfTheAncients:ScheduleEconWearableStripping(hero)
+    if hero == nil or hero:IsNull() then
+        return
+    end
+
+    local deadline = GameRules:GetGameTime() + WEARABLE_STRIP_DURATION_SECONDS
+    hero:SetContextThink("POA_StripEconWearables", function()
+        if hero:IsNull() then
+            return nil
+        end
+        self:StripEconWearables(hero)
+        if GameRules:GetGameTime() < deadline then
+            return WEARABLE_STRIP_INTERVAL_SECONDS
+        end
+        return nil
+    end, 0.1)
 end
 
 function PathOfTheAncients:ApplySelectedHero(playerID, heroName)

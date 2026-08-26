@@ -12,4 +12,16 @@
 		"Ability1"					"templar_assassin_refraction_holdout"		// Ability 1
 		"VisionNighttimeRange"		"1800"										// Range of vision at night time.
 	}
+
+	//=================================================================================================================
+	// HERO: Wraith King
+	// DisableWearables stops the client attaching econ cosmetics (renders error
+	// quads in custom games) but also skips default wearables; the server
+	// re-attaches defaults from default_wearables.lua.
+	//=================================================================================================================
+	"npc_dota_hero_skeleton_king"
+	{
+		"override_hero"				"npc_dota_hero_skeleton_king"				// Hero to override
+		"DisableWearables"			"1"											// Skip client wearable attachment
+	}
 }
