@@ -32,8 +32,6 @@ Server-side selection validation must still accept the same ascendancy keys and 
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | Glaivier | Phantom Lancer (`npc_dota_hero_phantom_lancer`) | Base |
 | Martial Artist | Juggernaut (`npc_dota_hero_juggernaut`) | War Dancer | Axe (`npc_dota_hero_axe`) | Arcana desired |
 
-Arcana and persona entries are UI labels describing presentation intent only. The prototype does not force cosmetics or alter a player's Steam loadout.
+Arcana / immortal presentation for selected ascendancies is enforced in-game via the hero cosmetics system (not the player's Steam loadout). See [`HERO_COSMETICS.md`](HERO_COSMETICS.md) for DisableWearables, default body slots, and forced looks (Drow Arcana, Voth Domosh, Zeus Arcana, Axe Unleashed).
 
-The current implementation boundary is selection, confirmation, party readiness, and assignment/control of the chosen ascendancy hero. It does not implement class or ascendancy abilities, stats, progression, or combat systems.
-
-This implementation has passed static source validation but is not claimed to be tested in-engine.
+The current implementation boundary is selection, confirmation, party readiness, assignment/control of the chosen ascendancy hero, and default/forced cosmetics. It does not implement class or ascendancy abilities, stats, progression, or combat systems.

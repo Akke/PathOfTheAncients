@@ -33,3 +33,11 @@ setup_dota_links.bat "C:\Program Files (x86)\Steam\steamapps\common\dota 2 beta"
 The batch file creates the same two directory symlinks and refuses to replace an existing addon path.
 
 The reusable compiler and watcher are documented separately in `~/Documents/dota 2 beta/COMPILING_ADDONS.md` on the current development machine.
+
+## Docs
+
+| Doc | Topic |
+|---|---|
+| [`docs/CLASS_SYSTEM.md`](docs/CLASS_SYSTEM.md) | Class / ascendancy catalog and selection flow |
+| [`docs/HERO_COSMETICS.md`](docs/HERO_COSMETICS.md) | Default looks, DisableWearables, arcana/immortal presets |
+| [`docs/PROJECT_CONVENTIONS.md`](docs/PROJECT_CONVENTIONS.md) | Language and tooling conventions |
