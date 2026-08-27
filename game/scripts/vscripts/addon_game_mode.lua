@@ -20,6 +20,58 @@ local BASE_CLASSES = {
     specialist = { hero = "npc_dota_hero_arc_warden", display_name = "Specialist" },
 }
 
+-- Order matches class_definitions.js ascendencies arrays (-ascend 1/2/3).
+local CLASS_ASCENDANCIES = {
+    warrior = {
+        { key = "berserker", hero = "npc_dota_hero_skeleton_king", display_name = "Berserker" },
+        { key = "paladin", hero = "npc_dota_hero_omniknight", display_name = "Paladin" },
+        { key = "slayer", hero = "npc_dota_hero_spectre", display_name = "Slayer" },
+    },
+    mercenary = {
+        { key = "artillerist", hero = "npc_dota_hero_gyrocopter", display_name = "Artillerist" },
+        { key = "death_blade", hero = "npc_dota_hero_legion_commander", display_name = "Death Blade" },
+        { key = "bloodhound", hero = "npc_dota_hero_bounty_hunter", display_name = "Bloodhound" },
+    },
+    ranger = {
+        { key = "deadeye", hero = "npc_dota_hero_windrunner", display_name = "Deadeye" },
+        { key = "gunslinger", hero = "npc_dota_hero_muerta", display_name = "Gunslinger" },
+        { key = "witch_hunter", hero = "npc_dota_hero_drow_ranger", display_name = "Witch Hunter" },
+    },
+    performer = {
+        { key = "bard", hero = "npc_dota_hero_largo", display_name = "Bard" },
+        { key = "drunkard", hero = "npc_dota_hero_brewmaster", display_name = "Drunkard" },
+        { key = "puppeteer", hero = "npc_dota_hero_ringmaster", display_name = "Puppeteer" },
+    },
+    mage = {
+        { key = "fire_mage", hero = "npc_dota_hero_lina", display_name = "Fire Mage" },
+        { key = "frost_mage", hero = "npc_dota_hero_crystal_maiden", display_name = "Frost Mage" },
+        { key = "lightning_mage", hero = "npc_dota_hero_zuus", display_name = "Lightning Mage" },
+    },
+    martial_artist = {
+        { key = "glaivier", hero = "npc_dota_hero_phantom_lancer", display_name = "Glaivier" },
+        { key = "striker", hero = "npc_dota_hero_marci", display_name = "Striker" },
+        { key = "war_dancer", hero = "npc_dota_hero_axe", display_name = "War Dancer" },
+    },
+    specialist = {
+        { key = "druid", hero = "npc_dota_hero_lone_druid", display_name = "Druid" },
+        { key = "spiritkin", hero = "npc_dota_hero_void_spirit", display_name = "Spiritkin" },
+        { key = "summoner", hero = "npc_dota_hero_warlock", display_name = "Summoner" },
+    },
+}
+
+local ASCENDANCY_BY_KEY = {}
+for classKey, list in pairs(CLASS_ASCENDANCIES) do
+    for index, ascendancy in ipairs(list) do
+        ASCENDANCY_BY_KEY[ascendancy.key] = {
+            key = ascendancy.key,
+            hero = ascendancy.hero,
+            display_name = ascendancy.display_name,
+            class_key = classKey,
+            index = index,
+        }
+    end
+end
+
 -- Optional per-class cosmetic overrides; see precache_cosmetics.lua.
 -- When set, these replace the hero's default_wearables.lua pieces.
 local COSMETIC_OVERRIDES = require("precache_cosmetics")
@@ -38,6 +90,11 @@ function Precache(context)
     end
     for _, classDef in pairs(BASE_CLASSES) do
         precacheUnit(classDef.hero)
+    end
+    for _, list in pairs(CLASS_ASCENDANCIES) do
+        for _, ascendancy in ipairs(list) do
+            precacheUnit(ascendancy.hero)
+        end
     end
     for _, models in pairs(COSMETIC_OVERRIDES) do
         for _, model in pairs(models) do
@@ -115,6 +172,37 @@ function PathOfTheAncients:InitGameMode()
         "poa_confirm_selection",
         function(_, event) self:OnConfirmSelection(event) end
     )
+
+    -- ListenToGameEvent with nil context passes the event table as arg 1.
+    ListenToGameEvent(
+        "npc_spawned",
+        function(event) self:OnNpcSpawned(event) end,
+        nil
+    )
+
+    ListenToGameEvent(
+        "player_chat",
+        function(event) self:OnPlayerChat(event) end,
+        nil
+    )
+
+    pcall(function()
+        -- FCVAR_CHEAT blocks non-cheat consoles; IsDevPlayer still gates the body.
+        Convars:RegisterCommand("poa_ascend", function(_, indexArg)
+            local player = Convars:GetCommandClient()
+            local playerID = -1
+            if player ~= nil and player.GetPlayerID ~= nil then
+                playerID = player:GetPlayerID()
+            end
+            if (playerID == nil or playerID < 0) and self:IsDevPlayer(0) then
+                playerID = 0
+            end
+            if not self:IsDevPlayer(playerID) then
+                return
+            end
+            self:DevAscendCommand(playerID, indexArg or "")
+        end, "Dev only: ascend to class path 1..N", FCVAR_CHEAT)
+    end)
 
     ListenToGameEvent(
         "player_connect_full",
@@ -247,6 +335,8 @@ function PathOfTheAncients:OnConfirmSelection(event)
 
     self.selections[playerID] = {
         archetype = classKey,
+        base_class = classKey,
+        playable = classKey,
         confirmed = true,
     }
 
@@ -257,18 +347,13 @@ function PathOfTheAncients:OnConfirmSelection(event)
     self.selections[playerID].hero_entindex = assignedHero ~= nil and assignedHero:entindex() or nil
 
     if heroAssigned and assignedHero ~= nil then
-        self:ScheduleEconWearableStripping(assignedHero)
-        if COSMETIC_OVERRIDES[classKey] ~= nil then
-            self:ApplyCosmeticOverrides(assignedHero, classKey)
-        else
-            self:ApplyDefaultWearables(assignedHero, classKey, classDef.hero)
-        end
+        self:ApplyPlayableCosmetics(assignedHero, classKey, classDef.hero)
     end
 
     self:SendToPlayer(playerID, "poa_selection_accepted", {
         archetype = classKey,
         hero = classDef.hero,
-        message = classDef.display_name .. " confirmed",
+        message = classDef.display_name .. " confirmed"
     })
 
     self:AssignTeams()
@@ -511,6 +596,74 @@ function PathOfTheAncients:IsOverrideWearable(entity)
     return false
 end
 
+function PathOfTheAncients:DestroyWearableEntity(entity)
+    if entity == nil or entity:IsNull() then
+        return false
+    end
+    local removed = pcall(function()
+        entity:RemoveSelf()
+    end)
+    if not removed then
+        removed = pcall(function()
+            UTIL_Remove(entity)
+        end)
+    end
+    if not removed then
+        removed = pcall(function()
+            entity:Remove()
+        end)
+    end
+    return removed
+end
+
+-- prop_dynamic pieces FollowEntity the hero; ReplaceHeroWith leaves them
+-- orphaned on the ground unless destroyed first.
+function PathOfTheAncients:ClearAttachedWearables(playerID, hero)
+    local removed = 0
+    local selection = self.selections[playerID]
+
+    if selection ~= nil and selection.override_entindexes ~= nil then
+        for _, entindex in pairs(selection.override_entindexes) do
+            local entity = EntIndexToHScript(entindex)
+            if self:DestroyWearableEntity(entity) then
+                removed = removed + 1
+            end
+        end
+        selection.override_entindexes = {}
+    end
+
+    if hero ~= nil and not hero:IsNull() then
+        local child = nil
+        pcall(function()
+            child = hero:FirstMoveChild()
+        end)
+        while child ~= nil do
+            local nextChild = nil
+            pcall(function()
+                nextChild = child:NextMovePeer()
+            end)
+            local classname = nil
+            pcall(function()
+                classname = child:GetClassname()
+            end)
+            if classname == "prop_dynamic"
+                or classname == "dota_item_wearable"
+                or classname == "additional_wearable" then
+                if self:DestroyWearableEntity(child) then
+                    removed = removed + 1
+                end
+            end
+            child = nextChild
+        end
+    end
+
+    if removed > 0 then
+        print("[POA] Cleared " .. tostring(removed)
+            .. " wearables before hero change for player " .. tostring(playerID))
+    end
+    return removed
+end
+
 function PathOfTheAncients:StripEconWearables(hero)
     if hero == nil or hero:IsNull() then
         return 0
@@ -554,6 +707,222 @@ function PathOfTheAncients:ScheduleEconWearableStripping(hero)
         end
         return nil
     end, 0.1)
+end
+
+-- Steam account IDs allowed to use -ascend outside Workshop Tools.
+-- Account ID = the number in [U:1:XXXXXXXX] (not the full 64-bit SteamID).
+local DEV_STEAM_ACCOUNT_IDS = {
+    [850174398] = true, -- capaxed
+    [122677592] = true, -- axwell
+}
+
+function PathOfTheAncients:GetPlayerSteamAccountID(playerID)
+    local accountID = 0
+    pcall(function()
+        accountID = PlayerResource:GetSteamAccountID(playerID) or 0
+    end)
+    return accountID
+end
+
+-- Dev commands are never granted by sv_cheats alone (lobby players can enable
+-- cheats). Allowed only in Workshop Tools, or for whitelisted Steam accounts.
+function PathOfTheAncients:IsDevPlayer(playerID)
+    if type(playerID) ~= "number" or playerID < 0 then
+        return false
+    end
+
+    if IsInToolsMode and IsInToolsMode() then
+        return true
+    end
+
+    local accountID = self:GetPlayerSteamAccountID(playerID)
+    if accountID ~= 0 and DEV_STEAM_ACCOUNT_IDS[accountID] == true then
+        return true
+    end
+
+    return false
+end
+
+function PathOfTheAncients:ApplyPlayableCosmetics(hero, playableKey, heroName)
+    if hero == nil or hero:IsNull() then
+        return
+    end
+    local playerID = -1
+    pcall(function()
+        playerID = hero:GetPlayerOwnerID()
+    end)
+    if type(playerID) == "number" and playerID >= 0 then
+        -- Drop any leftover props from a prior body before attaching new ones.
+        self:ClearAttachedWearables(playerID, hero)
+    end
+    self:ScheduleEconWearableStripping(hero)
+    if COSMETIC_OVERRIDES[playableKey] ~= nil then
+        self:ApplyCosmeticOverrides(hero, playableKey)
+    else
+        self:ApplyDefaultWearables(hero, playableKey, heroName)
+    end
+end
+
+function PathOfTheAncients:SayDev(playerID, message)
+    print("[POA DEV] player " .. tostring(playerID) .. ": " .. tostring(message))
+    self:SendToPlayer(playerID, "poa_selection_accepted", {
+        message = tostring(message),
+    })
+    -- Also surface in chat when possible.
+    pcall(function()
+        GameRules:SendCustomMessage("[POA] " .. tostring(message), 0, 0)
+    end)
+end
+
+function PathOfTheAncients:ResolveChatPlayerID(event)
+    if event == nil then
+        return -1
+    end
+
+    local playerID = event.playerid
+    if playerID == nil then
+        playerID = event.PlayerID
+    end
+    if type(playerID) == "number" and playerID >= 0 then
+        return playerID
+    end
+
+    local userID = event.userid
+    if type(userID) == "number" then
+        local mapped = nil
+        pcall(function()
+            if PlayerResource.GetPlayerCount ~= nil then
+                for id = 0, DOTA_MAX_TEAM_PLAYERS - 1 do
+                    if PlayerResource:IsValidPlayerID(id)
+                        and PlayerResource:GetSteamAccountID(id) ~= 0 then
+                        -- fallback scan; prefer GetPlayerIDByUserId when present
+                    end
+                end
+            end
+            if PlayerResource.GetPlayerIDByUserId ~= nil then
+                mapped = PlayerResource:GetPlayerIDByUserId(userID)
+            elseif PlayerResource.GetPlayerIDFromUserID ~= nil then
+                mapped = PlayerResource:GetPlayerIDFromUserID(userID)
+            end
+        end)
+        if type(mapped) == "number" and mapped >= 0 then
+            return mapped
+        end
+    end
+
+    return -1
+end
+
+function PathOfTheAncients:OnPlayerChat(event)
+    if type(event) ~= "table" then
+        print("[POA] player_chat ignored: bad event type " .. type(event))
+        return
+    end
+
+    local text = event.text
+    if type(text) ~= "string" then
+        print("[POA] player_chat ignored: missing text")
+        return
+    end
+
+    local playerID = self:ResolveChatPlayerID(event)
+    print("[POA] player_chat pid=" .. tostring(playerID)
+        .. " text=\"" .. text .. "\"")
+
+    if playerID < 0 then
+        -- Solo listen-server chat sometimes omits playerid; default to 0.
+        if PlayerResource:IsValidPlayerID(0) then
+            playerID = 0
+        else
+            return
+        end
+    end
+
+    local normalized = string.lower(string.gsub(text, "^%s+", ""))
+    -- Accept "-ascend 1", "ascend 1", "-ASCEND 2"
+    local cmd, arg = string.match(normalized, "^%-?([%w_]+)%s*(.*)$")
+    if cmd == nil then
+        return
+    end
+
+    if cmd == "ascend" then
+        self:DevAscendCommand(playerID, arg)
+    end
+end
+
+function PathOfTheAncients:DevAscendCommand(playerID, arg)
+    local isDev = self:IsDevPlayer(playerID)
+    print("[POA DEV] ascend request player=" .. tostring(playerID)
+        .. " steam=" .. tostring(self:GetPlayerSteamAccountID(playerID))
+        .. " arg=\"" .. tostring(arg) .. "\" dev=" .. tostring(isDev))
+
+    if not isDev then
+        -- Silent reject: do not teach the command to normal players.
+        return
+    end
+
+    local selection = self.selections[playerID]
+    if selection == nil or not selection.confirmed then
+        self:SayDev(playerID, "Confirm a base class before ascending.")
+        return
+    end
+
+    local baseClass = selection.base_class or selection.archetype
+    local list = CLASS_ASCENDANCIES[baseClass]
+    if list == nil or #list == 0 then
+        self:SayDev(playerID, "No ascendancies for class " .. tostring(baseClass))
+        return
+    end
+
+    arg = string.gsub(tostring(arg or ""), "^%s+", "")
+    arg = string.gsub(arg, "%s+$", "")
+    if arg == "" then
+        local lines = { "Ascendancies for " .. tostring(baseClass) .. ":" }
+        for i, ascendancy in ipairs(list) do
+            table.insert(lines, "-" .. "ascend " .. tostring(i) .. "=" .. ascendancy.display_name)
+        end
+        self:SayDev(playerID, table.concat(lines, " | "))
+        return
+    end
+
+    local index = tonumber(arg)
+    if index == nil or index < 1 or index > #list or index ~= math.floor(index) then
+        self:SayDev(playerID, "Usage: -ascend 1.." .. tostring(#list))
+        return
+    end
+
+    local ascendancy = list[index]
+    local previousPlayable = selection.playable or selection.archetype
+    -- Mark authorized before replace so enforce-think does not strip the new hero.
+    selection.base_class = baseClass
+    selection.playable = ascendancy.key
+    selection.archetype = baseClass
+
+    local heroAssigned, assignedHero = self:ApplySelectedHero(playerID, ascendancy.hero)
+    if not heroAssigned or assignedHero == nil then
+        selection.playable = previousPlayable
+        self:SayDev(playerID, "Failed to ascend to " .. ascendancy.display_name)
+        return
+    end
+
+    selection.hero_assigned = true
+    selection.hero_entindex = assignedHero:entindex()
+    self:ApplyPlayableCosmetics(assignedHero, ascendancy.key, ascendancy.hero)
+
+    print("[POA DEV] player " .. tostring(playerID) .. " ascended "
+        .. tostring(baseClass) .. " -> " .. ascendancy.key)
+    self:SayDev(playerID, "Ascended to " .. ascendancy.display_name
+        .. " (" .. tostring(index) .. "/" .. tostring(#list) .. ")")
+end
+
+function PathOfTheAncients:GetPlayableDefinition(playableKey)
+    if type(playableKey) ~= "string" then
+        return nil
+    end
+    if BASE_CLASSES[playableKey] ~= nil then
+        return BASE_CLASSES[playableKey]
+    end
+    return ASCENDANCY_BY_KEY[playableKey]
 end
 
 function PathOfTheAncients:ApplySelectedHero(playerID, heroName)
@@ -619,8 +988,19 @@ function PathOfTheAncients:ApplySelectedHero(playerID, heroName)
         return false
     end
 
+    local progress = self:CaptureHeroProgress(playerID, currentHero)
+
+    -- Destroy FollowEntity props first; ReplaceHeroWith does not take them with
+    -- the old hero and they otherwise drop in-world as permanent props.
+    self:ClearAttachedWearables(playerID, currentHero)
+
     local replaced, replacementError = pcall(function()
-        return PlayerResource:ReplaceHeroWith(playerID, heroName, 0, 0)
+        return PlayerResource:ReplaceHeroWith(
+            playerID,
+            heroName,
+            progress.gold,
+            progress.xp
+        )
     end)
 
     if not replaced then
@@ -630,7 +1010,10 @@ function PathOfTheAncients:ApplySelectedHero(playerID, heroName)
 
     local assignedHero = PlayerResource:GetSelectedHeroEntity(playerID) or player:GetAssignedHero()
     if assignedHero ~= nil and assignedHero:GetUnitName() == heroName then
-        print("[POA] Assigned " .. heroName .. " to player " .. tostring(playerID))
+        self:RestoreHeroProgress(playerID, assignedHero, progress)
+        print("[POA] Assigned " .. heroName .. " to player " .. tostring(playerID)
+            .. " (level " .. tostring(progress.level) .. ", xp " .. tostring(progress.xp)
+            .. ", gold " .. tostring(progress.gold) .. ")")
         return true, assignedHero
     end
 
@@ -638,6 +1021,107 @@ function PathOfTheAncients:ApplySelectedHero(playerID, heroName)
     print("[POA] Hero assignment incomplete for player " .. tostring(playerID)
         .. "; requested " .. heroName .. ", found " .. assignedName)
     return false
+end
+
+function PathOfTheAncients:CaptureHeroProgress(playerID, hero)
+    local progress = {
+        gold = 0,
+        xp = 0,
+        level = 1,
+        ability_points = 0,
+    }
+
+    pcall(function()
+        progress.gold = PlayerResource:GetGold(playerID) or 0
+    end)
+
+    if hero == nil or hero:IsNull() then
+        return progress
+    end
+
+    pcall(function()
+        progress.level = hero:GetLevel() or 1
+    end)
+    pcall(function()
+        progress.xp = hero:GetCurrentXP() or 0
+    end)
+    pcall(function()
+        progress.ability_points = hero:GetAbilityPoints() or 0
+    end)
+
+    -- If XP looks empty but level is above 1, derive a minimum XP floor from level.
+    if (progress.xp == nil or progress.xp <= 0) and progress.level > 1 then
+        local derived = 0
+        pcall(function()
+            if XP_PER_LEVEL_TABLE ~= nil then
+                derived = XP_PER_LEVEL_TABLE[progress.level] or 0
+            end
+        end)
+        if derived > 0 then
+            progress.xp = derived
+        end
+    end
+
+    return progress
+end
+
+function PathOfTheAncients:RestoreHeroProgress(playerID, hero, progress)
+    if hero == nil or hero:IsNull() or progress == nil then
+        return
+    end
+
+    pcall(function()
+        PlayerResource:SetGold(playerID, progress.gold or 0, false)
+        PlayerResource:SetGold(playerID, 0, true)
+    end)
+
+    local targetLevel = math.max(1, tonumber(progress.level) or 1)
+    local targetXP = math.max(0, tonumber(progress.xp) or 0)
+
+    -- ReplaceHeroWith often ignores/resets XP; force level + XP after spawn.
+    local currentLevel = 1
+    pcall(function() currentLevel = hero:GetLevel() or 1 end)
+
+    if targetLevel > currentLevel then
+        for _ = currentLevel, targetLevel - 1 do
+            local leveled = pcall(function()
+                hero:HeroLevelUp(false)
+            end)
+            if not leveled then
+                break
+            end
+        end
+    end
+
+    local currentXP = 0
+    pcall(function() currentXP = hero:GetCurrentXP() or 0 end)
+    if targetXP > currentXP then
+        local xpReason = 0
+        pcall(function()
+            if DOTA_ModifyXP_Unspecified ~= nil then
+                xpReason = DOTA_ModifyXP_Unspecified
+            end
+        end)
+        pcall(function()
+            hero:AddExperience(targetXP - currentXP, xpReason, false, true)
+        end)
+    end
+
+    -- Keep unspent ability points at least what the player had (HeroLevelUp may add more).
+    pcall(function()
+        local points = hero:GetAbilityPoints() or 0
+        local desired = math.max(points, tonumber(progress.ability_points) or 0)
+        if desired > points and hero.SetAbilityPoints ~= nil then
+            hero:SetAbilityPoints(desired)
+        end
+    end)
+
+    pcall(function()
+        print("[POA] Restored progress on " .. hero:GetUnitName()
+            .. " level=" .. tostring(hero:GetLevel())
+            .. " xp=" .. tostring(hero:GetCurrentXP())
+            .. " gold=" .. tostring(PlayerResource:GetGold(playerID)))
+    end)
 end
 
 function PathOfTheAncients:ForceDummyHeroes()
@@ -671,8 +1155,8 @@ function PathOfTheAncients:OnGameRulesStateChange()
     end
 
     for playerID, selection in pairs(self.selections) do
-        local classDef = BASE_CLASSES[selection.archetype]
-        if selection.confirmed and classDef ~= nil and self:IsValidPlayer(playerID) then
+        local playable = self:GetPlayableDefinition(selection.playable or selection.archetype)
+        if selection.confirmed and playable ~= nil and self:IsValidPlayer(playerID) then
             local player = PlayerResource:GetPlayer(playerID)
             local hero = selection.hero_entindex ~= nil
                 and EntIndexToHScript(selection.hero_entindex)
@@ -680,7 +1164,7 @@ function PathOfTheAncients:OnGameRulesStateChange()
             if player ~= nil
                 and hero ~= nil
                 and not hero:IsNull()
-                and hero:GetUnitName() == classDef.hero
+                and hero:GetUnitName() == playable.hero
                 and hero:GetPlayerOwnerID() == playerID
                 and player:GetAssignedHero() == hero then
                 print("[POA] Verified existing hero for player " .. tostring(playerID)
@@ -721,17 +1205,17 @@ end
 function PathOfTheAncients:AllConfirmedPlayersHaveAssignedHeroes()
     for playerID, selection in pairs(self.selections) do
         if selection.confirmed then
-            local classDef = BASE_CLASSES[selection.archetype]
+            local playable = self:GetPlayableDefinition(selection.playable or selection.archetype)
             local player = PlayerResource:GetPlayer(playerID)
             local hero = selection.hero_entindex ~= nil
                 and EntIndexToHScript(selection.hero_entindex)
                 or nil
             if not selection.hero_assigned
-                or classDef == nil
+                or playable == nil
                 or player == nil
                 or hero == nil
                 or hero:IsNull()
-                or hero:GetUnitName() ~= classDef.hero
+                or hero:GetUnitName() ~= playable.hero
                 or hero:GetPlayerOwnerID() ~= playerID
                 or player:GetAssignedHero() ~= hero then
                 return false
@@ -746,4 +1230,15 @@ function PathOfTheAncients:PublishPartyState()
         player_count = self:GetConnectedPlayerCount(),
         ready_count = self:GetReadyPlayerCount(),
     })
+end
+
+function PathOfTheAncients:OnNpcSpawned(event)
+    if event == nil or event.entindex == nil then
+        return
+    end
+
+    local entity = EntIndexToHScript(event.entindex)
+    if entity == nil or entity:IsNull() or not entity:IsRealHero() then
+        return
+    end
 end
