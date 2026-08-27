@@ -10,57 +10,23 @@ end
 -- details.
 local HERO_SELECTION_TIMEOUT_SECONDS = 3600
 
-local ARCHETYPES = {
-    berserker = { hero = "npc_dota_hero_skeleton_king", display_name = "Berserker" },
-    paladin = { hero = "npc_dota_hero_omniknight", display_name = "Paladin" },
-    slayer = { hero = "npc_dota_hero_spectre", display_name = "Slayer" },
-
-    artillerist = { hero = "npc_dota_hero_gyrocopter", display_name = "Artillerist" },
-    bloodhound = { hero = "npc_dota_hero_bounty_hunter", display_name = "Bloodhound" },
-    death_blade = { hero = "npc_dota_hero_legion_commander", display_name = "Death Blade" },
-
-    deadeye = { hero = "npc_dota_hero_windrunner", display_name = "Deadeye" },
-    gunslinger = { hero = "npc_dota_hero_muerta", display_name = "Gunslinger" },
-    witch_hunter = { hero = "npc_dota_hero_drow_ranger", display_name = "Witch Hunter" },
-
-    bard = { hero = "npc_dota_hero_largo", display_name = "Bard" },
-    drunkard = { hero = "npc_dota_hero_brewmaster", display_name = "Drunkard" },
-    puppeteer = { hero = "npc_dota_hero_ringmaster", display_name = "Puppeteer" },
-
-    fire_mage = { hero = "npc_dota_hero_lina", display_name = "Fire Mage" },
-    frost_mage = { hero = "npc_dota_hero_crystal_maiden", display_name = "Frost Mage" },
-    lightning_mage = { hero = "npc_dota_hero_zuus", display_name = "Lightning Mage" },
-
-    glaivier = { hero = "npc_dota_hero_phantom_lancer", display_name = "Glaivier" },
-    striker = { hero = "npc_dota_hero_marci", display_name = "Striker" },
-    war_dancer = { hero = "npc_dota_hero_axe", display_name = "War Dancer" },
-
-    druid = { hero = "npc_dota_hero_lone_druid", display_name = "Druid" },
-    spiritkin = { hero = "npc_dota_hero_void_spirit", display_name = "Spiritkin" },
-    summoner = { hero = "npc_dota_hero_warlock", display_name = "Summoner" },
+local BASE_CLASSES = {
+    warrior = { hero = "npc_dota_hero_mars", display_name = "Warrior" },
+    mercenary = { hero = "npc_dota_hero_antimage", display_name = "Mercenary" },
+    ranger = { hero = "npc_dota_hero_hoodwink", display_name = "Ranger" },
+    performer = { hero = "npc_dota_hero_monkey_king", display_name = "Performer" },
+    mage = { hero = "npc_dota_hero_invoker", display_name = "Mage" },
+    martial_artist = { hero = "npc_dota_hero_juggernaut", display_name = "Martial Artist" },
+    specialist = { hero = "npc_dota_hero_arc_warden", display_name = "Specialist" },
 }
 
--- Optional per-archetype cosmetic overrides; see precache_cosmetics.lua.
+-- Optional per-class cosmetic overrides; see precache_cosmetics.lua.
 -- When set, these replace the hero's default_wearables.lua pieces.
 local COSMETIC_OVERRIDES = require("precache_cosmetics")
 
 -- Default wearable models per hero for heroes whose KV override sets
 -- DisableWearables 1; see default_wearables.lua.
 local DEFAULT_WEARABLES = require("default_wearables")
-
--- Carousel preview heroes from panorama/scripts/custom_game/class_definitions.js.
--- Never spawned in-game, but their default wearables (hair, helmets) are
--- separate models that must be made resident or the DOTAScenePanel previews
--- on the selection screen render the bare body only.
-local PREVIEW_HEROES = {
-    "npc_dota_hero_mars",
-    "npc_dota_hero_antimage",
-    "npc_dota_hero_hoodwink",
-    "npc_dota_hero_monkey_king",
-    "npc_dota_hero_invoker",
-    "npc_dota_hero_juggernaut",
-    "npc_dota_hero_arc_warden",
-}
 
 function Precache(context)
     local precached = {}
@@ -70,11 +36,8 @@ function Precache(context)
             precached[heroName] = true
         end
     end
-    for _, archetype in pairs(ARCHETYPES) do
-        precacheUnit(archetype.hero)
-    end
-    for _, heroName in pairs(PREVIEW_HEROES) do
-        precacheUnit(heroName)
+    for _, classDef in pairs(BASE_CLASSES) do
+        precacheUnit(classDef.hero)
     end
     for _, models in pairs(COSMETIC_OVERRIDES) do
         for _, model in pairs(models) do
@@ -238,11 +201,22 @@ function PathOfTheAncients:SendToPlayer(playerID, eventName, payload)
     )
 end
 
+function PathOfTheAncients:ResolveSelectable(key)
+    if type(key) ~= "string" then
+        return nil, nil
+    end
+    local classDef = BASE_CLASSES[key]
+    if classDef ~= nil then
+        return key, classDef
+    end
+    return nil, nil
+end
+
 function PathOfTheAncients:OnPreviewSelection(event)
     local playerID = event.PlayerID
-    local archetype = ARCHETYPES[event.archetype]
+    local classKey, classDef = self:ResolveSelectable(event.archetype or event.class)
 
-    if not self:IsValidPlayer(playerID) or archetype == nil then
+    if not self:IsValidPlayer(playerID) or classDef == nil then
         return
     end
 
@@ -251,18 +225,18 @@ function PathOfTheAncients:OnPreviewSelection(event)
     end
 
     self.selections[playerID] = {
-        archetype = event.archetype,
+        archetype = classKey,
         confirmed = false,
     }
 end
 
 function PathOfTheAncients:OnConfirmSelection(event)
     local playerID = event.PlayerID
-    local archetype = ARCHETYPES[event.archetype]
+    local classKey, classDef = self:ResolveSelectable(event.archetype or event.class)
 
-    if not self:IsValidPlayer(playerID) or archetype == nil then
+    if not self:IsValidPlayer(playerID) or classDef == nil then
         self:SendToPlayer(playerID, "poa_selection_rejected", {
-            message = "That champion is not available.",
+            message = "That class is not available.",
         })
         return
     end
@@ -272,29 +246,29 @@ function PathOfTheAncients:OnConfirmSelection(event)
     end
 
     self.selections[playerID] = {
-        archetype = event.archetype,
+        archetype = classKey,
         confirmed = true,
     }
 
-    print("[POA] Confirmed " .. event.archetype .. " for player " .. tostring(playerID))
+    print("[POA] Confirmed " .. classKey .. " for player " .. tostring(playerID))
 
-    local heroAssigned, assignedHero = self:ApplySelectedHero(playerID, archetype.hero)
+    local heroAssigned, assignedHero = self:ApplySelectedHero(playerID, classDef.hero)
     self.selections[playerID].hero_assigned = heroAssigned
     self.selections[playerID].hero_entindex = assignedHero ~= nil and assignedHero:entindex() or nil
 
     if heroAssigned and assignedHero ~= nil then
         self:ScheduleEconWearableStripping(assignedHero)
-        if COSMETIC_OVERRIDES[event.archetype] ~= nil then
-            self:ApplyCosmeticOverrides(assignedHero, event.archetype)
+        if COSMETIC_OVERRIDES[classKey] ~= nil then
+            self:ApplyCosmeticOverrides(assignedHero, classKey)
         else
-            self:ApplyDefaultWearables(assignedHero, event.archetype, archetype.hero)
+            self:ApplyDefaultWearables(assignedHero, classKey, classDef.hero)
         end
     end
 
     self:SendToPlayer(playerID, "poa_selection_accepted", {
-        archetype = event.archetype,
-        hero = archetype.hero,
-        message = archetype.display_name .. " confirmed",
+        archetype = classKey,
+        hero = classDef.hero,
+        message = classDef.display_name .. " confirmed",
     })
 
     self:AssignTeams()
@@ -697,8 +671,8 @@ function PathOfTheAncients:OnGameRulesStateChange()
     end
 
     for playerID, selection in pairs(self.selections) do
-        local archetype = ARCHETYPES[selection.archetype]
-        if selection.confirmed and archetype ~= nil and self:IsValidPlayer(playerID) then
+        local classDef = BASE_CLASSES[selection.archetype]
+        if selection.confirmed and classDef ~= nil and self:IsValidPlayer(playerID) then
             local player = PlayerResource:GetPlayer(playerID)
             local hero = selection.hero_entindex ~= nil
                 and EntIndexToHScript(selection.hero_entindex)
@@ -706,7 +680,7 @@ function PathOfTheAncients:OnGameRulesStateChange()
             if player ~= nil
                 and hero ~= nil
                 and not hero:IsNull()
-                and hero:GetUnitName() == archetype.hero
+                and hero:GetUnitName() == classDef.hero
                 and hero:GetPlayerOwnerID() == playerID
                 and player:GetAssignedHero() == hero then
                 print("[POA] Verified existing hero for player " .. tostring(playerID)
@@ -747,17 +721,17 @@ end
 function PathOfTheAncients:AllConfirmedPlayersHaveAssignedHeroes()
     for playerID, selection in pairs(self.selections) do
         if selection.confirmed then
-            local archetype = ARCHETYPES[selection.archetype]
+            local classDef = BASE_CLASSES[selection.archetype]
             local player = PlayerResource:GetPlayer(playerID)
             local hero = selection.hero_entindex ~= nil
                 and EntIndexToHScript(selection.hero_entindex)
                 or nil
             if not selection.hero_assigned
-                or archetype == nil
+                or classDef == nil
                 or player == nil
                 or hero == nil
                 or hero:IsNull()
-                or hero:GetUnitName() ~= archetype.hero
+                or hero:GetUnitName() ~= classDef.hero
                 or hero:GetPlayerOwnerID() ~= playerID
                 or player:GetAssignedHero() ~= hero then
                 return false

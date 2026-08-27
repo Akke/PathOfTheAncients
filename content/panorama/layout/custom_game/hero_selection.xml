@@ -11,7 +11,7 @@
                 <Panel id="Header">
                     <Label id="Eyebrow" text="PATH OF THE ANCIENTS" />
                     <Label id="ScreenTitle" text="Choose Your Class" />
-                    <Label id="ScreenSubtitle" text="Select a class to view its ascendancies." />
+                    <Label id="ScreenSubtitle" text="Select a class to preview its ascendancies." />
                 </Panel>
 
                 <Panel id="BaseStage" class="SelectionStage">
@@ -22,21 +22,20 @@
                         </Panel>
                         <Button id="CarouselRight" class="CarouselArrow" hittestchildren="false"><Label text="›" /></Button>
                     </Panel>
-                    <Panel id="CarouselFooter"><Label id="CarouselPageLabel" text="" /><Label text="CLICK ON A CLASS TO SELECT IT" /></Panel>
                 </Panel>
 
                 <Panel id="AscendencyStage" class="SelectionStage AscendencyStage HiddenStage">
-                    <Panel id="AscendencyNav"><Button id="BackButton" hittestchildren="false"><Label text="‹ BACK TO CLASSES" /></Button><Label id="AscendencyHeading" text="Choose an Ascendancy" /></Panel>
+                    <Panel id="AscendencyNav"><Button id="BackButton" hittestchildren="false"><Label text="‹ BACK TO CLASSES" /></Button><Label id="AscendencyHeading" text="Ascendancies" /></Panel>
                     <Panel id="AscendencyBody">
                         <Panel id="AscendencyCards" />
                     </Panel>
                 </Panel>
 
                 <Panel id="SelectionFooter">
-                    <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedRole" text="Select a class to reveal its ascendancies" /></Panel>
+                    <Panel id="SelectionSummary"><Label class="SectionLabel" text="SELECTED PATH" /><Label id="SelectedHeroName" text="Choose a class" /><Label id="SelectedDesc" text="Select a class to preview its ascendancies" /></Panel>
                     <Panel id="ConfirmArea"><Label id="ReadyStatus" text="Choose a class to continue" /><Button id="ConfirmButton" enabled="false" disabled="true" hittestchildren="false"><Label id="ConfirmLabel" text="CURRENTLY PICKING..." /></Button></Panel>
                 </Panel>
-                <Panel id="PartyFooter"><Label id="PartyStatus" text="Preparing party…" /><Label text="Your ascendancy becomes your playable hero." /></Panel>
+                <Panel id="PartyFooter"><Label id="PartyStatus" text="Preparing party…" /><Label text="You lock in a base class now. Ascendancies unlock later in the game." /></Panel>
             </Panel>
         </Panel>
     </Panel>

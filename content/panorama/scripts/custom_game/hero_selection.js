@@ -4,7 +4,7 @@
   var CLASSES = POA_CLASS_DEFINITIONS;
 
   var selectedClass = null;
-  var selectedAscendency = null;
+  var previewAscendency = null;
   var confirmed = false;
   var classOrder = POA_CLASS_ORDER.slice();
   var focusIndex = 0;
@@ -86,7 +86,7 @@
     AddPanel("Panel", learnRow, "", "LearnMoreLine Right", false);
 
     slot.SetPanelEvent("onactivate", function () {
-      if (classOrder[focusIndex] === classKey) SelectClass(classKey);
+      if (classOrder[focusIndex] === classKey) OpenClassPreview(classKey);
       else UpdateCarousel(classOrder.indexOf(classKey) - focusIndex);
     });
   }
@@ -132,8 +132,6 @@
       var first = track.GetChild(0);
       if (first !== slot) track.MoveChildBefore(slot, first);
     }
-    $("#CarouselPageLabel").text =
-      CLASSES[classOrder[focusIndex]].name.toUpperCase();
     $.Msg("[POA UI] Carousel focus: " + classOrder[focusIndex]);
     QueueVisibleClassPreviews();
   }
@@ -177,7 +175,7 @@
     return null;
   }
 
-  function FocusAscendency(key) {
+  function FocusAscendencyPreview(key) {
     var ascendancy = FindAscendency(key);
     if (!ascendancy || !selectedClass) return;
     var definition = CLASSES[selectedClass];
@@ -203,31 +201,39 @@
       var scene = $("#AscendScene");
       if (scene) {
         scene.SetUnit(ascendancy.hero, "default", true);
-        $.Msg("[POA UI] Showcase render: " + ascendancy.hero);
+        $.Msg("[POA UI] Ascendancy preview: " + ascendancy.hero);
       }
     });
+    previewAscendency = key;
+    // Path summary always reflects the base class being locked in.
+    $("#SelectedHeroName").text = definition.name;
+    $("#SelectedDesc").text = definition.desc;
+    $("#ReadyStatus").text = "Ready to confirm " + definition.name;
+    $("#ConfirmButton").enabled = true;
+    $("#ConfirmLabel").text = "CONFIRM CHOICE";
   }
 
   function ShowClassStage() {
     if (confirmed) return;
     selectedClass = null;
-    selectedAscendency = null;
+    previewAscendency = null;
     $("#AscendencyCards").RemoveAndDeleteChildren();
     $("#BaseStage").RemoveClass("HiddenStage");
     $("#AscendencyStage").AddClass("HiddenStage");
     $("#ScreenTitle").text = "Choose Your Class";
-    $("#ScreenSubtitle").text = "Select a class to view its ascendencies.";
+    $("#ScreenSubtitle").text = "Select a class to preview its ascendancies.";
     $("#SelectedHeroName").text = "Choose a class";
-    $("#SelectedRole").text = "Select a class to view its ascendencies.";
+    $("#SelectedDesc").text = "Select a class to preview its ascendancies.";
     $("#ReadyStatus").text = "Choose a class to continue";
     $("#ConfirmButton").enabled = false;
+    $("#ConfirmLabel").text = "CURRENTLY PICKING...";
     QueueVisibleClassPreviews();
   }
 
-  function SelectClass(classKey) {
+  function OpenClassPreview(classKey) {
     if (confirmed || !CLASSES[classKey]) return;
     selectedClass = classKey;
-    selectedAscendency = null;
+    previewAscendency = null;
     var definition = CLASSES[classKey];
     var holder = $("#AscendencyCards");
     holder.RemoveAndDeleteChildren();
@@ -251,10 +257,7 @@
     var overlayName = $.CreatePanel("Label", backdrop, "AscendName");
     overlayName.AddClass("AscendNameText");
     overlayName.hittest = false;
-    var overlayDesc = $.CreatePanel("Label", backdrop, "AscendDesc");
-    overlayDesc.AddClass("AscendDescText");
-    overlayDesc.text = definition.ascendencies[0].desc;
-    overlayDesc.hittest = false;
+    var overlayDesc = $.CreatePanel("Label", backdrop, "AscendDesc"); overlayDesc.AddClass("AscendDescText"); overlayDesc.text = definition.desc; overlayDesc.hittest = false;
     var tabsHolder = $.CreatePanel("Panel", layout, "AscendTabs");
     tabsHolder.AddClass("AscendTabs");
     tabsHolder.hittest = false;
@@ -269,79 +272,62 @@
       tabName.AddClass("AscendTabName");
       tabName.text = ascendancy.name.toUpperCase();
       tabName.hittest = false;
-      tab.SetPanelEvent("onactivate", function () {
-        SelectAscendency(ascendancy.key);
-      });
+      tab.SetPanelEvent("onactivate", function () { FocusAscendencyPreview(ascendancy.key); });
     });
     var portrait = $.CreatePanel("DOTAScenePanel", tabsHolder, "AscendScene");
     portrait.AddClass("SpecPortrait");
     portrait.allowrotation = true;
     $("#BaseStage").AddClass("HiddenStage");
     $("#AscendencyStage").RemoveClass("HiddenStage");
-    $("#AscendencyHeading").text = "Ascendencies";
+    $("#AscendencyHeading").text = "Ascendancies";
     $("#ScreenTitle").text = definition.name;
-    $("#ScreenSubtitle").text =
-      "Choose an ascendancy that best fits your playstyle. Can be changed later in the game.";
+    $("#ScreenSubtitle").text = "Preview future ascendancy paths. Confirm locks in this base class.";
     $("#SelectedHeroName").text = definition.name;
-    $("#SelectedRole").text = "Choose an ascendancy to view its details.";
-    $("#ReadyStatus").text = "Choose a path to continue";
-    $("#ConfirmButton").enabled = false;
-    SelectAscendency(definition.ascendencies[0].key);
-    $.Msg("[POA UI] Selected base class: " + classKey);
-  }
-
-  function SelectAscendency(key) {
-    if (confirmed) return;
-    var ascendancy = FindAscendency(key);
-    if (!ascendancy) return;
-    FocusAscendency(key);
-    selectedAscendency = key;
-    $("#SelectedHeroName").text = ascendancy.name;
-    $("#SelectedRole").text = ascendancy.presentation;
-    $("#ReadyStatus").text = "Ready to confirm";
+    $("#SelectedDesc").text = definition.desc;
+    $("#ReadyStatus").text = "Ready to confirm " + definition.name;
     $("#ConfirmButton").enabled = true;
     $("#ConfirmLabel").text = "CONFIRM CHOICE";
-    $.Msg(
-      "[POA UI] Selected ascendancy: " + key + " (" + ascendancy.hero + ")",
-    );
-    GameEvents.SendCustomGameEventToServer("poa_preview_selection", {
-      archetype: key,
-    });
+    FocusAscendencyPreview(definition.ascendencies[0].key);
+    $.Msg("[POA UI] Opened class preview: " + classKey);
+    GameEvents.SendCustomGameEventToServer("poa_preview_selection", { archetype: classKey, class: classKey });
   }
 
   function ConfirmSelection() {
-    if (confirmed || !selectedAscendency) return;
+    if (confirmed || !selectedClass) return;
     confirmed = true;
     $("#HeroSelectionRoot").AddClass("IsConfirming");
     $("#ConfirmButton").enabled = false;
     $("#ConfirmLabel").text = "LOCKING IN…";
     $("#ReadyStatus").text = "Waiting for the server";
+    // Confirm the base class only; ascendancy tabs are preview-only.
     GameEvents.SendCustomGameEventToServer("poa_confirm_selection", {
-      archetype: selectedAscendency,
+        archetype: selectedClass,
+        class: selectedClass,
     });
   }
 
   function ReturnToClassSelection() {
-    $("#ConfirmLabel").text = "CURRENTLY PICKING...";
+    if (confirmed) return;
     ShowClassStage();
   }
 
   function OnSelectionAccepted(event) {
-    $.Msg("[POA UI] Selection accepted: " + (event.archetype || "unknown"));
-    confirmed = true;
-    $("#HeroSelectionRoot").RemoveClass("IsConfirming");
-    $("#HeroSelectionRoot").AddClass("Confirmed");
-    $("#ConfirmLabel").text = "READY";
-    $("#ReadyStatus").text = event.message || "Ascendency confirmed";
+      $.Msg("[POA UI] Selection accepted: " + (event.archetype || "unknown"));
+      confirmed = true;
+      $("#HeroSelectionRoot").RemoveClass("IsConfirming");
+      $("#HeroSelectionRoot").AddClass("Confirmed");
+      $("#ConfirmLabel").text = "READY";
+      $("#ReadyStatus").text = event.message || "Class confirmed";
   }
+
   function OnSelectionRejected(event) {
-    confirmed = false;
-    $("#HeroSelectionRoot").RemoveClass("IsConfirming");
-    $("#ConfirmButton").enabled = selectedAscendency !== null;
-    $("#ConfirmLabel").text = "CONFIRM CHOICE";
-    $("#ReadyStatus").text =
-      event.message || "Selection could not be confirmed";
+      confirmed = false;
+      $("#HeroSelectionRoot").RemoveClass("IsConfirming");
+      $("#ConfirmButton").enabled = selectedClass !== null;
+      $("#ConfirmLabel").text = "CONFIRM CHOICE";
+      $("#ReadyStatus").text = event.message || "Selection could not be confirmed";
   }
+
   function OnPartyReady() {
     $.Msg("[POA UI] Party ready; game start requested");
     var root = $("#HeroSelectionRoot"),
@@ -361,16 +347,12 @@
     $.Msg("[POA UI] Hero selection context collapsed; gameplay input released");
   }
   function UpdatePartyStatus() {
-    var state = CustomNetTables.GetTableValue("poa_selection", "party");
-    if (!state) {
-      $("#PartyStatus").text = "Choose your class";
-      return;
-    }
-    $("#PartyStatus").text =
-      (Number(state.ready_count) || 0) +
-      " / " +
-      (Number(state.player_count) || 1) +
-      " players ready";
+      var state = CustomNetTables.GetTableValue("poa_selection", "party");
+      if (!state) {
+          $("#PartyStatus").text = "Choose your class";
+          return;
+      }
+      $("#PartyStatus").text = (Number(state.ready_count) || 0) + " / " + (Number(state.player_count) || 1) + " players ready";
   }
 
   BuildClassCarousel();
@@ -386,12 +368,9 @@
   GameEvents.Subscribe("poa_selection_accepted", OnSelectionAccepted);
   GameEvents.Subscribe("poa_selection_rejected", OnSelectionRejected);
   GameEvents.Subscribe("poa_party_ready", OnPartyReady);
-  CustomNetTables.SubscribeNetTableListener(
-    "poa_selection",
-    function (table, key) {
+  CustomNetTables.SubscribeNetTableListener("poa_selection", function (table, key) {
       if (table === "poa_selection" && key === "party") UpdatePartyStatus();
-    },
-  );
+  });
   UpdatePartyStatus();
   UpdateCarousel(0);
 })();
