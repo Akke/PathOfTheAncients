@@ -755,6 +755,7 @@ function PathOfTheAncients:ApplyPlayableCosmetics(hero, playableKey, heroName)
         -- Drop any leftover props from a prior body before attaching new ones.
         self:ClearAttachedWearables(playerID, hero)
     end
+    self:StripDefaultAbilities(hero)
     self:ScheduleEconWearableStripping(hero)
     if COSMETIC_OVERRIDES[playableKey] ~= nil then
         self:ApplyCosmeticOverrides(hero, playableKey)
@@ -1241,4 +1242,56 @@ function PathOfTheAncients:OnNpcSpawned(event)
     if entity == nil or entity:IsNull() or not entity:IsRealHero() then
         return
     end
+end
+
+function PathOfTheAncients:StripDefaultAbilities(hero)
+    if hero == nil or hero:IsNull() then
+        return 0
+    end
+
+    local removed = 0
+    local count = 0
+    pcall(function()
+        count = hero:GetAbilityCount() or 0
+    end)
+
+    -- Walk high-to-low so removals do not shift unread indexes.
+    for i = count - 1, 0, -1 do
+        local ability = nil
+        pcall(function()
+            ability = hero:GetAbilityByIndex(i)
+        end)
+        if ability ~= nil and not ability:IsNull() then
+            local name = nil
+            pcall(function()
+                name = ability:GetAbilityName()
+            end)
+            if type(name) == "string" and name ~= "" and name ~= "generic_hidden" then
+                local ok = pcall(function()
+                    hero:RemoveAbility(name)
+                end)
+                if ok then
+                    removed = removed + 1
+                end
+            end
+        end
+    end
+
+    -- Keep six blank bar slots for future custom skills.
+    local placeholders = 0
+    pcall(function()
+        for i = 0, 5 do
+            local slot = hero:GetAbilityByIndex(i)
+            if slot == nil or slot:IsNull() then
+                hero:AddAbility("generic_hidden")
+                placeholders = placeholders + 1
+            end
+        end
+    end)
+
+    if removed > 0 or placeholders > 0 then
+        print("[POA] Stripped " .. tostring(removed) .. " default abilities from "
+            .. hero:GetUnitName() .. " (placeholders +" .. tostring(placeholders) .. ")")
+    end
+    return removed
 end
