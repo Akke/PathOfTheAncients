@@ -765,6 +765,171 @@ function PathOfTheAncients:IsDevPlayer(playerID)
     return false
 end
 
+function PathOfTheAncients:DumpHeroAbilities(hero, label)
+    if hero == nil or hero:IsNull() then
+        return
+    end
+    local count = 0
+    pcall(function()
+        count = hero:GetAbilityCount() or 0
+    end)
+    local parts = {}
+    for i = 0, count - 1 do
+        local ability = nil
+        pcall(function()
+            ability = hero:GetAbilityByIndex(i)
+        end)
+        if ability ~= nil and not ability:IsNull() then
+            local name = ""
+            local level = 0
+            pcall(function()
+                name = ability:GetAbilityName() or ""
+            end)
+            pcall(function()
+                level = ability:GetLevel() or 0
+            end)
+            table.insert(parts, tostring(i) .. ":" .. name .. "(" .. tostring(level) .. ")")
+        end
+    end
+    print("[POA DIAG] ability dump [" .. label .. "] " .. hero:GetUnitName()
+        .. " count=" .. tostring(count) .. " -> " .. table.concat(parts, " | "))
+end
+
+function PathOfTheAncients:GrantClassAbilities(hero, playableKey)
+    if hero == nil or hero:IsNull() or type(playableKey) ~= "string" then
+        return
+    end
+    local kit = CLASS_ABILITIES[playableKey]
+    if kit == nil then
+        return
+    end
+    local guard = 0
+    while guard < 30 do
+        local has = false
+        pcall(function() has = hero:HasAbility("generic_hidden") or false end)
+        if not has then
+            break
+        end
+        local ok = pcall(function()
+            hero:RemoveAbility("generic_hidden")
+        end)
+        if not ok then
+            break
+        end
+        guard = guard + 1
+    end
+    for _, name in ipairs(kit) do
+        local already = false
+        pcall(function() already = hero:HasAbility(name) or false end)
+        if not already then
+            local granted, result = pcall(function()
+                return hero:AddAbility(name)
+            end)
+            if granted and result ~= nil then
+                pcall(function()
+                    result:SetLevel(1)
+                end)
+                print("[POA] Granted ability " .. name .. " to " .. hero:GetUnitName())
+            else
+                print("[POA] Failed to grant ability " .. name .. ": " .. tostring(result))
+            end
+        else
+            pcall(function()
+                local existing = hero:FindAbilityByName(name)
+                if existing ~= nil then
+                    existing:SetLevel(1)
+                end
+            end)
+        end
+    end
+    self:DumpHeroAbilities(hero, "post-grant")
+end
+
+-- Safe error formatter: the engine's default error handler can itself throw and
+-- collapse to "Script Runtime Error: error in error handling", hiding the real
+-- cause. Catching and re-printing via pcall reveals it.
+function PathOfTheAncients:FmtError(e)
+    local ok, s = pcall(function() return tostring(e) end)
+    if ok then
+        return s
+    end
+    return "non-string error"
+end
+
+-- Returns the base class key any playable (base class or ascendancy) belongs
+-- to. Innates are base-class systems, so grant one and only one per base class.
+function PathOfTheAncients:GetBaseClassKey(playableKey)
+    if type(playableKey) ~= "string" then
+        return nil
+    end
+    if BASE_CLASSES[playableKey] ~= nil then
+        return playableKey
+    end
+    local def = ASCENDANCY_BY_KEY[playableKey]
+    if def ~= nil then
+        return def.class_key
+    end
+    return nil
+end
+
+-- Grants the base class innate: its signature skills plus the runtime module
+-- hook (e.g. a class resource attach). Innates are distinct from
+-- CLASS_ABILITIES kits; see class_innates.lua.
+function PathOfTheAncients:GrantClassInnate(hero, playableKey)
+    if hero == nil or hero:IsNull() then
+        return
+    end
+    local baseClassKey = self:GetBaseClassKey(playableKey)
+    local innate = (baseClassKey ~= nil) and CLASS_INNATES[baseClassKey] or nil
+    if innate == nil then
+        return
+    end
+
+    -- Grant the innate AFTER the six generic_hidden placeholders (indices 0-5)
+    -- left by StripDefaultAbilities, so it appends at a high index and never
+    -- occupies a visible QWER slot. Its INNATE_UI behavior renders it in the
+    -- innate diamond regardless of the numeric index.
+    local startIndex = 6
+    local currentIndex = startIndex
+
+    if type(innate.skills) == "table" then
+        print("[POA] Granting innate skills for " .. tostring(baseClassKey)
+            .. " to " .. hero:GetUnitName() .. ": " .. table.concat(innate.skills, ","))
+        for _, name in ipairs(innate.skills) do
+            local already = false
+            pcall(function() already = hero:HasAbility(name) or false end)
+            if not already then
+                local granted, result = pcall(function()
+                    return hero:AddAbility(name)
+                end)
+                if granted and result ~= nil then
+                    print("[POA] Granted innate skill " .. name .. " at slot "
+                        .. tostring(currentIndex) .. " to " .. hero:GetUnitName())
+                    currentIndex = currentIndex + 1
+                    pcall(function() result:SetLevel(1) end)
+                    print("[POA] Innate " .. name .. " leveled to " .. hero:GetUnitName())
+                else
+                    print("[POA] Failed to grant innate skill " .. name .. ": " .. tostring(result))
+                end
+            else
+                pcall(function()
+                    local existing = hero:FindAbilityByName(name)
+                    if existing ~= nil then
+                        existing:SetLevel(1)
+                    end
+                end)
+            end
+        end
+    end
+
+    local module = INNATE_MODULES[baseClassKey]
+    if module ~= nil and type(module.OnHeroApply) == "function" then
+        pcall(function()
+            module.OnHeroApply(hero)
+        end)
+    end
+end
+
 function PathOfTheAncients:ApplyPlayableCosmetics(hero, playableKey, heroName)
     if hero == nil or hero:IsNull() then
         return
