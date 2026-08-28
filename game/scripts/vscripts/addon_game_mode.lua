@@ -1,5 +1,22 @@
 require("libraries/timers")
 
+-- Custom ability kits per playable (base class or ascendancy key), granted
+-- server-side after spawn so they do not depend on hero KV override loading.
+-- See docs/CUSTOM_ABILITIES.md for the ability registration format and the
+-- fixes required to make custom abilities load in this engine build. Defined
+-- in modules, not inline, so class data stays out of the game mode file.
+local CLASS_ABILITIES = require("class_abilities")
+
+-- Class innate data (per base class). Distinct from ability kits: an innate is
+-- the signature class identity + resource, not a list of bar abilities. See
+-- class_innates.lua.
+local CLASS_INNATES = require("class_innates")
+
+-- Innate runtime modules by base class key, populated by each class's
+-- implementing branch via require. Modules self-register their modifiers and
+-- are linked up front so they are available before any innate is granted.
+local INNATE_MODULES = {}
+
 if PathOfTheAncients == nil then
     PathOfTheAncients = class({})
 end
