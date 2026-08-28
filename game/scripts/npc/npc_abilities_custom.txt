@@ -4,6 +4,59 @@
 	"Version"		"1"
 
 	//=================================================================================================================
+	// Ranger Innate: Precision
+	// The rangers attacks deal increased damage for every consecutive hit on the target.
+	// Stacks up to X times and has a limited duration.
+	//=================================================================================================================
+
+	"poa_innate_ranger"
+	{
+		"BaseClass"				"ability_lua"
+		"AbilityName"			"poa_innate_ranger"
+		"ScriptFile"			"abilities/poa_innate_ranger"
+
+		"AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_INNATE_UI"
+
+		"AbilityCastPoint"		"0.0"
+		"AbilityCooldown"		"12.0"
+		"AbilityManaCost"		"60"
+		"AbilityTextureName"	"drow_ranger_marksmanship"
+		"MaxLevel"				"1"
+		"Innate"				"1"
+
+		"AbilityValues"
+		{
+			"damage_increase_per_hit_pct" "2"
+			"max_stacks" "5"
+			"duration" "7"
+		}
+	}
+
+	//=================================================================================================================
+	// Witch Hunter innate: True Shot - Attacks ignore a small percentage of the targets base armor.
+	//=================================================================================================================
+	"poa_innate_ranger_witch_hunter"
+	{
+		"BaseClass"				"ability_lua"
+		"AbilityName"			"poa_innate_ranger_witch_hunter"
+		"ScriptFile"			"abilities/poa_innate_ranger_witch_hunter"
+
+		"AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_INNATE_UI"
+
+		"AbilityCastPoint"		"0.0"
+		"AbilityCooldown"		"0.0"
+		"AbilityManaCost"		"0"
+		"AbilityTextureName"	"drow_ranger_trueshot"
+		"MaxLevel"				"1"
+		"Innate"				"1"
+
+		"AbilityValues"
+		{
+			"armor_percentage" "-20"
+		}
+	}
+
+	//=================================================================================================================
 	// Templar Assassin: Refraction Holdout
 	//=================================================================================================================
 	"templar_assassin_refraction_holdout"

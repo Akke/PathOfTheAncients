@@ -1,66 +1,8 @@
 (function () {
-  "use strict";
+    "use strict";
 
-  const rootUI = $("#AscendancyTreeRoot");
-
-  const ASCENDANCY_TREE_CONFIG = {
-    "ranger": {
-        "witch_hunter": {
-            "starting_node": {
-                "name": "Decimating Strike",
-                "description": "Attacks ignore 20% of the targets base armor.",
-            },
-            "left": {
-                "row_1": {
-                    "node_1": {
-                        "name": "Elemental Infusion",
-                        "description": "Grants [Elemental Infusion] Ability — Crossbow Bolts can be infused with Fire, Lightning or Cold, each applying a distinct on-hit effect. Fire: Applies Flammable, stackable damage over time for 15% of the attack for 3s. Lightning: 35% chance to release a lightning arc to chains to 2-3 enemies, dealing 75% of the attack damage. Cold: Applies frost buildup, freezing enemies when fully built up.",
-                    }
-                },
-                "row_2": {
-                    "node_1": {
-                        "name": "Elemental Cascade",
-                        "description": "Fire: Bolts have a 25% chance to explode for 135% of their damage. Lightning: 5% chance to apply shock to enemies, causing them to take 20% increased damage for 4s. Cold: Killing frozen enemies causes them to shatter, dealing damage for 100% of the attack in an area.",
-                    },
-                    "node_2": {
-                        "name": "Emboldened Infusion",
-                        "description": "25% increased chance to Shock. 50% increased Flammability Magnitude. 25% increased Freeze Buildup.",
-                    }
-                },
-                "row_3": {
-                    "node_1": {
-                        "name": "Stripped Defenses",
-                        "description": "Elemental damage you inflict reduces the targets resistances to that element by 20% for 5s.",
-                    },
-                }
-            },
-            "right": {
-                "row_1": {
-                    "node_1": {
-                        "name": "Witchbane",
-                        "description": "Enemies have Maximum Concentration equal to 30% of their Maximum Life. Break enemy Concentration on attacks equal to 100% of Damage Dealt. Enemies regain 10% of Concentration every second if they haven't lost Concentration in the past 5 seconds.",
-                    }
-                },
-                "row_2": {
-                    "node_1": {
-                        "name": "No Mercy",
-                        "description": "Deal up to 40% more Damage to Enemies based on their missing Concentration.",
-                    },
-                    "node_2": {
-                        "name": "Zealous Inquisition",
-                        "description": "10% chance for Enemies you Kill to Explode, dealing 100% of their maximum Life as Physical Damage.",
-                    }
-                },
-                "row_3": {
-                    "node_1": {
-                        "name": "Damage vs Low Life Enemies",
-                        "description": "35% increased Damage with attacks against Enemies that have less than 10% remaining health.",
-                    },
-                }
-            },
-        }
-    }
-  }
+    const rootUI = $("#AscendancyTreeRoot");
+    let ASCENDANCY_TREE_CONFIG = undefined;
 
     function AddPanel(type, parent, id, className, hitTest) {
         const panel = $.CreatePanel(type, parent, id || "");
@@ -82,7 +24,7 @@
         );
 
         const name = AddPanel("Label", node, "", "NodeName", false);
-        name.text = nodeData.name;
+        name.text = nodeData.title;
 
         const description = AddPanel(
             "Label",
@@ -92,6 +34,8 @@
             false,
         );
         description.text = nodeData.description;
+
+        node.AddClass(nodeData.name);
 
         node.SetPanelEvent("onmouseover", function () {
             $.DispatchEvent(
@@ -106,16 +50,18 @@
         });
 
         node.SetPanelEvent("onactivate", function () {
-            onNodeClicked(node);
+            onNodeClicked(node, nodeData.name);
         });
 
         return node;
     }
 
-    function onNodeClicked(node) {
+    function onNodeClicked(node, nodeName) {
         if(node.BHasClass("learned")) return;
 
-        node.AddClass("learned");
+        GameEvents.SendCustomGameEventToServer("poa_ascendancy_node_learn", {
+            node: nodeName,
+        })
     }
 
     function CreateBranch(sideName, sideConfig, parent) {
@@ -127,28 +73,36 @@
             false,
         );
 
-        Object.keys(sideConfig).forEach(function (rowName) {
-            const row = AddPanel(
-                "Panel",
-                side,
-                "TreeRow_" + sideName + "_" + rowName,
-                "TreeRow",
-                false,
-            );
-
-            const nodes = sideConfig[rowName];
-
-            Object.keys(nodes).forEach(function (nodeName) {
-                CreateNode(
-                    nodes[nodeName],
-                    "Node_" + sideName + "_" + rowName + "_" + nodeName,
-                    row,
+        Object.keys(sideConfig)
+            .sort((a, b) => Number(a) - Number(b))
+            .forEach(function (rowIndex) {
+                const row = AddPanel(
+                    "Panel",
+                    side,
+                    "TreeRow_" + sideName + "_" + rowIndex,
+                    "TreeRow",
+                    false,
                 );
+
+                const nodesInRow = sideConfig[rowIndex];
+
+                Object.keys(nodesInRow)
+                    .sort((a, b) => Number(a) - Number(b))
+                    .forEach(function (nodeIndex) {
+                        CreateNode(
+                            nodesInRow[nodeIndex],
+                            "Node_" + sideName + "_" + rowIndex + "_" + nodeIndex,
+                            row,
+                        );
+                    });
             });
-        });
     }
 
     function CreateNodes(baseClass, ascensionClass) {
+        if (!ASCENDANCY_TREE_CONFIG) {
+            $.Msg("[POA UI — Ascendancy Tree] Ascendancy config has not loaded yet.");
+            return;
+        }
         if(!ASCENDANCY_TREE_CONFIG[baseClass]) return;
         if(!ASCENDANCY_TREE_CONFIG[baseClass][ascensionClass]) return;
 
@@ -176,20 +130,20 @@
             "Node StartingNode",
         );
 
-        $("#AscendancyTreeTitle").text = "Witch Hunter Ascendancy Tree";
+        $("#AscendancyTreeTitle").text = ascensionClass.replaceAll("_", " ") + " Ascendancy Tree";
         const innateAbility = $("#AscendancyInnateAbility");
-        innateAbility.abilityname = "drow_ranger_marksmanship";
+        const abilityName = "poa_innate_" + baseClass + "_" + ascensionClass;
+        innateAbility.abilityname = abilityName;
 
         innateAbility.SetPanelEvent("onmouseover", function () {
             $.DispatchEvent(
-                "DOTAShowTextTooltip",
-                innateAbility,
-                "Witch Hunter Innate — Crossbow attacks take longer to reload but deal 20% increased damage.",
+                "DOTAShowAbilityTooltip",
+                abilityName,
             );
         });
 
         innateAbility.SetPanelEvent("onmouseout", function () {
-            $.DispatchEvent("DOTAHideTextTooltip", innateAbility);
+            $.DispatchEvent("DOTAHideAbilityTooltip", innateAbility);
         });
 
         $("#CloseButton").SetPanelEvent("onactivate", function () {
@@ -206,7 +160,7 @@
         rootUI.hittestchildren = false;
     }
 
-    function OnUIOpen() {
+    function OpenAscendancyTree() {
         rootUI.style.visibility = "visible";
         rootUI.style.opacity = "1";
         rootUI.hittest = true;
@@ -215,10 +169,51 @@
 
     // Called once per player once the game is fully ready after everyone confirmed their picks
     function OnPlayerAscension(data) {
+        $("#TreeNodes").AddClass(data.ascensionClass);
         CreateNodes(data.baseClass, data.ascensionClass);
     }
 
-    GameEvents.Subscribe("poa_ascenscion_tree_open", OnUIOpen);
+    function OnNodeLearnedSuccess(data) {
+        const nodes = $("#TreeNodes").FindChildrenWithClassTraverse(data.node);
+        const node = nodes[0];
+
+        if (!node) {
+            $.Msg("[POA UI — Ascendancy Tree] Ascendancy node not found: " + data.node);
+            return;
+        }
+
+        node.AddClass("learned");
+    }
+
+    function OnInitialTreeConfigLoad(data) {
+        if(!data || !data.config) {
+            $.Msg("[POA UI — Ascendancy Tree] Ascension tree config is empty. This should not happen.");
+            return;
+        }
+
+        ASCENDANCY_TREE_CONFIG = data.config;
+        CreateNodes("ranger", "witch_hunter"); // debug purposes
+        $.Msg("[POA UI — Ascendancy Tree] Successfully loaded ascendancy tree config.");
+    }
+
+    function OnPointsUpdated(data) {
+        $("#AscendancyTreeDescription").text = `(${data.points}) Ascendancy Points remaining.`;
+    }
+
+    function OnResetAll() {
+        const nodes = $("#TreeNodes").FindChildrenWithClassTraverse("Node");
+        for(const node of nodes) {
+            node.RemoveClass("learned");
+        }
+
+        $.Msg("[POA UI — Ascendancy Tree] Reset complete.")
+    }
+
+    GameEvents.Subscribe("poa_ascenscion_tree_open", OpenAscendancyTree);
     GameEvents.Subscribe("poa_ascenscion_tree_player_ascension", OnPlayerAscension);
+    GameEvents.Subscribe("poa_ascendancy_node_learned_success", OnNodeLearnedSuccess);
+    GameEvents.Subscribe("poa_ascenscion_tree_config_send", OnInitialTreeConfigLoad);
+    GameEvents.Subscribe("poa_ascenscion_points_updated", OnPointsUpdated);
+    GameEvents.Subscribe("poa_ascenscion_reset_all", OnResetAll);
     $.Msg("[POA UI — Ascendancy Tree] Loaded Ascendancy Tree successfully.");
 })();

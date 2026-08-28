@@ -51,12 +51,95 @@
     width: 100%;
     background-color: #101820e8;
     border: 1px solid #4b5964aa;
-    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
     background-size: cover;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     border-radius: 6px;
     padding: 24px;
     margin: 24px 0;
+}
+
+#TreeNodes.witch_hunter {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.deadeye {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.gunslinger {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.berserker {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.paladin {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.slayer {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.artillerist {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.death_blade {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.bloodhound {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.bard {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.drunkard {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.puppeteer {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.fire_mage {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.frost_mage {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.lightning_mage {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.glaivier {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.striker {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.war_dancer {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.druid {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.spiritkin {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
+}
+
+#TreeNodes.summoner {
+    background-image: url("file://{images}/custom_game/drow_arcana.jpg");
 }
 
 #TreeBranches {
