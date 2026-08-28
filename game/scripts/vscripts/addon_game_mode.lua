@@ -7,10 +7,14 @@ require("libraries/timers")
 -- in modules, not inline, so class data stays out of the game mode file.
 local CLASS_ABILITIES = require("class_abilities")
 
--- Class innate data (per base class). Distinct from ability kits: an innate is
--- the signature class identity + resource, not a list of bar abilities. See
--- class_innates.lua.
+-- Class innate data (per base class and ascendancy). Distinct from ability
+-- kits: an innate is the signature class identity + resource, not a list of
+-- bar abilities. Ascendancy innates (CLASS_INNATES.ascendancies) override the
+-- base class innate. See class_innates.lua. NOTE: this engine's require only
+-- returns the first value, so both tables ride on the same module (CLASS_INNATES
+-- holds .ascendancies).
 local CLASS_INNATES = require("class_innates")
+local ASCENDANCY_INNATES = CLASS_INNATES.ascendancies
 
 -- Innate runtime modules by base class key, populated by each class's
 -- implementing branch via require. Modules self-register their modifiers and
@@ -114,6 +118,11 @@ function Precache(context)
         end
     end
     for baseClassKey, innate in pairs(CLASS_INNATES) do
+        if innate ~= nil and type(innate.unit) == "string" then
+            precacheUnit(innate.unit)
+        end
+    end
+    for ascendancyKey, innate in pairs(ASCENDANCY_INNATES) do
         if innate ~= nil and type(innate.unit) == "string" then
             precacheUnit(innate.unit)
         end
@@ -880,7 +889,9 @@ function PathOfTheAncients:GrantClassInnate(hero, playableKey)
         return
     end
     local baseClassKey = self:GetBaseClassKey(playableKey)
-    local innate = (baseClassKey ~= nil) and CLASS_INNATES[baseClassKey] or nil
+    -- An ascendancy's innate replaces the base class innate: prefer the
+    -- ascendancy's own innate, falling back to the base class innate.
+    local innate = ASCENDANCY_INNATES[playableKey] or ((baseClassKey ~= nil) and CLASS_INNATES[baseClassKey] or nil)
     if innate == nil then
         return
     end
@@ -922,7 +933,10 @@ function PathOfTheAncients:GrantClassInnate(hero, playableKey)
         end
     end
 
-    local module = INNATE_MODULES[baseClassKey]
+        -- Runtime module lookup: prefer the innate's own key (ascendancy innates
+    -- register under their innate key, e.g. "adaptability"), fall back to the
+    -- base class key.
+    local module = INNATE_MODULES[innate.key] or INNATE_MODULES[baseClassKey]
     if module ~= nil and type(module.OnHeroApply) == "function" then
         pcall(function()
             module.OnHeroApply(hero)
@@ -1077,41 +1091,66 @@ function PathOfTheAncients:DevAscendCommand(playerID, arg)
     arg = string.gsub(arg, "%s+$", "")
     if arg == "" then
         local lines = { "Ascendancies for " .. tostring(baseClass) .. ":" }
+        lines[#lines+1] = "-ascend 0=Return to base class (" .. (BASE_CLASSES[baseClass] and BASE_CLASSES[baseClass].display_name or baseClass) .. ")"
         for i, ascendancy in ipairs(list) do
-            table.insert(lines, "-" .. "ascend " .. tostring(i) .. "=" .. ascendancy.display_name)
+            table.insert(lines, "-ascend " .. tostring(i) .. "=" .. ascendancy.display_name)
         end
         self:SayDev(playerID, table.concat(lines, " | "))
         return
     end
 
     local index = tonumber(arg)
-    if index == nil or index < 1 or index > #list or index ~= math.floor(index) then
-        self:SayDev(playerID, "Usage: -ascend 1.." .. tostring(#list))
+    if index == nil or index < 0 or index > #list or index ~= math.floor(index) then
+        self:SayDev(playerID, "Usage: -ascend 0.." .. tostring(#list))
         return
     end
 
-    local ascendancy = list[index]
+    local ascendancy, targetHero, targetPlayableKey
+    local displayName
+    if index == 0 then
+        -- Return to the base class (drop the ascendancy).
+        local baseDef = BASE_CLASSES[baseClass]
+        if baseDef == nil then
+            self:SayDev(playerID, "No base class definition for " .. tostring(baseClass))
+            return
+        end
+        targetHero = baseDef.hero
+        targetPlayableKey = baseClass
+        displayName = baseDef.display_name or baseClass
+    else
+        ascendancy = list[index]
+        targetHero = ascendancy.hero
+        targetPlayableKey = ascendancy.key
+        displayName = ascendancy.display_name
+    end
+
     local previousPlayable = selection.playable or selection.archetype
     -- Mark authorized before replace so enforce-think does not strip the new hero.
     selection.base_class = baseClass
-    selection.playable = ascendancy.key
+    selection.playable = targetPlayableKey
     selection.archetype = baseClass
 
-    local heroAssigned, assignedHero = self:ApplySelectedHero(playerID, ascendancy.hero)
+    local heroAssigned, assignedHero = self:ApplySelectedHero(playerID, targetHero)
     if not heroAssigned or assignedHero == nil then
         selection.playable = previousPlayable
-        self:SayDev(playerID, "Failed to ascend to " .. ascendancy.display_name)
+        self:SayDev(playerID, "Failed to " .. (index == 0 and "return to base class" or "ascend to " .. displayName))
         return
     end
 
     selection.hero_assigned = true
     selection.hero_entindex = assignedHero:entindex()
-    self:ApplyPlayableCosmetics(assignedHero, ascendancy.key, ascendancy.hero)
+    self:ApplyPlayableCosmetics(assignedHero, targetPlayableKey, targetHero)
 
-    print("[POA DEV] player " .. tostring(playerID) .. " ascended "
-        .. tostring(baseClass) .. " -> " .. ascendancy.key)
-    self:SayDev(playerID, "Ascended to " .. ascendancy.display_name
-        .. " (" .. tostring(index) .. "/" .. tostring(#list) .. ")")
+    if index == 0 then
+        print("[POA DEV] player " .. tostring(playerID) .. " returned to base class "
+            .. tostring(baseClass))
+        self:SayDev(playerID, "Returned to " .. displayName .. " (base class)")
+    else
+        print("[POA DEV] player " .. tostring(playerID) .. " ascended "
+            .. tostring(baseClass) .. " -> " .. ascendancy.key)
+        self:SayDev(playerID, "Ascended to " .. displayName
+            .. " (" .. tostring(index) .. "/" .. tostring(#list) .. ")")
+    end
 end
 
 function PathOfTheAncients:GetPlayableDefinition(playableKey)
