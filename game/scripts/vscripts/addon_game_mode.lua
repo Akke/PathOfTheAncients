@@ -1464,7 +1464,11 @@ function PathOfTheAncients:StripDefaultAbilities(hero)
             pcall(function()
                 name = ability:GetAbilityName()
             end)
-            if type(name) == "string" and name ~= "" and name ~= "generic_hidden" then
+            -- Keep poa_ custom abilities defined in hero KV; strip Dota defaults.
+            if type(name) == "string"
+                and name ~= ""
+                and name ~= "generic_hidden"
+                and string.sub(name, 1, 4) ~= "poa_" then
                 local ok = pcall(function()
                     hero:RemoveAbility(name)
                 end)
