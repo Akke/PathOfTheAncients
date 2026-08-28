@@ -3,7 +3,6 @@
 {
 	"Version"		"1"
 
-	//=================================================================================================================
 	// Ranger Innate: Precision
 	// The rangers attacks deal increased damage for every consecutive hit on the target.
 	// Stacks up to X times and has a limited duration.
@@ -57,46 +56,93 @@
 	}
 
 	//=================================================================================================================
-	// Templar Assassin: Refraction Holdout
+	// Specialist Innate: Manifestation
+	// The Specialist projects an aspect of itself onto the battlefield as a
+	// summonable companion that fights alongside the hero. Resonance - the bond
+	// between the Specialist and the manifestation - is a modifier
+	// (modifier_poa_specialist_resonance), not an ability. This ability summons
+	// the base manifestation.
 	//=================================================================================================================
-	"templar_assassin_refraction_holdout"
+
+	"poa_innate_specialist"
 	{
-		// General
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
-		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"	
+		"BaseClass"				"ability_lua"
+		"AbilityName"			"poa_innate_specialist"
+		"ScriptFile"			"abilities/poa_innate_specialist"
 
-		// Casting
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastPoint"				"0.0 0.0 0.0 0.0"
+		// INNATE_UI: renders this in the innate diamond (off the QWER bar) like
+		// stock innates (e.g. juggernaut_duelist). It is still a castable summon.
+		"AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_INNATE_UI"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
 
-		// Time		
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"17.0 17.0 17.0 17.0"
+		"AbilityCastPoint"		"0.0"
+		"AbilityCooldown"		"12.0"
+		"AbilityManaCost"		"60"
+		"AbilityTextureName"	"lone_druid_summon_spirit_bear"
+		"MaxLevel"				"1"
+		"Innate"				"1"
+	}
 
-		// Cost
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityManaCost"				"100"
-		
-		// Special
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilitySpecial"
-		{
-			"01"
-			{
-				"var_type"					"FIELD_INTEGER"
-				"damage_absorb"				"200 300 400 500"
-			}
-			"02"
-			{
-				"var_type"					"FIELD_INTEGER"
-				"bonus_damage"				"20 40 60 80"
-			}
-			"04"
-			{
-				"var_type"					"FIELD_FLOAT"
-				"duration"					"17.0 17.0 17.0 17.0"
-			}
-		}
+	//=================================================================================================================
+	// Druid innate: Adaptability - Beast Aspect (self-manifestation)
+	// Shifts between Wolf, Bear, and Wyvern forms. The hero IS the manifestation.
+	//=================================================================================================================
+	"poa_innate_specialist_druid"
+	{
+		"BaseClass"				"ability_lua"
+		"AbilityName"			"poa_innate_specialist_druid"
+		"ScriptFile"			"abilities/poa_innate_specialist_druid"
+
+		"AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_INNATE_UI"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_PHYSICAL"
+
+		"AbilityCastPoint"		"0.0"
+		"AbilityCooldown"		"0.0"
+		"AbilityManaCost"		"0"
+		"AbilityTextureName"	"lone_druid_summon_spirit_bear"
+		"MaxLevel"				"1"
+		"Innate"				"1"
+	}
+
+	//=================================================================================================================
+	// Spiritkin innate: Harmony - Elemental Attunement (self-manifestation)
+	// Attunes the Spiritkin to Storm, Ember, or Stone. The hero IS the manifestation.
+	//=================================================================================================================
+	"poa_innate_specialist_spiritkin"
+	{
+		"BaseClass"				"ability_lua"
+		"AbilityName"			"poa_innate_specialist_spiritkin"
+		"ScriptFile"			"abilities/poa_innate_specialist_spiritkin"
+
+		"AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_INNATE_UI"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+
+		"AbilityCastPoint"		"0.0"
+		"AbilityCooldown"		"0.0"
+		"AbilityManaCost"		"0"
+		"AbilityTextureName"	"zuus_arc_lightning"
+		"MaxLevel"				"1"
+		"Innate"				"1"
+	}
+
+	//=================================================================================================================
+	// Summoner innate: Convergence - Summon Servant (external manifestation)
+	// Summons a servant construct that fights for the Summoner.
+	//=================================================================================================================
+	"poa_innate_specialist_summoner"
+	{
+		"BaseClass"				"ability_lua"
+		"AbilityName"			"poa_innate_specialist_summoner"
+		"ScriptFile"			"abilities/poa_innate_specialist_summoner"
+
+		"AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_INNATE_UI"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_PHYSICAL"
+
+		"AbilityCastPoint"		"0.0"
+		"AbilityCooldown"		"8.0"
+		"AbilityManaCost"		"60"
+		"AbilityTextureName"	"warlock_golem"
+		"MaxLevel"				"1"
+		"Innate"				"1"
 	}
 }

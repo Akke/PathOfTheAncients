@@ -1,0 +1,28 @@
+"lang"
+{
+	"Language"		"English"
+	"Tokens"
+	{
+		"addon_game_name"		"Path of the Ancients"
+
+		"DOTA_Tooltip_Ability_poa_innate_specialist"		"Manifest"
+		"DOTA_Tooltip_Ability_poa_innate_specialist_SummaryDescription"		"Summon an aspect of the Specialist to fight alongside you."
+		"DOTA_Tooltip_Ability_poa_innate_specialist_Description"		"Summons an aspect of the Specialist to fight alongside you. Resonance builds while the aspect fights with you, and decays if it falls."
+		"DOTA_Tooltip_Ability_poa_innate_specialist_Lore"		"The Specialist shapes itself into more than one thing."
+
+	}
+		"DOTA_Tooltip_Ability_poa_innate_specialist_druid"					"Beast Aspect"
+		"DOTA_Tooltip_Ability_poa_innate_specialist_druid_SummaryDescription"	"Shift between Wolf, Bear, and Wyvern forms. You are the manifestation."
+		"DOTA_Tooltip_Ability_poa_innate_specialist_druid_Description"		"Shifts the Druid between three beast forms - Wolf, Bear, Wyvern. Fighting in a form builds Resonance. Adapt to the fight."
+		"DOTA_Tooltip_Ability_poa_innate_specialist_druid_Lore"				"The wild one becomes the wild itself."
+
+		"DOTA_Tooltip_Ability_poa_innate_specialist_spiritkin"					"Harmony"
+		"DOTA_Tooltip_Ability_poa_innate_specialist_spiritkin_SummaryDescription"	"Attune to Storm, Ember, or Stone elemental spirits."
+		"DOTA_Tooltip_Ability_poa_innate_specialist_spiritkin_Description"		"Attunes the Spiritkin to one of three elemental spirits - Storm, Ember, Stone. Harmony expresses the chosen element through the kit."
+		"DOTA_Tooltip_Ability_poa_innate_specialist_spiritkin_Lore"				"Every element is another facet of the same self."
+
+		"DOTA_Tooltip_Ability_poa_innate_specialist_summoner"						"Summon Servant"
+		"DOTA_Tooltip_Ability_poa_innate_specialist_summoner_SummaryDescription"	"Summon a servant construct to fight for you."
+		"DOTA_Tooltip_Ability_poa_innate_specialist_summoner_Description"			"Summons a durable servant construct that fights alongside the Summoner. Servants amplify the Summoner presence on the battlefield."
+		"DOTA_Tooltip_Ability_poa_innate_specialist_summoner_Lore"				"I manifest servants to do the work I command."
+}
