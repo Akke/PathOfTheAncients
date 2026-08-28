@@ -113,6 +113,11 @@ function Precache(context)
             precacheUnit(ascendancy.hero)
         end
     end
+    for baseClassKey, innate in pairs(CLASS_INNATES) do
+        if innate ~= nil and type(innate.unit) == "string" then
+            precacheUnit(innate.unit)
+        end
+    end
     for _, models in pairs(COSMETIC_OVERRIDES) do
         for _, model in pairs(models) do
             PrecacheModel(model, context)

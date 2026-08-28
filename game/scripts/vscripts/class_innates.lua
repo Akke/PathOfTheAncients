@@ -6,6 +6,7 @@
 --   key        : stable innate key.
 --   name       : display name.
 --   resource   : name of the class resource the innate builds/spends.
+--   unit       : optional creature name the innate summons (precached on load).
 --   skills     : base (base-class-level) skills that drive the innate loop.
 --                These are granted as part of the innate, not as a kit.
 --   + class-specific tuning consumed by that class's runtime module
