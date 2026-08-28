@@ -19,7 +19,9 @@ local ASCENDANCY_INNATES = CLASS_INNATES.ascendancies
 -- Innate runtime modules by base class key, populated by each class's
 -- implementing branch via require. Modules self-register their modifiers and
 -- are linked up front so they are available before any innate is granted.
-local INNATE_MODULES = {}
+local INNATE_MODULES = {
+    specialist = require("innates/specialist_manifestation"),
+}
 
 if PathOfTheAncients == nil then
     PathOfTheAncients = class({})
@@ -933,7 +935,7 @@ function PathOfTheAncients:GrantClassInnate(hero, playableKey)
         end
     end
 
-        -- Runtime module lookup: prefer the innate's own key (ascendancy innates
+-- Runtime module lookup: prefer the innate's own key (ascendancy innates
     -- register under their innate key, e.g. "adaptability"), fall back to the
     -- base class key.
     local module = INNATE_MODULES[innate.key] or INNATE_MODULES[baseClassKey]

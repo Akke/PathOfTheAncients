@@ -2,6 +2,7 @@
 {
     custom_net_tables =
     [
-        "poa_selection"
+        "poa_selection",
+        "poa_innate"
     ]
 }
