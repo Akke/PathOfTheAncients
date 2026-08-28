@@ -3,5 +3,8 @@
         <CustomUIElement
             type="Hud"
             layoutfile="file://{resources}/layout/custom_game/hero_selection.xml" />
+        <CustomUIElement
+            type="Hud"
+            layoutfile="file://{resources}/layout/custom_game/ascendancy_tree.xml" />
     </Panel>
 </root>

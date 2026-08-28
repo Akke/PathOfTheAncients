@@ -1,0 +1,28 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/ascendancy_tree.css" /></styles>
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/class_definitions.js" />
+        <include src="file://{resources}/scripts/custom_game/ascendancy_tree.js" />
+    </scripts>
+    <Panel class="AscendancyTreeContainer" hittest="false">
+        <Panel id="AscendancyTreeRoot" hittest="false">
+            <Panel id="Backdrop" hittest="false" />
+            <Label id="CloseButton" hittest="true" text="X" />
+            <Panel id="TreeWrapper" hittest="false">
+                <Panel id="Header" hittest="false">
+                    <Panel id="HeaderLeft" hittest="false">
+                        <Label id="AscendancyTreeTitle" text="Ascendancy Tree" />
+                        <Label id="AscendancyTreeDescription" text="(0) Ascendancy Points remaining." />
+                    </Panel>
+
+                    <Panel id="HeaderRight" hittest="false">
+                        <DOTAAbilityImage id="AscendancyInnateAbility" abilityname="axe_counter_helix" />
+                    </Panel>
+                </Panel>
+                <Panel id="TreeNodes" hittest="false">
+
+                </Panel>
+            </Panel>
+        </Panel>
+    </Panel>
+</root>

@@ -8,6 +8,7 @@
   var confirmed = false;
   var classOrder = POA_CLASS_ORDER.slice();
   var focusIndex = 0;
+  var rootUI = $("#HeroSelectionRoot");
   var carouselPositions = (function () {
     var ringScales = [1, 0.8, 0.7, 0.6];
     var cardWidth = 250;
@@ -340,10 +341,9 @@
       wrapper.hittest = false;
       wrapper.hittestchildren = false;
     }
-    context.hittest = false;
-    context.hittestchildren = false;
-    context.style.visibility = "collapse";
-    context.RemoveAndDeleteChildren();
+    rootUI.hittest = false;
+    rootUI.hittestchildren = false;
+    rootUI.style.visibility = "collapse";
     $.Msg("[POA UI] Hero selection context collapsed; gameplay input released");
   }
   function UpdatePartyStatus() {

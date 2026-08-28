@@ -33,16 +33,40 @@ if not exist "!TARGET!" (
     echo !TARGET! 1>&2
     exit /b 1
 )
-if exist "!LINK!" (
-    echo Error: refusing to replace existing path: 1>&2
-    echo !LINK! 1>&2
-    exit /b 1
+if not exist "!LINK!" (
+    mkdir "!LINK!" >nul
+    if errorlevel 1 (
+        echo Error: could not create directory: 1>&2
+        echo !LINK! 1>&2
+        exit /b 1
+    )
+) else (
+    if not exist "!LINK!\" (
+        echo Error: refusing to use existing non-directory path: 1>&2
+        echo !LINK! 1>&2
+        exit /b 1
+    )
 )
-mklink /D "!LINK!" "!TARGET!" >nul
-if errorlevel 1 (
-    echo Error: could not create the !KIND! link. 1>&2
-    echo Enable Windows Developer Mode or run Command Prompt as Administrator. 1>&2
-    exit /b 1
+for /f "delims=" %%F in ('dir /b "!TARGET!"') do (
+    if /I not "%%~nxF"=="maps" (
+        set "ITEM_TARGET=!TARGET!\%%F"
+        set "ITEM_LINK=!LINK!\%%F"
+        if exist "!ITEM_LINK!" (
+            echo Error: refusing to replace existing path: 1>&2
+            echo !ITEM_LINK! 1>&2
+            exit /b 1
+        )
+        if exist "!ITEM_TARGET!\" (
+            mklink /D "!ITEM_LINK!" "!ITEM_TARGET!" >nul
+        ) else (
+            mklink "!ITEM_LINK!" "!ITEM_TARGET!" >nul
+        )
+        if errorlevel 1 (
+            echo Error: could not create link for %%F 1>&2
+            echo Enable Windows Developer Mode or run Command Prompt as Administrator. 1>&2
+            exit /b 1
+        )
+        echo Created !KIND! link: !ITEM_LINK! ^-^> !ITEM_TARGET!
+    )
 )
-echo Created !KIND! link: !LINK! ^-^> !TARGET!
 exit /b 0
