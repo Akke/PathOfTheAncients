@@ -1,5 +1,28 @@
 require("libraries/timers")
 
+-- Custom ability kits per playable (base class or ascendancy key), granted
+-- server-side after spawn so they do not depend on hero KV override loading.
+-- See docs/CUSTOM_ABILITIES.md for the ability registration format and the
+-- fixes required to make custom abilities load in this engine build. Defined
+-- in modules, not inline, so class data stays out of the game mode file.
+local CLASS_ABILITIES = require("class_abilities")
+
+-- Class innate data (per base class and ascendancy). Distinct from ability
+-- kits: an innate is the signature class identity + resource, not a list of
+-- bar abilities. Ascendancy innates (CLASS_INNATES.ascendancies) override the
+-- base class innate. See class_innates.lua. NOTE: this engine's require only
+-- returns the first value, so both tables ride on the same module (CLASS_INNATES
+-- holds .ascendancies).
+local CLASS_INNATES = require("class_innates")
+local ASCENDANCY_INNATES = CLASS_INNATES.ascendancies
+
+-- Innate runtime modules by base class key, populated by each class's
+-- implementing branch via require. Modules self-register their modifiers and
+-- are linked up front so they are available before any innate is granted.
+local INNATE_MODULES = {
+    specialist = require("innates/specialist_manifestation"),
+}
+
 if PathOfTheAncients == nil then
     PathOfTheAncients = class({})
 end
@@ -94,6 +117,16 @@ function Precache(context)
     for _, list in pairs(CLASS_ASCENDANCIES) do
         for _, ascendancy in ipairs(list) do
             precacheUnit(ascendancy.hero)
+        end
+    end
+    for baseClassKey, innate in pairs(CLASS_INNATES) do
+        if innate ~= nil and type(innate.unit) == "string" then
+            precacheUnit(innate.unit)
+        end
+    end
+    for ascendancyKey, innate in pairs(ASCENDANCY_INNATES) do
+        if innate ~= nil and type(innate.unit) == "string" then
+            precacheUnit(innate.unit)
         end
     end
     for _, models in pairs(COSMETIC_OVERRIDES) do
@@ -743,7 +776,186 @@ function PathOfTheAncients:IsDevPlayer(playerID)
     return false
 end
 
+function PathOfTheAncients:DumpHeroAbilities(hero, label)
+    if hero == nil or hero:IsNull() then
+        return
+    end
+    local count = 0
+    pcall(function()
+        count = hero:GetAbilityCount() or 0
+    end)
+    local parts = {}
+    for i = 0, count - 1 do
+        local ability = nil
+        pcall(function()
+            ability = hero:GetAbilityByIndex(i)
+        end)
+        if ability ~= nil and not ability:IsNull() then
+            local name = ""
+            local level = 0
+            pcall(function()
+                name = ability:GetAbilityName() or ""
+            end)
+            pcall(function()
+                level = ability:GetLevel() or 0
+            end)
+            table.insert(parts, tostring(i) .. ":" .. name .. "(" .. tostring(level) .. ")")
+        end
+    end
+    print("[POA DIAG] ability dump [" .. label .. "] " .. hero:GetUnitName()
+        .. " count=" .. tostring(count) .. " -> " .. table.concat(parts, " | "))
+end
+
+function PathOfTheAncients:GrantClassAbilities(hero, playableKey)
+    if hero == nil or hero:IsNull() or type(playableKey) ~= "string" then
+        return
+    end
+    local kit = CLASS_ABILITIES[playableKey]
+    if kit == nil then
+        return
+    end
+    local guard = 0
+    while guard < 30 do
+        local has = false
+        pcall(function() has = hero:HasAbility("generic_hidden") or false end)
+        if not has then
+            break
+        end
+        local ok = pcall(function()
+            hero:RemoveAbility("generic_hidden")
+        end)
+        if not ok then
+            break
+        end
+        guard = guard + 1
+    end
+    for _, name in ipairs(kit) do
+        local already = false
+        pcall(function() already = hero:HasAbility(name) or false end)
+        if not already then
+            local granted, result = pcall(function()
+                return hero:AddAbility(name)
+            end)
+            if granted and result ~= nil then
+                pcall(function()
+                    result:SetLevel(1)
+                end)
+                print("[POA] Granted ability " .. name .. " to " .. hero:GetUnitName())
+            else
+                print("[POA] Failed to grant ability " .. name .. ": " .. tostring(result))
+            end
+        else
+            pcall(function()
+                local existing = hero:FindAbilityByName(name)
+                if existing ~= nil then
+                    existing:SetLevel(1)
+                end
+            end)
+        end
+    end
+    self:DumpHeroAbilities(hero, "post-grant")
+end
+
+-- Safe error formatter: the engine's default error handler can itself throw and
+-- collapse to "Script Runtime Error: error in error handling", hiding the real
+-- cause. Catching and re-printing via pcall reveals it.
+function PathOfTheAncients:FmtError(e)
+    local ok, s = pcall(function() return tostring(e) end)
+    if ok then
+        return s
+    end
+    return "non-string error"
+end
+
+-- Returns the base class key any playable (base class or ascendancy) belongs
+-- to. Innates are base-class systems, so grant one and only one per base class.
+function PathOfTheAncients:GetBaseClassKey(playableKey)
+    if type(playableKey) ~= "string" then
+        return nil
+    end
+    if BASE_CLASSES[playableKey] ~= nil then
+        return playableKey
+    end
+    local def = ASCENDANCY_BY_KEY[playableKey]
+    if def ~= nil then
+        return def.class_key
+    end
+    return nil
+end
+
+-- Grants the base class innate: its signature skills plus the runtime module
+-- hook (e.g. a class resource attach). Innates are distinct from
+-- CLASS_ABILITIES kits; see class_innates.lua.
+function PathOfTheAncients:GrantClassInnate(hero, playableKey)
+    if hero == nil or hero:IsNull() then
+        return
+    end
+    local baseClassKey = self:GetBaseClassKey(playableKey)
+    -- An ascendancy's innate replaces the base class innate: prefer the
+    -- ascendancy's own innate, falling back to the base class innate.
+    local innate = ASCENDANCY_INNATES[playableKey] or ((baseClassKey ~= nil) and CLASS_INNATES[baseClassKey] or nil)
+    if innate == nil then
+        return
+    end
+
+    -- Grant the innate AFTER the six generic_hidden placeholders (indices 0-5)
+    -- left by StripDefaultAbilities, so it appends at a high index and never
+    -- occupies a visible QWER slot. Its INNATE_UI behavior renders it in the
+    -- innate diamond regardless of the numeric index.
+    local startIndex = 6
+    local currentIndex = startIndex
+
+    if type(innate.skills) == "table" then
+        print("[POA] Granting innate skills for " .. tostring(baseClassKey)
+            .. " to " .. hero:GetUnitName() .. ": " .. table.concat(innate.skills, ","))
+        for _, name in ipairs(innate.skills) do
+            local already = false
+            pcall(function() already = hero:HasAbility(name) or false end)
+            if not already then
+                local granted, result = pcall(function()
+                    return hero:AddAbility(name)
+                end)
+                if granted and result ~= nil then
+                    print("[POA] Granted innate skill " .. name .. " at slot "
+                        .. tostring(currentIndex) .. " to " .. hero:GetUnitName())
+                    currentIndex = currentIndex + 1
+                    pcall(function() result:SetLevel(1) end)
+                    print("[POA] Innate " .. name .. " leveled to " .. hero:GetUnitName())
+                else
+                    print("[POA] Failed to grant innate skill " .. name .. ": " .. tostring(result))
+                end
+            else
+                pcall(function()
+                    local existing = hero:FindAbilityByName(name)
+                    if existing ~= nil then
+                        existing:SetLevel(1)
+                    end
+                end)
+            end
+        end
+    end
+
+-- Runtime module lookup: prefer the innate's own key (ascendancy innates
+    -- register under their innate key, e.g. "adaptability"), fall back to the
+    -- base class key.
+    local module = INNATE_MODULES[innate.key] or INNATE_MODULES[baseClassKey]
+    if module ~= nil and type(module.OnHeroApply) == "function" then
+        pcall(function()
+            module.OnHeroApply(hero)
+        end)
+    end
+end
+
 function PathOfTheAncients:ApplyPlayableCosmetics(hero, playableKey, heroName)
+    local ok, err = pcall(function()
+        self:ApplyPlayableCosmeticsInner(hero, playableKey, heroName)
+    end)
+    if not ok then
+        print("[POA] ApplyPlayableCosmetics error: " .. self:FmtError(err))
+    end
+end
+
+function PathOfTheAncients:ApplyPlayableCosmeticsInner(hero, playableKey, heroName)
     if hero == nil or hero:IsNull() then
         return
     end
@@ -756,6 +968,8 @@ function PathOfTheAncients:ApplyPlayableCosmetics(hero, playableKey, heroName)
         self:ClearAttachedWearables(playerID, hero)
     end
     self:StripDefaultAbilities(hero)
+    self:GrantClassAbilities(hero, playableKey)
+    self:GrantClassInnate(hero, playableKey)
     self:ScheduleEconWearableStripping(hero)
     if COSMETIC_OVERRIDES[playableKey] ~= nil then
         self:ApplyCosmeticOverrides(hero, playableKey)
@@ -891,43 +1105,68 @@ function PathOfTheAncients:DevAscendCommand(playerID, arg)
     arg = string.gsub(arg, "%s+$", "")
     if arg == "" then
         local lines = { "Ascendancies for " .. tostring(baseClass) .. ":" }
+        lines[#lines+1] = "-ascend 0=Return to base class (" .. (BASE_CLASSES[baseClass] and BASE_CLASSES[baseClass].display_name or baseClass) .. ")"
         for i, ascendancy in ipairs(list) do
-            table.insert(lines, "-" .. "ascend " .. tostring(i) .. "=" .. ascendancy.display_name)
+            table.insert(lines, "-ascend " .. tostring(i) .. "=" .. ascendancy.display_name)
         end
         self:SayDev(playerID, table.concat(lines, " | "))
         return
     end
 
     local index = tonumber(arg)
-    if index == nil or index < 1 or index > #list or index ~= math.floor(index) then
-        self:SayDev(playerID, "Usage: -ascend 1.." .. tostring(#list))
+    if index == nil or index < 0 or index > #list or index ~= math.floor(index) then
+        self:SayDev(playerID, "Usage: -ascend 0.." .. tostring(#list))
         return
     end
 
-    local ascendancy = list[index]
+    local ascendancy, targetHero, targetPlayableKey
+    local displayName
+    if index == 0 then
+        -- Return to the base class (drop the ascendancy).
+        local baseDef = BASE_CLASSES[baseClass]
+        if baseDef == nil then
+            self:SayDev(playerID, "No base class definition for " .. tostring(baseClass))
+            return
+        end
+        targetHero = baseDef.hero
+        targetPlayableKey = baseClass
+        displayName = baseDef.display_name or baseClass
+    else
+        ascendancy = list[index]
+        targetHero = ascendancy.hero
+        targetPlayableKey = ascendancy.key
+        displayName = ascendancy.display_name
+    end
+
     local previousPlayable = selection.playable or selection.archetype
     -- Mark authorized before replace so enforce-think does not strip the new hero.
     selection.base_class = baseClass
-    selection.playable = ascendancy.key
+    selection.playable = targetPlayableKey
     selection.archetype = baseClass
 
-    local heroAssigned, assignedHero = self:ApplySelectedHero(playerID, ascendancy.hero)
+    local heroAssigned, assignedHero = self:ApplySelectedHero(playerID, targetHero)
     if not heroAssigned or assignedHero == nil then
         selection.playable = previousPlayable
-        self:SayDev(playerID, "Failed to ascend to " .. ascendancy.display_name)
+        self:SayDev(playerID, "Failed to " .. (index == 0 and "return to base class" or "ascend to " .. displayName))
         return
     end
 
     selection.hero_assigned = true
     selection.hero_entindex = assignedHero:entindex()
-    self:ApplyPlayableCosmetics(assignedHero, ascendancy.key, ascendancy.hero)
+    self:ApplyPlayableCosmetics(assignedHero, targetPlayableKey, targetHero)
 
-    print("[POA DEV] player " .. tostring(playerID) .. " ascended "
-        .. tostring(baseClass) .. " -> " .. ascendancy.key)
-    self:SayDev(playerID, "Ascended to " .. ascendancy.display_name
-        .. " (" .. tostring(index) .. "/" .. tostring(#list) .. ")")
-
-    self:OnPlayerAscension(playerID, baseClass, ascendancy.key, index)
+    if index == 0 then
+        print("[POA DEV] player " .. tostring(playerID) .. " returned to base class "
+            .. tostring(baseClass))
+        self:SayDev(playerID, "Returned to " .. displayName .. " (base class)")
+    else
+        print("[POA DEV] player " .. tostring(playerID) .. " ascended "
+            .. tostring(baseClass) .. " -> " .. ascendancy.key)
+        self:SayDev(playerID, "Ascended to " .. displayName
+            .. " (" .. tostring(index) .. "/" .. tostring(#list) .. ")")
+    
+      self:OnPlayerAscension(playerID, baseClass, ascendancy.key, index)
+    end
 end
 
 function PathOfTheAncients:OnPlayerAscension(playerID, baseClass, ascensionClass, level)
@@ -1293,7 +1532,11 @@ function PathOfTheAncients:StripDefaultAbilities(hero)
             pcall(function()
                 name = ability:GetAbilityName()
             end)
-            if type(name) == "string" and name ~= "" and name ~= "generic_hidden" then
+            -- Keep poa_ custom abilities defined in hero KV; strip Dota defaults.
+            if type(name) == "string"
+                and name ~= ""
+                and name ~= "generic_hidden"
+                and string.sub(name, 1, 4) ~= "poa_" then
                 local ok = pcall(function()
                     hero:RemoveAbility(name)
                 end)

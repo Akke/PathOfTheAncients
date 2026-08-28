@@ -89,4 +89,109 @@
 			"XPGain"					"15"
 		}
 	}
+
+	//=================================================================================================================
+	// Specialist Innate base manifestation (external manifestation)
+	// A controllable servant that fights alongside the Specialist. Generic
+	// base aspect: each ascendancy replaces this with its own manifestation
+	// (beast form / spirit / servants). Uses the Spirit Bear model, which is
+	// verified to exist in this engine build.
+	//=================================================================================
+	"npc_dota_poa_specialist_manifestation"
+	{
+		"Model"						"models/heroes/lone_druid/spirit_bear.vmdl"
+		"BaseClass"					"npc_dota_creature"
+		"SoundSet"					"dota_creature_bear"
+		"Level"						"1"
+		"ModelScale" 				"0.9"
+
+		"ArmorPhysical"				"4"
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
+		"AttackDamageMin"			"40"
+		"AttackDamageMax"			"55"
+		"AttackRate"				"1.4"
+		"AttackAnimationPoint"		"0.4"
+		"AttackAcquisitionRange"	"800"
+		"AttackRange"				"150"
+
+		"RingRadius"				"40"
+		"HealthBarOffset"			"0"
+
+		"BountyXP"					"0"
+		"BountyGoldMin"				"0"
+		"BountyGoldMax"				"0"
+
+		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
+		"MovementSpeed"				"330"
+
+		"StatusHealth"				"600"
+		"StatusHealthRegen"			"1.0"
+		"StatusMana"				"0"
+		"StatusManaRegen"			"0.0"
+
+		"VisionDaytimeRange"		"800"
+		"VisionNighttimeRange"		"800"
+
+		"TeamName"					"DOTA_TEAM_GOODGUYS"
+		"CombatClassAttack"			"DOTA_COMBAT_CLASS_ATTACK_HERO"
+		"CombatClassDefend"			"DOTA_COMBAT_CLASS_DEFEND_HERO"
+		"UnitRelationshipClass"		"DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
+
+		//=================================================================================================================
+	// Summoner innate: Convergence - servant construct (external manifestation)
+	// A durable construct summoned by the Summoner innate.
+	//=================================================================================================================
+	"npc_dota_poa_summoner_servant"
+	{
+		"Model"						"models/heroes/warlock/golem/golem.vmdl"
+		"BaseClass"					"npc_dota_creature"
+		"SoundSet"					"dota_creature_bear"
+		"Level"						"1"
+		"ModelScale" 				"0.9"
+
+		"ArmorPhysical"				"6"
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
+		"AttackDamageMin"			"55"
+		"AttackDamageMax"			"70"
+		"AttackRate"				"1.3"
+		"AttackAnimationPoint"		"0.4"
+		"AttackAcquisitionRange"	"800"
+		"AttackRange"				"150"
+
+		"RingRadius"				"50"
+		"HealthBarOffset"			"0"
+
+		"BountyXP"					"0"
+		"BountyGoldMin"				"0"
+		"BountyGoldMax"				"0"
+
+		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
+		"MovementSpeed"				"300"
+
+		"StatusHealth"				"800"
+		"StatusHealthRegen"			"1.5"
+		"StatusMana"				"0"
+		"StatusManaRegen"			"0.0"
+
+		"VisionDaytimeRange"		"800"
+		"VisionNighttimeRange"		"800"
+
+		"TeamName"					"DOTA_TEAM_GOODGUYS"
+		"CombatClassAttack"			"DOTA_COMBAT_CLASS_ATTACK_HERO"
+		"CombatClassDefend"			"DOTA_COMBAT_CLASS_DEFEND_HERO"
+		"UnitRelationshipClass"		"DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
+
+		"Creature"
+		{
+			"HPGain"				"60"
+			"DamageGain"			"3"
+			"ArmorGain"				"0.5"
+			"MagicResistGain"		"0.1"
+			"MoveSpeedGain"			"1"
+			"BountyGain"			"0"
+			"XPGain"				"0"
+		}
+	}
 }

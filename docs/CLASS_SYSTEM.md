@@ -34,4 +34,4 @@ Server-side selection validation must still accept the same ascendancy keys and 
 
 Arcana / immortal presentation for selected ascendancies is enforced in-game via the hero cosmetics system (not the player's Steam loadout). See [`HERO_COSMETICS.md`](HERO_COSMETICS.md) for DisableWearables, default body slots, and forced looks (Drow Arcana, Voth Domosh, Zeus Arcana, Axe Unleashed).
 
-The current implementation boundary is selection, confirmation, party readiness, assignment/control of the chosen ascendancy hero, and default/forced cosmetics. It does not implement class or ascendancy abilities, stats, progression, or combat systems.
+The current implementation boundary is selection, confirmation, party readiness, assignment/control of the chosen ascendancy hero, and default/forced cosmetics. No class or ascendancy abilities are implemented yet (the Specialist Druid kit was a prototype and was removed). See [`CUSTOM_ABILITIES.md`](CUSTOM_ABILITIES.md) for the ability registration and granting requirements specific to this engine build, and [`GDD.md`](GDD.md) §7 for the Specialist design. Stats, progression, and combat systems are not yet implemented.
