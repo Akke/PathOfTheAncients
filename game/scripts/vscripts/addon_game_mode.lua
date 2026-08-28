@@ -931,6 +931,15 @@ function PathOfTheAncients:GrantClassInnate(hero, playableKey)
 end
 
 function PathOfTheAncients:ApplyPlayableCosmetics(hero, playableKey, heroName)
+    local ok, err = pcall(function()
+        self:ApplyPlayableCosmeticsInner(hero, playableKey, heroName)
+    end)
+    if not ok then
+        print("[POA] ApplyPlayableCosmetics error: " .. self:FmtError(err))
+    end
+end
+
+function PathOfTheAncients:ApplyPlayableCosmeticsInner(hero, playableKey, heroName)
     if hero == nil or hero:IsNull() then
         return
     end
@@ -943,6 +952,8 @@ function PathOfTheAncients:ApplyPlayableCosmetics(hero, playableKey, heroName)
         self:ClearAttachedWearables(playerID, hero)
     end
     self:StripDefaultAbilities(hero)
+    self:GrantClassAbilities(hero, playableKey)
+    self:GrantClassInnate(hero, playableKey)
     self:ScheduleEconWearableStripping(hero)
     if COSMETIC_OVERRIDES[playableKey] ~= nil then
         self:ApplyCosmeticOverrides(hero, playableKey)
