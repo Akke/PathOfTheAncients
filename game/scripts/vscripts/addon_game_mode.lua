@@ -1053,16 +1053,28 @@ function PathOfTheAncients:OnPlayerChat(event)
         end
     end
 
-    local normalized = string.lower(string.gsub(text, "^%s+", ""))
-    -- Accept "-ascend 1", "ascend 1", "-ASCEND 2"
-    local cmd, arg = string.match(normalized, "^%-?([%w_]+)%s*(.*)$")
+    local trimmed = string.gsub(text, "^%s+", "")
+    local normalized = string.lower(trimmed)
+
+    -- All commands must have the - prefix
+    local cmd, arg = string.match(normalized, "^%-([%w_]+)%s*(.*)$")
     if cmd == nil then
         return
     end
 
     if cmd == "ascend" then
         self:DevAscendCommand(playerID, arg)
+    elseif cmd == "asctree" then
+        self:OpenAscensionTree(playerID)
     end
+end
+
+function PathOfTheAncients:OpenAscensionTree(playerID)
+    if not self:PlayerHasAscended(playerID) then
+        return
+    end
+
+    self:SendToPlayer(playerID, "poa_ascenscion_tree_open", {})
 end
 
 function PathOfTheAncients:DevAscendCommand(playerID, arg)
@@ -1152,7 +1164,22 @@ function PathOfTheAncients:DevAscendCommand(playerID, arg)
             .. tostring(baseClass) .. " -> " .. ascendancy.key)
         self:SayDev(playerID, "Ascended to " .. displayName
             .. " (" .. tostring(index) .. "/" .. tostring(#list) .. ")")
+    
+      self:OnPlayerAscension(playerID, baseClass, ascendancy.key, index)
     end
+end
+
+function PathOfTheAncients:OnPlayerAscension(playerID, baseClass, ascensionClass, level)
+    self:SendToPlayer(playerID, "poa_ascenscion_tree_player_ascension", {
+        baseClass = baseClass,
+        ascensionClass = ascensionClass,
+        level = level
+    })
+end
+
+function PathOfTheAncients:PlayerHasAscended(playerID)
+    local selection = self.selections[playerID]
+    return selection.base_class ~= selection.playable
 end
 
 function PathOfTheAncients:GetPlayableDefinition(playableKey)
