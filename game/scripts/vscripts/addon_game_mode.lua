@@ -1,4 +1,5 @@
 require("libraries/timers")
+require("core/ascendancy_tree")
 
 -- Custom ability kits per playable (base class or ascendancy key), granted
 -- server-side after spawn so they do not depend on hero KV override loading.
@@ -25,6 +26,13 @@ local INNATE_MODULES = {
 
 if PathOfTheAncients == nil then
     PathOfTheAncients = class({})
+end
+
+PathOfTheAncients.__index = PathOfTheAncients
+
+function PathOfTheAncients.new()
+    local self = setmetatable({}, PathOfTheAncients)
+    return self
 end
 
 -- Fallback cap only: the game normally starts early via ForceGameStart once
@@ -196,6 +204,8 @@ function PathOfTheAncients:InitGameMode()
 
     mode:SetAnnouncerDisabled(true)
     mode:SetKillingSpreeAnnouncerDisabled(true)
+
+    AscendancyTree:Init()
 
     CustomGameEventManager:RegisterListener(
         "poa_preview_selection",
@@ -1066,6 +1076,10 @@ function PathOfTheAncients:OnPlayerChat(event)
         self:DevAscendCommand(playerID, arg)
     elseif cmd == "asctree" then
         self:OpenAscensionTree(playerID)
+    elseif cmd == "ascpoints" then
+        AscendancyTree:SetPoints(playerID, arg)
+    elseif cmd == "ascreset" then
+        AscendancyTree:ResetAll(playerID)
     end
 end
 
@@ -1170,16 +1184,33 @@ function PathOfTheAncients:DevAscendCommand(playerID, arg)
 end
 
 function PathOfTheAncients:OnPlayerAscension(playerID, baseClass, ascensionClass, level)
-    self:SendToPlayer(playerID, "poa_ascenscion_tree_player_ascension", {
-        baseClass = baseClass,
-        ascensionClass = ascensionClass,
-        level = level
-    })
+    AscendancyTree:OnPlayerAscension(playerID, baseClass, ascensionClass, level)
 end
 
 function PathOfTheAncients:PlayerHasAscended(playerID)
     local selection = self.selections[playerID]
     return selection.base_class ~= selection.playable
+end
+
+function PathOfTheAncients:PlayerGetAscension(playerID)
+    local selection = self.selections[playerID]
+    if not selection then return nil end
+
+    local baseClass = selection.base_class
+    local ascension = selection.playable
+
+    if baseClass == ascension then return nil end -- player hasnt ascended
+
+    return ascension
+end
+
+function PathOfTheAncients:PlayerGetBaseClass(playerID)
+    local selection = self.selections[playerID]
+    if not selection then return nil end
+
+    local baseClass = selection.base_class
+
+    return baseClass
 end
 
 function PathOfTheAncients:GetPlayableDefinition(playableKey)
@@ -1564,4 +1595,11 @@ function PathOfTheAncients:StripDefaultAbilities(hero)
             .. hero:GetUnitName() .. " (placeholders +" .. tostring(placeholders) .. ")")
     end
     return removed
+end
+
+function PathOfTheAncients:DisplayHUDError(playerID, message)
+    local player = PlayerResource:GetPlayer(playerID)
+    if player then
+        CustomGameEventManager:Send_ServerToPlayer(player, "CreateIngameErrorMessage", { message = message })
+    end
 end

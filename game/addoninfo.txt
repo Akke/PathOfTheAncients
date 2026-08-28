@@ -1,14 +1,30 @@
 <!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
-    maps = "path_of_the_ancients"
-    IsPlayable = true
-    TeamCount = 1
-    MaxPlayers = 4
-    IsCustomGame = true
-    EnablePickRules = false
-
-    path_of_the_ancients =
-    {
-        MaxPlayers = 4
-    }
+	maps = 
+	[
+		"path_of_the_ancients",
+	]
+	IsPlayable = true
+	TeamCount = 1
+	MaxPlayers = 4
+	IsCustomGame = true
+	EnablePickRules = false
+	path_of_the_ancients = 
+	{
+		MaxPlayers = 4
+	}
+	HideInTools = false
+	IsTemplate = false
+	CheckAFKPlayers = false
+	DefaultMap = "path_of_the_ancients"
+	Default_Keys = null
+	DisableIK = true
+	EventGame = false
+	hero_picker = null
+	HeroGuidesSupported = false
+	ForceDefaultGuide = false
+	MinimalPrecache = false
+	MinPlayers = 1
+	map_options = null
+	PenaltiesEnabled = false
 }
