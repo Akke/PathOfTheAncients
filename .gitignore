@@ -6,6 +6,11 @@ build/
 
 # Local runtime/debug state
 game/panorama_debugger.cfg
+game/tools_asset_info.bin
+game/tools_thumbnail_cache.sqlite3
+game/tools_thumbnail_cache.sqlite3-shm
+game/tools_thumbnail_cache.sqlite3-wal
+game/addoninfo.txt
 
 # Local backups and temporary files
 *.bak
